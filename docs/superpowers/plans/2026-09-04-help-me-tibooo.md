@@ -8,12 +8,12 @@
 중복 없이 전달하는 무료 GitHub Actions 감시기를 만든다.
 
 **아키텍처:** Python 애플리케이션이 Codex Reset JSON 피드와 TwiScan HTML을 하나의
-게시물 모델로 정규화하고, 결정론적 규칙으로 분류한 뒤 Discord Incoming Webhook으로
+게시물 모델로 정규화하고, 결정론적 규칙으로 분류한 뒤 비공개 Discord 봇의 REST API로
 전송한다. GitHub Actions 캐시에 최근 처리 ID와 연속 실패 상태를 보관하며, 소스별
 장애 격리와 3회 연속 전체 장애 알림을 지원한다.
 
 **기술 스택:** Python 3.12, `httpx==0.28.1`, `beautifulsoup4==4.15.0`,
-`pytest==9.1.1`, GitHub Actions, Discord Incoming Webhook
+`pytest==9.1.1`, GitHub Actions, Discord Bot REST API
 
 **설계 문서:** `docs/superpowers/specs/2026-09-04-help-me-tibooo-design.md`
 
@@ -24,7 +24,7 @@
 - 예약 실행 주기는 `*/10 * * * *`이며 GitHub Actions의 실제 실행은 늦어질 수 있다.
 - Tibo의 원글과 답글은 포함하고 단순 리포스트는 제외한다.
 - 첫 정상 실행은 기준점만 저장하고 과거 알림을 보내지 않는다.
-- Discord 메시지는 멘션을 발생시키지 않으며 웹훅 URL을 로그나 저장소에 남기지 않는다.
+- Discord 메시지는 멘션을 발생시키지 않으며 Bot Token을 로그나 저장소에 남기지 않는다.
 - 야간 알림 억제는 이번 구현 범위에 포함하지 않는다.
 
 ## 파일 구조
@@ -38,7 +38,7 @@
 - `src/help_me_tibooo/classifier.py`: 중요 뉴스의 결정론적 분류 규칙
 - `src/help_me_tibooo/discord.py`: 안전한 Discord payload 생성과 제한 재시도
 - `src/help_me_tibooo/watcher.py`: 기준점, 중복 제거, 실패 누적, 알림 순서 조율
-- `src/help_me_tibooo/__main__.py`: `watch`, `test-discord`, `smoke` 명령
+- `src/help_me_tibooo/__main__.py`: `watch`, `test-bot`, `smoke` 명령
 - `tests/fixtures/codex_reset_feed.json`: 구조화 피드 테스트 입력
 - `tests/fixtures/twiscan_timeline.html`: 원글·답글·리포스트를 포함한 HTML 입력
 - `tests/conftest.py`: fixture 파일 로더와 게시물 생성 테스트 fixture
@@ -48,14 +48,17 @@
 - `tests/test_discord.py`: 메시지 형식, 멘션 억제, 재시도 테스트
 - `tests/test_watcher.py`: 최초 실행, 순서, 중복, 장애 상태 테스트
 - `tests/test_cli.py`: 세 CLI 명령의 환경 변수와 종료 코드 테스트
+- `tests/test_setup_wizard.py`: 설치 마법사의 Secret·Variable 전달과 토큰 비노출 테스트
 - `.github/workflows/ci.yml`: push와 pull request에서 전체 테스트 실행
 - `.github/workflows/watch.yml`: 10분 예약 실행과 수동 테스트 실행
+- `scripts/setup-discord-bot.sh`: 비공개 봇 생성·초대와 GitHub 설정 마법사
+- `assets/tiboham-avatar.png`: 티보햄 픽셀아트 프로필 이미지
 - `README.md`: 한글 설치·운영·문제 해결 안내
 - `LICENSE`: MIT 라이선스
 
 ---
 
-### 작업 1: 프로젝트 기반, 도메인 모델, 상태 저장
+### Task 1: 프로젝트 기반, 도메인 모델, 상태 저장
 
 **파일:**
 
@@ -127,7 +130,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest==9.1.1"]
+test = [
+  "PyYAML==6.0.2",
+  "pytest==9.1.1",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -188,23 +194,34 @@ class SourceBatch:
 
 
 @dataclass(frozen=True, slots=True)
+class AlertDeliveryCheckpoint:
+    post: Post
+    categories: tuple[AlertCategory, ...]
+    sources: tuple[SourceName, ...]
+    next_payload_index: int
+
+
+@dataclass(frozen=True, slots=True)
 class WatcherState:
     latest_id: str | None = None
     seen_ids: tuple[str, ...] = ()
     consecutive_failures: int = 0
     outage_notified: bool = False
+    alert_delivery: AlertDeliveryCheckpoint | None = None
 ```
 
-`state.py`는 JSON 객체의 버전이 `1`인지 확인하고, 임시 파일을 같은 디렉터리에 쓴 뒤
-`Path.replace()`로 원자적으로 교체한다. 알 수 없는 필드는 무시하되 타입이 잘못된
-핵심 필드는 `ValueError`를 발생시킨다. `seen_ids`는 저장 직전에 최근 500개로 제한한다.
+`state.py`는 기존 버전 1·2를 읽어 마이그레이션하고 버전 3으로 저장한다. 임시 파일을
+같은 디렉터리에 쓴 뒤 `Path.replace()`로 원자적으로 교체한다. 알 수 없는 필드는
+무시하되 타입이 잘못된 핵심 필드는 `ValueError`를 발생시킨다. `seen_ids`는 저장 직전에
+최근 500개로 제한한다. 버전 3에는 장문 알림의 게시물·범주·출처 스냅샷과 다음 payload
+번호를 함께 저장해, 게시물이 다음 소스 응답에서 사라져도 성공한 조각 다음부터 재개한다.
 
 ```python
 def load_state(path: Path) -> WatcherState | None:
     if not path.exists():
         return None
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if payload.get("version") != 1:
+    if payload.get("version") not in {1, 2, 3}:
         raise ValueError("지원하지 않는 상태 버전입니다")
     return WatcherState(
         latest_id=payload.get("latest_id"),
@@ -218,7 +235,7 @@ def save_state(path: Path, state: WatcherState) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
     payload = {
-        "version": 1,
+        "version": 3,
         "latest_id": state.latest_id,
         "seen_ids": list(state.seen_ids[-500:]),
         "consecutive_failures": state.consecutive_failures,
@@ -243,7 +260,7 @@ git commit -m "feat: 감시 상태 모델과 저장소 추가"
 
 ---
 
-### 작업 2: 공개 데이터 소스 수집과 정규화
+### Task 2: 공개 데이터 소스 수집과 정규화
 
 **파일:**
 
@@ -387,7 +404,7 @@ git commit -m "feat: Tibo 공개 피드 수집 추가"
 
 ---
 
-### 작업 3: 중요 뉴스 규칙 분류기
+### Task 3: 중요 뉴스 규칙 분류기
 
 **파일:**
 
@@ -472,7 +489,7 @@ git commit -m "feat: 중요 OpenAI 소식 분류 추가"
 
 ---
 
-### 작업 4: Discord 메시지와 제한 재시도
+### Task 4: Discord 메시지와 제한 재시도
 
 **파일:**
 
@@ -482,26 +499,27 @@ git commit -m "feat: 중요 OpenAI 소식 분류 추가"
 **인터페이스:**
 
 - 소비: `Post`, `AlertCategory`
-- 제공: `build_alert_payload(post: Post, categories: tuple[AlertCategory, ...]) -> dict[str, object]`
+- 제공: `build_alert_payloads(post: Post, categories: tuple[AlertCategory, ...]) -> tuple[dict[str, object], ...]`
 - 제공: `build_health_payload(failure_count: int) -> dict[str, object]`
-- 제공: `DiscordWebhook.send(payload: dict[str, object]) -> None`
+- 제공: `DiscordBotCredentials(token: str, channel_id: str)`
+- 제공: `DiscordBot.send(payload: dict[str, object]) -> None`
 
 - [ ] **1단계: payload 보안과 길이 실패 테스트 작성**
 
 ```python
 def test_alert_payload_disables_mentions(make_post) -> None:
     post = make_post(text="@everyone reset landed")
-    payload = build_alert_payload(post, (AlertCategory.RESET,))
+    payload = build_alert_payloads(post, (AlertCategory.RESET,))[0]
 
     assert payload["allowed_mentions"] == {"parse": []}
-    assert "[리셋]" in payload["content"]
-    assert post.url in payload["content"]
-    assert len(payload["content"]) <= 2000
+    assert payload["embeds"][0]["title"] == "티보햄 · 리셋"
+    assert payload["embeds"][0]["url"] == post.url
+    assert payload["embeds"][0]["description"] == post.text
 
 
 def test_health_payload_names_three_failures() -> None:
     payload = build_health_payload(3)
-    assert "3회 연속" in payload["content"]
+    assert "3회 연속" in payload["embeds"][0]["description"]
 ```
 
 - [ ] **2단계: payload 테스트 실패 확인**
@@ -512,18 +530,24 @@ def test_health_payload_names_three_failures() -> None:
 
 - [ ] **3단계: payload 생성 최소 구현**
 
-본문은 링크와 제목 공간을 남기도록 잘라 전체 `content`가 2,000자를 넘지 않게 한다.
+원문은 Discord Embed 설명의 4,096 UTF-16 코드 단위 제한에 맞춰 여러 메시지로 나누고
+내용은 버리지 않는다. 제목에는 `티보햄`과 한국어 범주, URL에는 검증된 원본 X 링크,
+색상에는 첫 범주의 지정 색을 넣는다. 빈 범주 목록은 명시적으로 거부한다.
 
 ```python
-def build_alert_payload(post: Post, categories: tuple[AlertCategory, ...]) -> dict[str, object]:
-    labels = " · ".join(f"[{category.value}]" for category in categories)
-    suffix = f"\n<{post.url}>"
-    prefix = f"**{labels} Tibo 알림**\n"
-    body = post.text[: 2000 - len(prefix) - len(suffix)]
-    return {
-        "content": f"{prefix}{body}{suffix}",
+def build_alert_payloads(
+    post: Post,
+    categories: tuple[AlertCategory, ...],
+) -> tuple[dict[str, object], ...]:
+    labels = " · ".join(category.value for category in categories)
+    return ({
+        "embeds": [{
+            "title": f"티보햄 · {labels}",
+            "description": post.text,
+            "url": post.url,
+        }],
         "allowed_mentions": {"parse": []},
-    }
+    },)
 ```
 
 - [ ] **4단계: 재시도 실패 테스트 작성과 구현**
@@ -533,8 +557,8 @@ def build_alert_payload(post: Post, categories: tuple[AlertCategory, ...]) -> di
 `sleep: Callable[[float], None]`로 실제 대기를 제거한다.
 
 ```python
-def test_webhook_retries_server_error_then_succeeds() -> None:
-    statuses = iter((500, 204))
+def test_bot_retries_server_error_then_succeeds() -> None:
+    statuses = iter((500, 200))
     calls: list[httpx.Request] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -543,15 +567,17 @@ def test_webhook_retries_server_error_then_succeeds() -> None:
 
     client = httpx.Client(transport=httpx.MockTransport(handler))
     sleeps: list[float] = []
-    webhook = DiscordWebhook("https://discord.example/webhook", client, sleeps.append)
+    credentials = DiscordBotCredentials("secret.bot.token", "123456789")
+    bot = DiscordBot(credentials, client, sleeps.append)
 
-    webhook.send({"content": "test", "allowed_mentions": {"parse": []}})
+    bot.send({"content": "test", "allowed_mentions": {"parse": []}})
 
     assert len(calls) == 2
     assert sleeps == [1.0]
 ```
 
-예외 메시지와 로그에는 웹훅 URL을 포함하지 않는다.
+봇은 `POST /api/v10/channels/<channel_id>/messages`에 `Authorization: Bot <token>`을
+사용한다. 예외 메시지와 로그에는 Bot Token이나 Discord 응답 본문을 포함하지 않는다.
 
 - [ ] **5단계: Discord 테스트 통과 확인**
 
@@ -563,12 +589,12 @@ def test_webhook_retries_server_error_then_succeeds() -> None:
 
 ```bash
 git add src/help_me_tibooo/discord.py tests/test_discord.py
-git commit -m "feat: Discord 웹훅 알림 추가"
+git commit -m "feat: Discord 봇 알림 추가"
 ```
 
 ---
 
-### 작업 5: 감시 실행 흐름과 장애 상태
+### Task 5: 감시 실행 흐름과 장애 상태
 
 **파일:**
 
@@ -698,7 +724,7 @@ git commit -m "feat: 중복 방지 감시 흐름 추가"
 
 ---
 
-### 작업 6: CLI, GitHub Actions, 운영 문서
+### Task 6: CLI, GitHub Actions, 운영 문서
 
 **파일:**
 
@@ -712,24 +738,26 @@ git commit -m "feat: 중복 방지 감시 흐름 추가"
 **인터페이스:**
 
 - 제공: `python -m help_me_tibooo watch --state-path .state/watcher.json`
-- 제공: `python -m help_me_tibooo test-discord`
+- 제공: `python -m help_me_tibooo test-bot`
 - 제공: `python -m help_me_tibooo smoke`
-- 환경 변수: `DISCORD_WEBHOOK_URL`은 `watch`와 `test-discord`에서만 필수
+- 환경 변수: `DISCORD_BOT_TOKEN`, `DISCORD_CHANNEL_ID`는 `watch`와 `test-bot`에서만 필수
 
 - [ ] **1단계: CLI 실패 테스트 작성**
 
 ```python
-def test_watch_requires_webhook(monkeypatch, capsys) -> None:
-    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+def test_watch_requires_bot_credentials(monkeypatch, capsys) -> None:
+    monkeypatch.delenv("DISCORD_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("DISCORD_CHANNEL_ID", raising=False)
 
     exit_code = main(["watch", "--state-path", ".state/test.json"])
 
     assert exit_code == 2
-    assert "DISCORD_WEBHOOK_URL" in capsys.readouterr().err
+    assert "DISCORD_BOT_TOKEN" in capsys.readouterr().err
 
 
-def test_smoke_does_not_require_webhook(monkeypatch) -> None:
-    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+def test_smoke_does_not_require_bot_credentials(monkeypatch) -> None:
+    monkeypatch.delenv("DISCORD_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("DISCORD_CHANNEL_ID", raising=False)
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -753,9 +781,9 @@ def test_smoke_does_not_require_webhook(monkeypatch) -> None:
 - [ ] **2단계: CLI 구현과 테스트 통과 확인**
 
 `watch`는 상태를 읽고, 두 소스를 가져오고, `run_watcher()`를 호출한 뒤 `finally`에서
-갱신된 상태를 저장한다. `test-discord`는 `Help Me Tibooo 테스트 알림`이라는 문구만
-보내며 상태 파일을 열지 않는다. `smoke`는 소스별 정상 여부와 게시물 개수만 출력하고
-Discord를 호출하지 않는다.
+갱신된 상태를 저장한다. `test-bot`은 `티보햄 · 연결 테스트` Embed만 보내며 상태
+파일을 열지 않는다. `smoke`는 소스별 정상 여부와 게시물 개수만 출력하고 Discord를
+호출하지 않는다.
 
 실행: `python -m pytest tests/test_cli.py -v`
 
@@ -793,10 +821,10 @@ on:
       mode:
         description: 실행 방식
         required: true
-        default: test-discord
+        default: test-bot
         type: choice
         options:
-          - test-discord
+          - test-bot
           - watch
           - smoke
 
@@ -812,18 +840,22 @@ concurrency:
 때만 `actions/cache/restore@v4`로 `help-me-tibooo-state-` 접두사의 최신 캐시를
 `.state`에 복원한다. 실행 후 `actions/cache/save@v4`를 `if: always()`와
 `help-me-tibooo-state-${{ github.run_id }}-${{ github.run_attempt }}` 키로 호출한다.
-웹훅은 `env.DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}`로만 전달한다.
+Bot Token은 `env.DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}`, 채널 ID는
+`env.DISCORD_CHANNEL_ID: ${{ vars.DISCORD_CHANNEL_ID }}`로 `watch`와 `test-bot`
+단계에만 전달한다.
 
 - [ ] **5단계: 한글 README와 MIT 라이선스 작성**
 
 README에는 다음 실제 운영 절차를 순서대로 적는다.
 
-1. Discord `서버 설정 → 연동 → 웹후크 → 새 웹후크`에서 대상 채널을 선택한다.
-2. GitHub `Settings → Secrets and variables → Actions → New repository secret`에서
-   이름을 `DISCORD_WEBHOOK_URL`로 지정하고 URL을 저장한다.
-3. `Actions → Tibo watcher → Run workflow → test-discord`로 연결을 확인한다.
-4. 예약 실행은 10분마다 요청되지만 GitHub 사정으로 늦을 수 있음을 안내한다.
-5. 공개 피드 장애, 규칙 기반 분류의 오탐·누락, 캐시 유실 시 재기준점 설정 가능성을
+1. `scripts/setup-discord-bot.sh`로 Discord Developer Portal에서 `티보햄` 비공개 봇을
+   만들고 픽셀아트 프로필 이미지를 등록한다.
+2. 봇을 개인 서버에 `채널 보기`, `메시지 보내기` 권한으로 초대한다.
+3. 마법사가 Bot Token을 GitHub Secret `DISCORD_BOT_TOKEN`, 채널 ID를 GitHub Variable
+   `DISCORD_CHANNEL_ID`로 등록한다.
+4. `Actions → Tibo watcher → Run workflow → test-bot`으로 연결을 확인한다.
+5. 예약 실행은 10분마다 요청되지만 GitHub 사정으로 늦을 수 있음을 안내한다.
+6. 공개 피드 장애, 규칙 기반 분류의 오탐·누락, 캐시 유실 시 재기준점 설정 가능성을
    알려진 제약으로 명시한다.
 
 라이선스 저작권 표기는 `Copyright (c) 2026 chjh6107`로 한다.
@@ -858,6 +890,6 @@ gh run list --repo chjh6107/help-me-tibooo --limit 5
 ```
 
 CI가 성공한 뒤 `Tibo watcher`를 `smoke` 모드로 수동 실행해 공개 소스 접근을 확인한다.
-`DISCORD_WEBHOOK_URL` Secret이 설정된 뒤에만 `test-discord`를 실행한다. 웹훅 Secret이
-없다면 구현 완료 보고에는 Discord 실전 전송이 아직 사용자 설정 대기 중임을 분명히
-표시한다.
+`DISCORD_BOT_TOKEN` Secret과 `DISCORD_CHANNEL_ID` Variable이 설정된 뒤에만
+`test-bot`을 실행한다. 값이 없다면 구현 완료 보고에는 Discord 실전 전송이 아직
+사용자 설정 대기 중임을 분명히 표시한다.
