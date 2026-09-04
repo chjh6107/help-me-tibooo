@@ -229,6 +229,80 @@ def test_partial_alert_is_resumed_before_newer_post_when_missing_from_snapshot()
     )
 
 
+def test_source_failure_is_recorded_when_pending_alert_retry_also_fails() -> None:
+    pending_post = important_post("502")
+    state = WatcherState(
+        latest_id="501",
+        seen_ids=("501",),
+        consecutive_failures=2,
+        initialized=True,
+        source_checkpoints=(
+            SourceCheckpoint(
+                source=SourceName.RESET,
+                position=CheckpointPosition(id="501"),
+            ),
+        ),
+        alert_delivery=AlertDeliveryCheckpoint(
+            post=pending_post,
+            categories=(AlertCategory.RESET,),
+            sources=(SourceName.RESET,),
+            next_payload_index=1,
+        ),
+    )
+    health_alerts: list[int] = []
+
+    def fail_pending(_post: Post, _categories: object) -> None:
+        raise AlertDeliveryInterrupted(next_payload_index=1)
+
+    with pytest.raises(WatcherRunError) as error:
+        run_watcher(
+            (
+                SourceBatch("reset", error="down"),
+                SourceBatch("twiscan", error="down"),
+            ),
+            state,
+            fail_pending,
+            health_alerts.append,
+        )
+
+    assert health_alerts == [3]
+    assert error.value.state.consecutive_failures == 3
+    assert error.value.state.outage_notified is True
+    assert error.value.state.alert_delivery == state.alert_delivery
+
+
+def test_source_recovery_is_recorded_when_pending_alert_retry_still_fails() -> None:
+    pending_post = important_post("502")
+    state = WatcherState(
+        latest_id="501",
+        seen_ids=("501",),
+        consecutive_failures=2,
+        outage_notified=True,
+        initialized=True,
+        alert_delivery=AlertDeliveryCheckpoint(
+            post=pending_post,
+            categories=(AlertCategory.RESET,),
+            sources=(SourceName.RESET,),
+            next_payload_index=1,
+        ),
+    )
+
+    def fail_pending(_post: Post, _categories: object) -> None:
+        raise AlertDeliveryInterrupted(next_payload_index=1)
+
+    with pytest.raises(WatcherRunError) as error:
+        run_watcher(
+            (SourceBatch("reset", posts=(important_post("503"),)),),
+            state,
+            fail_pending,
+            lambda _: None,
+        )
+
+    assert error.value.state.consecutive_failures == 0
+    assert error.value.state.outage_notified is False
+    assert error.value.state.alert_delivery == state.alert_delivery
+
+
 def test_failed_alert_carries_state_after_earlier_success() -> None:
     attempts: list[str] = []
     batches = (

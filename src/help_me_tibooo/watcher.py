@@ -33,15 +33,21 @@ def run_watcher(
     send_alert: Callable[[Post, tuple[AlertCategory, ...]], None],
     send_health: Callable[[int], None],
 ) -> WatcherState:
-    current_state = _resume_pending_alert(
-        state or WatcherState(),
-        send_alert,
-    )
     usable_batches = tuple(batch for batch in batches if batch.error is None and batch.posts)
+    source_state = state or WatcherState()
+    if usable_batches:
+        source_state = _clear_failure_state(source_state)
+    try:
+        current_state = _resume_pending_alert(source_state, send_alert)
+    except WatcherRunError as error:
+        if usable_batches:
+            raise
+        failed_state = _record_total_failure(error.state, send_health)
+        raise WatcherRunError(failed_state) from None
     if not usable_batches:
         return _record_total_failure(current_state, send_health)
 
-    next_state = _clear_failure_state(current_state)
+    next_state = current_state
     was_initialized = current_state.initialized
     baseline_posts: list[Post] = []
     candidate_posts: dict[str, Post] = {}
@@ -103,11 +109,10 @@ def run_watcher(
         if post.id not in next_state.seen_ids:
             categories = classify(post)
             if categories:
-                tracking_sources = set(candidate_sources[post.id])
-                tracking_sources.update(
-                    checkpoint.source
-                    for checkpoint in next_state.source_checkpoints
-                    if post.id in checkpoint.pending_ids
+                tracking_sources = _tracking_sources(
+                    next_state,
+                    candidate_sources,
+                    post.id,
                 )
                 try:
                     send_alert(post, categories)
@@ -134,11 +139,10 @@ def run_watcher(
                     )
                     raise WatcherRunError(next_state) from None
         next_state = _remember(next_state, post.id)
-        tracking_sources = set(candidate_sources[post.id])
-        tracking_sources.update(
-            checkpoint.source
-            for checkpoint in next_state.source_checkpoints
-            if post.id in checkpoint.pending_ids
+        tracking_sources = _tracking_sources(
+            next_state,
+            candidate_sources,
+            post.id,
         )
         for source in tracking_sources:
             checkpoint = _find_checkpoint(next_state, source)
@@ -197,6 +201,20 @@ def _delivery_checkpoint(
         sources=tuple(sorted(sources)),
         next_payload_index=next_payload_index,
     )
+
+
+def _tracking_sources(
+    state: WatcherState,
+    candidate_sources: dict[str, list[SourceName]],
+    post_id: str,
+) -> set[SourceName]:
+    sources = set(candidate_sources[post_id])
+    sources.update(
+        checkpoint.source
+        for checkpoint in state.source_checkpoints
+        if post_id in checkpoint.pending_ids
+    )
+    return sources
 
 
 def _record_total_failure(
