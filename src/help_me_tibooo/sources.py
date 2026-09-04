@@ -11,6 +11,7 @@ from help_me_tibooo.models import Post, SourceBatch
 RESET_FEED_URL = "https://codex-reset.com/api/feed"
 TWISCAN_TIMELINE_URL = "https://twiscan.com/en/x/thsottiaux"
 POST_ID_PATTERN = re.compile(r"^clamp-(\d+)-(\d+)$")
+RESPONSE_LIMIT_BYTES = 2 * 1024 * 1024
 
 
 def parse_reset_feed(payload: object) -> tuple[Post, ...]:
@@ -112,17 +113,19 @@ def _fetch_source(
         ) as response:
             if response.status_code >= 400:
                 return SourceBatch(source=source, error=f"HTTP status {response.status_code}")
+            content_length = response.headers.get("Content-Length")
+            if content_length is not None and content_length.isdigit() and int(content_length) > RESPONSE_LIMIT_BYTES:
+                return SourceBatch(source=source, error="response exceeds 2 MiB")
 
             content = bytearray()
             for chunk in response.iter_bytes():
-                content.extend(chunk)
-                if len(content) > 2 * 1024 * 1024:
+                if len(content) + len(chunk) > RESPONSE_LIMIT_BYTES:
                     return SourceBatch(source=source, error="response exceeds 2 MiB")
+                content.extend(chunk)
         return SourceBatch(source=source, posts=parser(bytes(content)))
-    except httpx.HTTPError as error:
-        message = str(error)
-        if "http://" not in message and "https://" not in message:
-            return SourceBatch(source=source, error=message or "request failed")
+    except httpx.TimeoutException:
+        return SourceBatch(source=source, error="request timed out")
+    except httpx.HTTPError:
         return SourceBatch(source=source, error="request failed")
     except (UnicodeDecodeError, ValueError):
         return SourceBatch(source=source, error="invalid response")

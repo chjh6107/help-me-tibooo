@@ -32,7 +32,7 @@ def test_fetch_all_sources_isolates_one_failure(load_text_fixture) -> None:
 
     batches = fetch_all_sources(client)
 
-    assert batches[0].error == "reset feed unavailable"
+    assert batches[0].error == "request failed"
     assert batches[1].posts[0].id == "301"
 
 
@@ -45,3 +45,88 @@ def test_fetch_all_sources_does_not_expose_response_details() -> None:
     batches = fetch_all_sources(client)
 
     assert [batch.error for batch in batches] == ["HTTP status 500", "HTTP status 500"]
+
+
+def test_fetch_all_sources_sends_required_request_settings() -> None:
+    request_settings: list[tuple[str, dict[str, float]]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        request_settings.append(
+            (request.headers["User-Agent"], dict(request.extensions["timeout"]))
+        )
+        if request.url == httpx.URL(RESET_FEED_URL):
+            return httpx.Response(200, json={"tweets": []})
+        return httpx.Response(200, text="<html></html>")
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+
+    batches = fetch_all_sources(client)
+
+    assert [batch.posts for batch in batches] == [(), ()]
+    assert request_settings == [
+        (
+            "help-me-tibooo/0.1",
+            {"connect": 15.0, "read": 15.0, "write": 15.0, "pool": 15.0},
+        ),
+        (
+            "help-me-tibooo/0.1",
+            {"connect": 15.0, "read": 15.0, "write": 15.0, "pool": 15.0},
+        ),
+    ]
+
+
+def test_fetch_all_sources_rejects_declared_oversized_responses() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, headers={"Content-Length": str(2 * 1024 * 1024 + 1)})
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+
+    batches = fetch_all_sources(client)
+
+    assert [batch.error for batch in batches] == [
+        "response exceeds 2 MiB",
+        "response exceeds 2 MiB",
+    ]
+
+
+def test_fetch_all_sources_accepts_just_under_limit_responses() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url == httpx.URL(RESET_FEED_URL):
+            content = b'{"tweets": []}'
+        else:
+            content = b"<html></html>"
+        return httpx.Response(200, content=content.ljust(2 * 1024 * 1024, b" "))
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+
+    batches = fetch_all_sources(client)
+
+    assert [batch.posts for batch in batches] == [(), ()]
+
+
+def test_fetch_all_sources_rejects_chunked_oversized_responses() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, content=b"x" * (2 * 1024 * 1024 + 1))
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+
+    batches = fetch_all_sources(client)
+
+    assert [batch.error for batch in batches] == [
+        "response exceeds 2 MiB",
+        "response exceeds 2 MiB",
+    ]
+
+
+def test_fetch_all_sources_sanitizes_transport_errors() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise httpx.ReadTimeout(
+            "https://private.example/?token=secret X-Private: secret body",
+            request=request,
+        )
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+
+    batches = fetch_all_sources(client)
+
+    assert [batch.error for batch in batches] == ["request timed out", "request timed out"]
