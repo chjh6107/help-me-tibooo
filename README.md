@@ -1,23 +1,42 @@
 # Help Me Tibooo
 
+![티보햄 Discord 봇 프로필](assets/tiboham-avatar.png)
+
 Tibo의 공개 게시물과 답글에서 중요한 OpenAI 소식을 찾아 Discord 채널에 알리는 작은
 감시 도구입니다. Codex 사용량 리셋, 한도 변경, 주요 출시, 요금제 변경, 중대한 장애와
 복구를 규칙으로 분류합니다. 유료 X API나 언어 모델 API는 사용하지 않습니다.
 
 ## 운영 설정
 
-1. Discord에서 `서버 설정 → 연동 → 웹후크 → 새 웹후크`로 이동해 알림을 받을 채널을
-   선택하고 웹후크를 만듭니다.
-2. GitHub 저장소에서
-   `Settings → Secrets and variables → Actions → New repository secret`로 이동합니다.
-   Secret 이름을 `DISCORD_WEBHOOK_URL`로 지정하고 Discord에서 복사한 URL을 저장합니다.
-3. `Actions → Tibo watcher → Run workflow`에서 `test-discord`를 선택해 연결을
-   확인합니다. 테스트가 성공하면 `Help Me Tibooo 테스트 알림`이 한 번 전송됩니다.
-4. 예약 실행은 10분마다 요청됩니다. GitHub Actions의 작업량이나 서비스 상태에 따라
+Discord 서버에 실제 비공개 봇 `티보햄`을 초대해 사용합니다. 봇은 별도의 상시 서버에
+접속하지 않으므로 멤버 목록에서 오프라인으로 보일 수 있지만, 예약 알림 전송에는
+문제가 없습니다.
+
+가장 간단한 설정 방법은 저장소 루트에서 설치 마법사를 실행하는 것입니다.
+
+```bash
+./scripts/setup-discord-bot.sh
+```
+
+마법사는 Discord Developer Portal을 열고 다음 절차를 차례로 안내합니다.
+
+1. 이름이 `티보햄`인 비공개 Discord 애플리케이션과 봇을 만듭니다.
+2. `assets/tiboham-avatar.png`를 봇 프로필 이미지로 등록합니다.
+3. `채널 보기`, `메시지 보내기` 권한만 가진 봇을 개인 서버에 초대합니다.
+4. Bot Token을 GitHub Secret `DISCORD_BOT_TOKEN`으로 등록합니다.
+5. 알림 채널 ID를 GitHub Variable `DISCORD_CHANNEL_ID`로 등록합니다.
+6. PR을 병합한 뒤 `Actions → Tibo watcher → Run workflow`에서 `test-bot`을 선택해
+   연결을 확인합니다.
+
+마법사를 사용하려면 GitHub CLI의 로그인이 필요합니다. 직접 설정하려면 Discord
+Developer Portal에서 같은 봇을 만들고, GitHub 저장소의
+`Settings → Secrets and variables → Actions`에 위 Secret과 Variable을 등록하면 됩니다.
+
+예약 실행은 10분마다 요청됩니다. GitHub Actions의 작업량이나 서비스 상태에 따라
    실제 시작 시각은 늦어질 수 있습니다.
 
-웹후크 URL은 저장소 파일, 이슈, 로그에 붙여 넣지 마세요. 노출되었다면 Discord에서
-해당 웹후크를 삭제하고 새로 만드세요.
+Bot Token은 저장소 파일, 이슈, 로그에 붙여 넣지 마세요. 노출되었다면 Discord
+Developer Portal의 Bot 화면에서 즉시 토큰을 재발급하세요.
 
 ## 로컬 확인
 
@@ -38,8 +57,8 @@ python -m help_me_tibooo smoke
 python -m help_me_tibooo watch --state-path .state/watcher.json
 ```
 
-`watch`와 `test-discord`에는 실행 환경의 `DISCORD_WEBHOOK_URL`이 필요합니다. 로컬 상태
-파일과 웹후크 URL은 커밋하지 마세요.
+`watch`와 `test-bot`에는 실행 환경의 `DISCORD_BOT_TOKEN`과 `DISCORD_CHANNEL_ID`가
+필요합니다. 로컬 상태 파일과 Bot Token은 커밋하지 마세요.
 
 ## 동작 방식
 
@@ -58,7 +77,7 @@ python -m help_me_tibooo watch --state-path .state/watcher.json
 보존하므로 오래된 게시물이 다시 나타나도 재전송하지 않습니다.
 
 GitHub Actions의 `watch` 실행만 `.state/watcher.json` 캐시를 복원하고 저장합니다.
-`test-discord`와 `smoke`는 감시 상태를 읽거나 변경하지 않습니다.
+`test-bot`과 `smoke`는 감시 상태를 읽거나 변경하지 않습니다.
 
 ## 알려진 제약
 
@@ -70,13 +89,14 @@ GitHub Actions의 `watch` 실행만 `.state/watcher.json` 캐시를 복원하고
   설정합니다. 이때 과거 게시물은 다시 보내지 않습니다.
 - 예약 작업은 10분보다 늦게 시작될 수 있습니다.
 - 첫 마일스톤은 야간 알림 억제를 지원하지 않습니다.
+- 첫 마일스톤은 채널 하나만 지원하며 `/status` 같은 명령어를 제공하지 않습니다.
 
 ## 문제 해결
 
-- `DISCORD_WEBHOOK_URL 환경 변수가 필요합니다`가 나오면 GitHub Secret의 이름과 저장
-  위치를 확인합니다.
-- `test-discord`가 실패하면 Discord에서 웹후크가 삭제되거나 대상 채널 권한이 바뀌지
-  않았는지 확인합니다.
+- `DISCORD_BOT_TOKEN` 또는 `DISCORD_CHANNEL_ID` 환경 변수가 필요하다는 메시지가 나오면
+  GitHub Secret과 Variable의 이름 및 저장 위치를 확인합니다.
+- `test-bot`이 실패하면 Bot Token이 유효한지, Channel ID가 올바른지, 티보햄에게 해당
+  채널의 보기·메시지 보내기 권한이 있는지 확인합니다.
 - `smoke`에서 소스가 실패하면 잠시 뒤 다시 실행합니다. 실패가 계속되면 공개 피드의
   서비스 상태나 응답 형식 변경을 확인합니다.
 

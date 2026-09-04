@@ -8,10 +8,10 @@ on:
       mode:
         description: 실행 방식
         required: true
-        default: test-discord
+        default: test-bot
         type: choice
         options:
-          - test-discord
+          - test-bot
           - watch
           - smoke
 
@@ -53,13 +53,15 @@ jobs:
       - name: 감시 실행
         if: steps.mode.outputs.value == 'watch'
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CHANNEL_ID: ${{ vars.DISCORD_CHANNEL_ID }}
         run: python -m help_me_tibooo watch --state-path .state/watcher.json
-      - name: Discord 테스트
-        if: steps.mode.outputs.value == 'test-discord'
+      - name: Discord 봇 테스트
+        if: steps.mode.outputs.value == 'test-bot'
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: python -m help_me_tibooo test-discord
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CHANNEL_ID: ${{ vars.DISCORD_CHANNEL_ID }}
+        run: python -m help_me_tibooo test-bot
       - name: 공개 소스 smoke
         if: steps.mode.outputs.value == 'smoke'
         run: python -m help_me_tibooo smoke

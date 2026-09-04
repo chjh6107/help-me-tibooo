@@ -9,18 +9,33 @@ import httpx
 from help_me_tibooo.models import AlertCategory, Post
 
 
+ALERT_COLORS = {
+    AlertCategory.RESET: 0x8B5CF6,
+    AlertCategory.LIMITS: 0xF59E0B,
+    AlertCategory.LAUNCH: 0x3B82F6,
+    AlertCategory.PLANS: 0x22C55E,
+    AlertCategory.INCIDENT: 0xEF4444,
+}
+
+
 def build_alert_payload(
     post: Post,
     categories: tuple[AlertCategory, ...],
 ) -> dict[str, object]:
     unique_categories = tuple(dict.fromkeys(categories))[: len(AlertCategory)]
-    labels = " · ".join(f"[{category.value}]" for category in unique_categories)
-    prefix = f"**{labels} Tibo 알림**\n"
-    suffix = f"\n<{_canonical_post_url(post)}>"
+    labels = " · ".join(category.value for category in unique_categories)
     safe_text = _replace_unpaired_surrogates(post.text)
-    body = _truncate_utf16(safe_text, 2_000 - _utf16_length(prefix) - _utf16_length(suffix))
+    description = _truncate_utf16(safe_text, 4_096)
     return {
-        "content": f"{prefix}{body}{suffix}",
+        "embeds": [
+            {
+                "title": f"티보햄 · {labels}",
+                "description": description,
+                "url": _canonical_post_url(post),
+                "color": ALERT_COLORS[unique_categories[0]],
+                "footer": {"text": "Tibo (@thsottiaux)"},
+            }
+        ],
         "allowed_mentions": {"parse": []},
     }
 
@@ -28,7 +43,13 @@ def build_alert_payload(
 def build_health_payload(failure_count: int) -> dict[str, object]:
     bounded_failure_count = min(max(failure_count, 0), 999_999)
     return {
-        "content": f"Tibo 감시가 {bounded_failure_count}회 연속 실패했습니다.",
+        "embeds": [
+            {
+                "title": "티보햄 · 감시 장애",
+                "description": f"Tibo 감시가 {bounded_failure_count}회 연속 실패했습니다.",
+                "color": ALERT_COLORS[AlertCategory.INCIDENT],
+            }
+        ],
         "allowed_mentions": {"parse": []},
     }
 
@@ -84,15 +105,25 @@ def _truncate_utf16(value: str, maximum: int) -> str:
     return value[:low]
 
 
-class DiscordWebhook:
+class DiscordBot:
     def __init__(
         self,
-        webhook_url: str,
+        token: str,
+        channel_id: str,
         client: httpx.Client,
         sleep: Callable[[float], None],
         now: Callable[[], datetime] | None = None,
     ) -> None:
-        self._webhook_url = webhook_url
+        if not (
+            channel_id.isascii()
+            and channel_id.isdigit()
+            and 1 <= len(channel_id) <= 20
+        ):
+            raise ValueError("Discord channel ID must be 1 to 20 ASCII digits")
+        self._token = token
+        self._message_url = (
+            f"https://discord.com/api/v10/channels/{channel_id}/messages"
+        )
         self._client = client
         self._sleep = sleep
         self._now = now or (lambda: datetime.now(UTC))
@@ -100,21 +131,25 @@ class DiscordWebhook:
     def send(self, payload: dict[str, object]) -> None:
         for attempt in range(1, 5):
             try:
-                response = self._client.post(self._webhook_url, json=payload)
+                response = self._client.post(
+                    self._message_url,
+                    headers={"Authorization": f"Bot {self._token}"},
+                    json=payload,
+                )
             except httpx.HTTPError:
-                raise RuntimeError("Discord webhook request failed: transport error") from None
+                raise RuntimeError("Discord bot request failed: transport error") from None
 
             if 200 <= response.status_code < 300:
                 return
 
             if response.status_code != 429 and response.status_code < 500:
                 raise RuntimeError(
-                    f"Discord webhook request failed: HTTP {response.status_code}"
+                    f"Discord bot request failed: HTTP {response.status_code}"
                 )
 
             if attempt == 4:
                 raise RuntimeError(
-                    "Discord webhook request failed after 3 retries: "
+                    "Discord bot request failed after 3 retries: "
                     f"HTTP {response.status_code}"
                 )
 

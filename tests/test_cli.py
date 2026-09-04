@@ -23,17 +23,22 @@ def make_post(post_id: str, text: str = "Codex usage reset") -> Post:
     )
 
 
-def test_watch_requires_webhook(monkeypatch, capsys, tmp_path: Path) -> None:
-    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+def test_watch_requires_bot_credentials(monkeypatch, capsys, tmp_path: Path) -> None:
+    monkeypatch.delenv("DISCORD_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("DISCORD_CHANNEL_ID", raising=False)
 
     exit_code = main(["watch", "--state-path", str(tmp_path / "watcher.json")])
 
     assert exit_code == 2
-    assert "DISCORD_WEBHOOK_URL" in capsys.readouterr().err
+    assert capsys.readouterr().err.splitlines() == [
+        "DISCORD_BOT_TOKEN 환경 변수가 필요합니다.",
+        "DISCORD_CHANNEL_ID 환경 변수가 필요합니다.",
+    ]
 
 
-def test_smoke_does_not_require_webhook_or_call_discord(monkeypatch, capsys) -> None:
-    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+def test_smoke_does_not_require_bot_credentials_or_call_discord(monkeypatch, capsys) -> None:
+    monkeypatch.delenv("DISCORD_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("DISCORD_CHANNEL_ID", raising=False)
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -45,7 +50,7 @@ def test_smoke_does_not_require_webhook_or_call_discord(monkeypatch, capsys) -> 
     def reject_discord(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("Discord를 호출하면 안 됩니다")
 
-    monkeypatch.setattr("help_me_tibooo.__main__.DiscordWebhook", reject_discord)
+    monkeypatch.setattr("help_me_tibooo.__main__.DiscordBot", reject_discord)
 
     assert main(["smoke"]) == 0
     assert capsys.readouterr().out.splitlines() == [
@@ -55,7 +60,8 @@ def test_smoke_does_not_require_webhook_or_call_discord(monkeypatch, capsys) -> 
 
 
 def test_smoke_returns_failure_when_every_source_fails(monkeypatch, capsys) -> None:
-    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+    monkeypatch.delenv("DISCORD_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("DISCORD_CHANNEL_ID", raising=False)
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -75,20 +81,25 @@ def test_smoke_returns_failure_when_every_source_fails(monkeypatch, capsys) -> N
     assert "private timeline response" not in captured.out
 
 
-def test_test_discord_requires_webhook(monkeypatch, capsys) -> None:
-    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+def test_test_bot_requires_bot_credentials(monkeypatch, capsys) -> None:
+    monkeypatch.delenv("DISCORD_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("DISCORD_CHANNEL_ID", raising=False)
 
-    exit_code = main(["test-discord"])
+    exit_code = main(["test-bot"])
 
     assert exit_code == 2
-    assert "DISCORD_WEBHOOK_URL" in capsys.readouterr().err
+    assert capsys.readouterr().err.splitlines() == [
+        "DISCORD_BOT_TOKEN 환경 변수가 필요합니다.",
+        "DISCORD_CHANNEL_ID 환경 변수가 필요합니다.",
+    ]
 
 
-def test_test_discord_sends_only_test_message_without_state_access(monkeypatch) -> None:
-    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+def test_test_bot_sends_only_test_message_without_state_access(monkeypatch) -> None:
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
     sent_payloads: list[dict[str, object]] = []
     monkeypatch.setattr(
-        "help_me_tibooo.__main__.DiscordWebhook.send",
+        "help_me_tibooo.__main__.DiscordBot.send",
         lambda _self, payload: sent_payloads.append(payload),
     )
 
@@ -98,10 +109,16 @@ def test_test_discord_sends_only_test_message_without_state_access(monkeypatch) 
     monkeypatch.setattr("help_me_tibooo.__main__.load_state", reject_state_access)
     monkeypatch.setattr("help_me_tibooo.__main__.save_state", reject_state_access)
 
-    assert main(["test-discord"]) == 0
+    assert main(["test-bot"]) == 0
     assert sent_payloads == [
         {
-            "content": "Help Me Tibooo 테스트 알림",
+            "embeds": [
+                {
+                    "title": "티보햄 · 연결 테스트",
+                    "description": "Discord 봇 연결이 정상입니다.",
+                    "color": 0x22C55E,
+                }
+            ],
             "allowed_mentions": {"parse": []},
         }
     ]
@@ -113,7 +130,8 @@ def test_watch_persists_updated_state(monkeypatch, tmp_path: Path) -> None:
         state_path,
         WatcherState(latest_id="500", seen_ids=("500",), initialized=True),
     )
-    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -145,7 +163,8 @@ def test_watch_logs_source_classification_and_successful_delivery_safely(
         state_path,
         WatcherState(latest_id="900", seen_ids=("900",), initialized=True),
     )
-    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -154,7 +173,7 @@ def test_watch_logs_source_classification_and_successful_delivery_safely(
         ),
     )
     monkeypatch.setattr(
-        "help_me_tibooo.__main__.DiscordWebhook.send",
+        "help_me_tibooo.__main__.DiscordBot.send",
         lambda _self, _payload: None,
     )
 
@@ -182,7 +201,8 @@ def test_watch_persists_partial_state_after_delivery_failure(
         state_path,
         WatcherState(latest_id="700", seen_ids=("700",), initialized=True),
     )
-    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -195,10 +215,10 @@ def test_watch_persists_partial_state_after_delivery_failure(
         nonlocal send_count
         send_count += 1
         if send_count == 2:
-            raise RuntimeError("https://discord.example/webhook")
+            raise RuntimeError("secret.bot.token")
 
     monkeypatch.setattr(
-        "help_me_tibooo.__main__.DiscordWebhook.send",
+        "help_me_tibooo.__main__.DiscordBot.send",
         fail_second_delivery,
     )
 
@@ -219,7 +239,7 @@ def test_watch_persists_partial_state_after_delivery_failure(
         "게시물 702 Discord 알림 전송 실패",
         "감시 실행 실패: alert delivery failed",
     ]
-    assert "discord.example" not in captured.out + captured.err
+    assert "secret.bot.token" not in captured.out + captured.err
 
 
 def test_watch_logs_successful_health_delivery_safely(
@@ -229,7 +249,8 @@ def test_watch_logs_successful_health_delivery_safely(
 ) -> None:
     state_path = tmp_path / "watcher.json"
     save_state(state_path, WatcherState(consecutive_failures=2, initialized=True))
-    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -238,7 +259,7 @@ def test_watch_logs_successful_health_delivery_safely(
         ),
     )
     monkeypatch.setattr(
-        "help_me_tibooo.__main__.DiscordWebhook.send",
+        "help_me_tibooo.__main__.DiscordBot.send",
         lambda _self, _payload: None,
     )
 
@@ -262,7 +283,8 @@ def test_watch_logs_failed_health_delivery_without_error_details(
 ) -> None:
     state_path = tmp_path / "watcher.json"
     save_state(state_path, WatcherState(consecutive_failures=2, initialized=True))
-    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -272,10 +294,10 @@ def test_watch_logs_failed_health_delivery_without_error_details(
     )
 
     def fail_delivery(_self: object, _payload: dict[str, object]) -> None:
-        raise RuntimeError("https://discord.example/webhook")
+        raise RuntimeError("secret.bot.token")
 
     monkeypatch.setattr(
-        "help_me_tibooo.__main__.DiscordWebhook.send",
+        "help_me_tibooo.__main__.DiscordBot.send",
         fail_delivery,
     )
 
@@ -284,7 +306,7 @@ def test_watch_logs_failed_health_delivery_without_error_details(
     assert captured.err.splitlines() == [
         "Discord 감시 장애 알림 전송 실패: 연속 실패 3회"
     ]
-    assert "discord.example" not in captured.out + captured.err
+    assert "secret.bot.token" not in captured.out + captured.err
 
 
 def test_watch_retains_last_valid_state_after_unexpected_failure(
@@ -300,13 +322,14 @@ def test_watch_retains_last_valid_state_after_unexpected_failure(
         initialized=True,
     )
     save_state(state_path, expected)
-    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
 
     def fail_fetch(_client: object) -> tuple[SourceBatch, ...]:
-        raise RuntimeError("https://discord.example/webhook")
+        raise RuntimeError("secret.bot.token")
 
     monkeypatch.setattr("help_me_tibooo.__main__.fetch_all_sources", fail_fetch)
 
     assert main(["watch", "--state-path", str(state_path)]) == 1
     assert load_state(state_path) == expected
-    assert "discord.example" not in capsys.readouterr().err
+    assert "secret.bot.token" not in capsys.readouterr().err

@@ -134,7 +134,7 @@ def test_failed_alert_is_retried_and_later_posts_are_not_sent() -> None:
     def fail_on_second(post: Post, _categories: object) -> None:
         attempts.append(post.id)
         if post.id == "502":
-            raise RuntimeError("webhook unavailable")
+            raise RuntimeError("bot unavailable")
 
     with pytest.raises(WatcherRunError, match="alert delivery failed") as error:
         run_watcher(batches, WatcherState(initialized=True), fail_on_second, lambda _: None)
@@ -164,7 +164,7 @@ def test_failed_alert_carries_state_after_earlier_success() -> None:
     def fail_on_second(post: Post, _categories: object) -> None:
         attempts.append(post.id)
         if post.id == "702":
-            raise RuntimeError("webhook unavailable")
+            raise RuntimeError("bot unavailable")
 
     with pytest.raises(WatcherRunError, match="alert delivery failed") as error:
         run_watcher(
