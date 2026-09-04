@@ -195,7 +195,9 @@ class SourceBatch:
 
 @dataclass(frozen=True, slots=True)
 class AlertDeliveryCheckpoint:
-    post_id: str
+    post: Post
+    categories: tuple[AlertCategory, ...]
+    sources: tuple[SourceName, ...]
     next_payload_index: int
 
 
@@ -211,8 +213,8 @@ class WatcherState:
 `state.py`는 기존 버전 1·2를 읽어 마이그레이션하고 버전 3으로 저장한다. 임시 파일을
 같은 디렉터리에 쓴 뒤 `Path.replace()`로 원자적으로 교체한다. 알 수 없는 필드는
 무시하되 타입이 잘못된 핵심 필드는 `ValueError`를 발생시킨다. `seen_ids`는 저장 직전에
-최근 500개로 제한한다. 버전 3에는 장문 알림의 `post_id`와 다음 payload 번호를 함께
-저장해 부분 전송 실패 시 이미 성공한 조각 다음부터 재개한다.
+최근 500개로 제한한다. 버전 3에는 장문 알림의 게시물·범주·출처 스냅샷과 다음 payload
+번호를 함께 저장해, 게시물이 다음 소스 응답에서 사라져도 성공한 조각 다음부터 재개한다.
 
 ```python
 def load_state(path: Path) -> WatcherState | None:

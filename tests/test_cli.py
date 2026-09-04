@@ -3,6 +3,7 @@ from pathlib import Path
 from help_me_tibooo.__main__ import main
 from help_me_tibooo.models import (
     AlertDeliveryCheckpoint,
+    AlertCategory,
     CheckpointPosition,
     Post,
     SourceBatch,
@@ -243,7 +244,9 @@ def test_watch_persists_partial_state_after_delivery_failure(
             ),
         ),
         alert_delivery=AlertDeliveryCheckpoint(
-            post_id="702",
+            post=make_post("702"),
+            categories=(AlertCategory.RESET,),
+            sources=(SourceName.RESET,),
             next_payload_index=0,
         ),
     )
@@ -277,11 +280,18 @@ def test_watch_resumes_long_alert_from_first_unsent_payload(
     )
     text = "Codex usage reset " + ("a" * 8_200)
     post = make_post("901", text)
+    newer_post = make_post("902", "Codex usage reset 902")
     monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
     monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    source_runs = iter(
+        (
+            (SourceBatch("reset", posts=(post,)),),
+            (SourceBatch("reset", posts=(newer_post,)),),
+        )
+    )
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
-        lambda _client: (SourceBatch("reset", posts=(post,)),),
+        lambda _client: next(source_runs),
     )
     first_attempt: list[str] = []
 
@@ -299,7 +309,9 @@ def test_watch_resumes_long_alert_from_first_unsent_payload(
     interrupted_state = load_state(state_path)
     assert interrupted_state is not None
     assert interrupted_state.alert_delivery == AlertDeliveryCheckpoint(
-        post_id="901",
+        post=post,
+        categories=(AlertCategory.RESET,),
+        sources=(SourceName.RESET,),
         next_payload_index=1,
     )
 
@@ -315,9 +327,10 @@ def test_watch_resumes_long_alert_from_first_unsent_payload(
     final_state = load_state(state_path)
     assert final_state is not None
     assert final_state.alert_delivery is None
-    assert final_state.seen_ids == ("900", "901")
+    assert final_state.seen_ids == ("900", "901", "902")
     assert len(first_attempt) == 2
-    assert "".join(resumed_payloads) == text[4_096:]
+    assert "".join(resumed_payloads[:-1]) == text[4_096:]
+    assert resumed_payloads[-1] == newer_post.text
     assert first_attempt[0] not in resumed_payloads
     assert "bot unavailable" not in capsys.readouterr().err
 

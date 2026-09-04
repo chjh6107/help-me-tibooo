@@ -4,6 +4,7 @@ import pytest
 
 from help_me_tibooo.models import (
     AlertDeliveryCheckpoint,
+    AlertCategory,
     CheckpointPosition,
     Post,
     SourceBatch,
@@ -168,7 +169,9 @@ def test_partial_alert_delivery_checkpoint_is_saved_and_cleared_after_retry() ->
         )
 
     assert error.value.state.alert_delivery == AlertDeliveryCheckpoint(
-        post_id="502",
+        post=important_post("502"),
+        categories=(AlertCategory.RESET,),
+        sources=(SourceName.RESET,),
         next_payload_index=1,
     )
 
@@ -181,6 +184,49 @@ def test_partial_alert_delivery_checkpoint_is_saved_and_cleared_after_retry() ->
 
     assert state.alert_delivery is None
     assert state.seen_ids == ("501", "502")
+
+
+def test_partial_alert_is_resumed_before_newer_post_when_missing_from_snapshot() -> None:
+    failed_post = important_post("502")
+
+    def interrupt(_post: Post, _categories: object) -> None:
+        raise AlertDeliveryInterrupted(next_payload_index=1)
+
+    with pytest.raises(WatcherRunError) as error:
+        run_watcher(
+            (SourceBatch("reset", posts=(failed_post,)),),
+            WatcherState(
+                latest_id="501",
+                seen_ids=("501",),
+                initialized=True,
+                source_checkpoints=(
+                    SourceCheckpoint(
+                        source=SourceName.RESET,
+                        position=CheckpointPosition(id="501"),
+                    ),
+                ),
+            ),
+            interrupt,
+            lambda _: None,
+        )
+
+    alerts: list[str] = []
+    state = run_watcher(
+        (SourceBatch("reset", posts=(important_post("503"),)),),
+        error.value.state,
+        lambda post, _categories: alerts.append(post.id),
+        lambda _: None,
+    )
+
+    assert alerts == ["502", "503"]
+    assert state.alert_delivery is None
+    assert state.seen_ids == ("501", "502", "503")
+    assert state.source_checkpoints == (
+        SourceCheckpoint(
+            source=SourceName.RESET,
+            position=CheckpointPosition(id="503"),
+        ),
+    )
 
 
 def test_failed_alert_carries_state_after_earlier_success() -> None:
@@ -218,6 +264,12 @@ def test_failed_alert_carries_state_after_earlier_success() -> None:
                 source=SourceName.RESET,
                 position=CheckpointPosition(id="701"),
             ),
+        ),
+        alert_delivery=AlertDeliveryCheckpoint(
+            post=important_post("702"),
+            categories=(AlertCategory.RESET,),
+            sources=(SourceName.RESET,),
+            next_payload_index=0,
         ),
     )
 

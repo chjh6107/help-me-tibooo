@@ -33,11 +33,14 @@ def run_watcher(
     send_alert: Callable[[Post, tuple[AlertCategory, ...]], None],
     send_health: Callable[[int], None],
 ) -> WatcherState:
+    current_state = _resume_pending_alert(
+        state or WatcherState(),
+        send_alert,
+    )
     usable_batches = tuple(batch for batch in batches if batch.error is None and batch.posts)
     if not usable_batches:
-        return _record_total_failure(state or WatcherState(), send_health)
+        return _record_total_failure(current_state, send_health)
 
-    current_state = state or WatcherState()
     next_state = _clear_failure_state(current_state)
     was_initialized = current_state.initialized
     baseline_posts: list[Post] = []
@@ -100,24 +103,36 @@ def run_watcher(
         if post.id not in next_state.seen_ids:
             categories = classify(post)
             if categories:
+                tracking_sources = set(candidate_sources[post.id])
+                tracking_sources.update(
+                    checkpoint.source
+                    for checkpoint in next_state.source_checkpoints
+                    if post.id in checkpoint.pending_ids
+                )
                 try:
                     send_alert(post, categories)
                 except AlertDeliveryInterrupted as error:
                     next_state = replace(
                         next_state,
-                        alert_delivery=AlertDeliveryCheckpoint(
-                            post_id=post.id,
-                            next_payload_index=error.next_payload_index,
+                        alert_delivery=_delivery_checkpoint(
+                            post,
+                            categories,
+                            tracking_sources,
+                            error.next_payload_index,
                         ),
                     )
                     raise WatcherRunError(next_state) from None
                 except Exception:
+                    next_state = replace(
+                        next_state,
+                        alert_delivery=_delivery_checkpoint(
+                            post,
+                            categories,
+                            tracking_sources,
+                            0,
+                        ),
+                    )
                     raise WatcherRunError(next_state) from None
-            if (
-                next_state.alert_delivery is not None
-                and next_state.alert_delivery.post_id == post.id
-            ):
-                next_state = replace(next_state, alert_delivery=None)
         next_state = _remember(next_state, post.id)
         tracking_sources = set(candidate_sources[post.id])
         tracking_sources.update(
@@ -134,6 +149,54 @@ def run_watcher(
                 )
 
     return next_state
+
+
+def _resume_pending_alert(
+    state: WatcherState,
+    send_alert: Callable[[Post, tuple[AlertCategory, ...]], None],
+) -> WatcherState:
+    checkpoint = state.alert_delivery
+    if checkpoint is None:
+        return state
+
+    try:
+        send_alert(checkpoint.post, checkpoint.categories)
+    except AlertDeliveryInterrupted as error:
+        raise WatcherRunError(
+            replace(
+                state,
+                alert_delivery=replace(
+                    checkpoint,
+                    next_payload_index=error.next_payload_index,
+                ),
+            )
+        ) from None
+    except Exception:
+        raise WatcherRunError(state) from None
+
+    next_state = _remember(replace(state, alert_delivery=None), checkpoint.post_id)
+    for source in checkpoint.sources:
+        source_checkpoint = _find_checkpoint(next_state, source)
+        if source_checkpoint is not None:
+            next_state = _set_checkpoint(
+                next_state,
+                _complete_checkpoint_post(source_checkpoint, checkpoint.post),
+            )
+    return next_state
+
+
+def _delivery_checkpoint(
+    post: Post,
+    categories: tuple[AlertCategory, ...],
+    sources: set[SourceName],
+    next_payload_index: int,
+) -> AlertDeliveryCheckpoint:
+    return AlertDeliveryCheckpoint(
+        post=post,
+        categories=categories,
+        sources=tuple(sorted(sources)),
+        next_payload_index=next_payload_index,
+    )
 
 
 def _record_total_failure(

@@ -6,7 +6,9 @@ import pytest
 
 from help_me_tibooo.models import (
     AlertDeliveryCheckpoint,
+    AlertCategory,
     CheckpointPosition,
+    Post,
     SourceCheckpoint,
     SourceName,
     WatcherState,
@@ -22,7 +24,18 @@ def test_state_round_trip(tmp_path: Path) -> None:
         consecutive_failures=2,
         outage_notified=False,
         initialized=True,
-        alert_delivery=AlertDeliveryCheckpoint(post_id="103", next_payload_index=2),
+        alert_delivery=AlertDeliveryCheckpoint(
+            post=Post(
+                id="103",
+                text="Codex usage reset",
+                created_at=datetime(2026, 9, 4, 12, tzinfo=UTC),
+                url="https://x.com/thsottiaux/status/103",
+                source=SourceName.RESET,
+            ),
+            categories=(AlertCategory.RESET,),
+            sources=(SourceName.RESET,),
+            next_payload_index=2,
+        ),
     )
 
     save_state(path, expected)

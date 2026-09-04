@@ -68,8 +68,14 @@ class SourceCheckpoint:
 
 @dataclass(frozen=True, slots=True)
 class AlertDeliveryCheckpoint:
-    post_id: str
+    post: Post
+    categories: tuple[AlertCategory, ...]
+    sources: tuple[SourceName, ...]
     next_payload_index: int
+
+    @property
+    def post_id(self) -> str:
+        return self.post.id
 
 
 @dataclass(frozen=True, slots=True)

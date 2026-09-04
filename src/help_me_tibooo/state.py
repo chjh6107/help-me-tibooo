@@ -4,7 +4,9 @@ from pathlib import Path
 
 from .models import (
     AlertDeliveryCheckpoint,
+    AlertCategory,
     CheckpointPosition,
+    Post,
     SourceCheckpoint,
     SourceName,
     WatcherState,
@@ -105,14 +107,7 @@ def save_state(path: Path, state: WatcherState) -> None:
             }
             for checkpoint in state.source_checkpoints
         ],
-        "alert_delivery": (
-            {
-                "post_id": state.alert_delivery.post_id,
-                "next_payload_index": state.alert_delivery.next_payload_index,
-            }
-            if state.alert_delivery is not None
-            else None
-        ),
+        "alert_delivery": _dump_alert_delivery(state.alert_delivery),
     }
     temporary.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
     temporary.replace(path)
@@ -188,9 +183,15 @@ def _load_alert_delivery(value: object) -> AlertDeliveryCheckpoint | None:
     if not isinstance(value, dict):
         raise ValueError("alert_delivery의 형식이 잘못되었습니다")
 
-    post_id = value.get("post_id")
+    post_payload = value.get("post")
+    categories = value.get("categories")
+    sources = value.get("sources")
     next_payload_index = value.get("next_payload_index")
-    if not isinstance(post_id, str) or not post_id:
+    if not isinstance(post_payload, dict):
+        raise ValueError("alert_delivery의 형식이 잘못되었습니다")
+    if not isinstance(categories, list) or not categories:
+        raise ValueError("alert_delivery의 형식이 잘못되었습니다")
+    if not isinstance(sources, list) or not sources:
         raise ValueError("alert_delivery의 형식이 잘못되었습니다")
     if (
         isinstance(next_payload_index, bool)
@@ -198,7 +199,64 @@ def _load_alert_delivery(value: object) -> AlertDeliveryCheckpoint | None:
         or next_payload_index < 0
     ):
         raise ValueError("alert_delivery의 형식이 잘못되었습니다")
-    return AlertDeliveryCheckpoint(
-        post_id=post_id,
-        next_payload_index=next_payload_index,
+    try:
+        loaded_categories = tuple(AlertCategory(category) for category in categories)
+        loaded_sources = tuple(SourceName(source) for source in sources)
+        post = _load_alert_post(post_payload)
+    except (TypeError, ValueError):
+        raise ValueError("alert_delivery의 형식이 잘못되었습니다") from None
+    return AlertDeliveryCheckpoint(post, loaded_categories, loaded_sources, next_payload_index)
+
+
+def _load_alert_post(payload: dict[object, object]) -> Post:
+    post_id = payload.get("id")
+    text = payload.get("text")
+    created_at = payload.get("created_at")
+    url = payload.get("url")
+    source = payload.get("source")
+    is_reply = payload.get("is_reply", False)
+    is_repost = payload.get("is_repost", False)
+    source_kind = payload.get("source_kind")
+    if not isinstance(post_id, str) or not post_id:
+        raise ValueError
+    if not isinstance(text, str) or not isinstance(url, str):
+        raise ValueError
+    if not isinstance(source, str) or not isinstance(is_reply, bool):
+        raise ValueError
+    if not isinstance(is_repost, bool):
+        raise ValueError
+    if source_kind is not None and not isinstance(source_kind, str):
+        raise ValueError
+    return Post(
+        id=post_id,
+        text=text,
+        created_at=_load_checkpoint_datetime(created_at),
+        url=url,
+        source=SourceName(source),
+        is_reply=is_reply,
+        is_repost=is_repost,
+        source_kind=source_kind,
     )
+
+
+def _dump_alert_delivery(
+    checkpoint: AlertDeliveryCheckpoint | None,
+) -> dict[str, object] | None:
+    if checkpoint is None:
+        return None
+    post = checkpoint.post
+    return {
+        "post": {
+            "id": post.id,
+            "text": post.text,
+            "created_at": post.created_at.isoformat() if post.created_at is not None else None,
+            "url": post.url,
+            "source": post.source,
+            "is_reply": post.is_reply,
+            "is_repost": post.is_repost,
+            "source_kind": post.source_kind,
+        },
+        "categories": list(checkpoint.categories),
+        "sources": list(checkpoint.sources),
+        "next_payload_index": checkpoint.next_payload_index,
+    }
