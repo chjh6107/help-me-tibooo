@@ -47,6 +47,27 @@ def test_smoke_does_not_require_webhook_or_call_discord(monkeypatch, capsys) -> 
     ]
 
 
+def test_smoke_returns_failure_when_every_source_fails(monkeypatch, capsys) -> None:
+    monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        lambda _client: (
+            SourceBatch("reset", error="private reset response"),
+            SourceBatch("twiscan", error="private timeline response"),
+        ),
+    )
+
+    assert main(["smoke"]) == 1
+    captured = capsys.readouterr()
+    assert captured.out.splitlines() == [
+        "reset: 실패, 게시물 0개",
+        "twiscan: 실패, 게시물 0개",
+    ]
+    assert captured.err == ""
+    assert "private reset response" not in captured.out
+    assert "private timeline response" not in captured.out
+
+
 def test_test_discord_requires_webhook(monkeypatch, capsys) -> None:
     monkeypatch.delenv("DISCORD_WEBHOOK_URL", raising=False)
 
@@ -101,6 +122,43 @@ def test_watch_persists_updated_state(monkeypatch, tmp_path: Path) -> None:
     )
 
 
+def test_watch_logs_source_classification_and_successful_delivery_safely(
+    monkeypatch,
+    capsys,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    save_state(
+        state_path,
+        WatcherState(latest_id="900", seen_ids=("900",), initialized=True),
+    )
+    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        lambda _client: (
+            SourceBatch("reset", posts=(make_post("901"),)),
+            SourceBatch("twiscan", error="private source response"),
+        ),
+    )
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.DiscordWebhook.send",
+        lambda _self, _payload: None,
+    )
+
+    assert main(["watch", "--state-path", str(state_path)]) == 0
+    captured = capsys.readouterr()
+    assert captured.out.splitlines() == [
+        "reset: 정상, 게시물 1개",
+        "twiscan: 실패, 게시물 0개",
+        "게시물 901 분류: 리셋",
+        "게시물 901 Discord 알림 전송 성공",
+    ]
+    assert captured.err == ""
+    assert "Codex usage reset" not in captured.out
+    assert "private source response" not in captured.out
+    assert "discord.example" not in captured.out
+
+
 def test_watch_persists_partial_state_after_delivery_failure(
     monkeypatch,
     capsys,
@@ -137,7 +195,77 @@ def test_watch_persists_partial_state_after_delivery_failure(
         seen_ids=("700", "701"),
         initialized=True,
     )
-    assert "discord.example" not in capsys.readouterr().err
+    captured = capsys.readouterr()
+    assert captured.err.splitlines() == [
+        "게시물 702 Discord 알림 전송 실패",
+        "감시 실행 실패: alert delivery failed",
+    ]
+    assert "discord.example" not in captured.out + captured.err
+
+
+def test_watch_logs_successful_health_delivery_safely(
+    monkeypatch,
+    capsys,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    save_state(state_path, WatcherState(consecutive_failures=2, initialized=True))
+    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        lambda _client: (
+            SourceBatch("reset", error="private reset response"),
+            SourceBatch("twiscan", error="private timeline response"),
+        ),
+    )
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.DiscordWebhook.send",
+        lambda _self, _payload: None,
+    )
+
+    assert main(["watch", "--state-path", str(state_path)]) == 0
+    captured = capsys.readouterr()
+    assert captured.out.splitlines() == [
+        "reset: 실패, 게시물 0개",
+        "twiscan: 실패, 게시물 0개",
+        "Discord 감시 장애 알림 전송 성공: 연속 실패 3회",
+    ]
+    assert captured.err == ""
+    assert "private reset response" not in captured.out
+    assert "private timeline response" not in captured.out
+    assert "discord.example" not in captured.out
+
+
+def test_watch_logs_failed_health_delivery_without_error_details(
+    monkeypatch,
+    capsys,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    save_state(state_path, WatcherState(consecutive_failures=2, initialized=True))
+    monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        lambda _client: (
+            SourceBatch("reset", error="down"),
+            SourceBatch("twiscan", error="down"),
+        ),
+    )
+
+    def fail_delivery(_self: object, _payload: dict[str, object]) -> None:
+        raise RuntimeError("https://discord.example/webhook")
+
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.DiscordWebhook.send",
+        fail_delivery,
+    )
+
+    assert main(["watch", "--state-path", str(state_path)]) == 0
+    captured = capsys.readouterr()
+    assert captured.err.splitlines() == [
+        "Discord 감시 장애 알림 전송 실패: 연속 실패 3회"
+    ]
+    assert "discord.example" not in captured.out + captured.err
 
 
 def test_watch_retains_last_valid_state_after_unexpected_failure(
