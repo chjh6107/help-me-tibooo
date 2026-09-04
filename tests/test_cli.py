@@ -94,6 +94,14 @@ def test_test_bot_requires_bot_credentials(monkeypatch, capsys) -> None:
     ]
 
 
+def test_test_bot_rejects_invalid_credentials_without_traceback(monkeypatch, capsys) -> None:
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "not-a-channel")
+
+    assert main(["test-bot"]) == 1
+    assert capsys.readouterr().err == "실행 중 오류가 발생했습니다.\n"
+
+
 def test_test_bot_sends_only_test_message_without_state_access(monkeypatch) -> None:
     monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
     monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")

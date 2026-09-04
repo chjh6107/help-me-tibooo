@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 from math import isfinite
@@ -18,26 +19,46 @@ ALERT_COLORS = {
 }
 
 
-def build_alert_payload(
+@dataclass(frozen=True, slots=True)
+class DiscordBotCredentials:
+    token: str = field(repr=False)
+    channel_id: str
+
+    def __post_init__(self) -> None:
+        if not self.token or self.token.isspace():
+            raise ValueError("Discord bot token must not be empty")
+        if not (
+            self.channel_id.isascii()
+            and self.channel_id.isdigit()
+            and 1 <= len(self.channel_id) <= 20
+        ):
+            raise ValueError("Discord channel ID must be 1 to 20 ASCII digits")
+
+
+def build_alert_payloads(
     post: Post,
     categories: tuple[AlertCategory, ...],
-) -> dict[str, object]:
+) -> tuple[dict[str, object], ...]:
     unique_categories = tuple(dict.fromkeys(categories))[: len(AlertCategory)]
+    if not unique_categories:
+        raise ValueError("at least one category is required")
     labels = " · ".join(category.value for category in unique_categories)
     safe_text = _replace_unpaired_surrogates(post.text)
-    description = _truncate_utf16(safe_text, 4_096)
-    return {
-        "embeds": [
-            {
-                "title": f"티보햄 · {labels}",
-                "description": description,
-                "url": _canonical_post_url(post),
-                "color": ALERT_COLORS[unique_categories[0]],
-                "footer": {"text": "Tibo (@thsottiaux)"},
-            }
-        ],
-        "allowed_mentions": {"parse": []},
-    }
+    return tuple(
+        {
+            "embeds": [
+                {
+                    "title": f"티보햄 · {labels}",
+                    "description": description,
+                    "url": _canonical_post_url(post),
+                    "color": ALERT_COLORS[unique_categories[0]],
+                    "footer": {"text": "Tibo (@thsottiaux)"},
+                }
+            ],
+            "allowed_mentions": {"parse": []},
+        }
+        for description in _split_utf16(safe_text, 4_096)
+    )
 
 
 def build_health_payload(failure_count: int) -> dict[str, object]:
@@ -88,11 +109,24 @@ def _replace_unpaired_surrogates(value: str) -> str:
     )
 
 
-def _truncate_utf16(value: str, maximum: int) -> str:
+def _split_utf16(value: str, maximum: int) -> tuple[str, ...]:
     if maximum <= 0:
-        return ""
+        raise ValueError("maximum must be positive")
+    if not value:
+        return ("",)
+
+    chunks: list[str] = []
+    remaining = value
+    while remaining:
+        boundary = _utf16_prefix_length(remaining, maximum)
+        chunks.append(remaining[:boundary])
+        remaining = remaining[boundary:]
+    return tuple(chunks)
+
+
+def _utf16_prefix_length(value: str, maximum: int) -> int:
     if _utf16_length(value) <= maximum:
-        return value
+        return len(value)
 
     low = 0
     high = min(len(value), maximum)
@@ -102,27 +136,20 @@ def _truncate_utf16(value: str, maximum: int) -> str:
             low = middle
         else:
             high = middle - 1
-    return value[:low]
+    return low
 
 
 class DiscordBot:
     def __init__(
         self,
-        token: str,
-        channel_id: str,
+        credentials: DiscordBotCredentials,
         client: httpx.Client,
         sleep: Callable[[float], None],
         now: Callable[[], datetime] | None = None,
     ) -> None:
-        if not (
-            channel_id.isascii()
-            and channel_id.isdigit()
-            and 1 <= len(channel_id) <= 20
-        ):
-            raise ValueError("Discord channel ID must be 1 to 20 ASCII digits")
-        self._token = token
+        self._token = credentials.token
         self._message_url = (
-            f"https://discord.com/api/v10/channels/{channel_id}/messages"
+            f"https://discord.com/api/v10/channels/{credentials.channel_id}/messages"
         )
         self._client = client
         self._sleep = sleep

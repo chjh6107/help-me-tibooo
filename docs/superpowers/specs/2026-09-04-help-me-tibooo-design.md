@@ -22,7 +22,7 @@
 - GitHub Actions에서 테스트 알림을 직접 실행할 수 있게 한다.
 
 예약된 야간 무음 알림은 후속 마일스톤으로 명확히 분리한다. 향후 버전에서는 밤에
-보내는 웹훅 메시지에 Discord의 `SUPPRESS_NOTIFICATIONS` 메시지 플래그를 적용할 수
+봇 REST API로 보내는 메시지에 Discord의 `SUPPRESS_NOTIFICATIONS` 플래그를 적용할 수
 있다.
 
 ## 아키텍처
@@ -89,7 +89,8 @@ GitHub Actions는 상시 Gateway 연결 없이 Discord REST API의 채널 메시
 같은 상호작용 명령은 후속 마일스톤으로 둔다.
 
 알림은 범주별 색상을 가진 한국어 Embed 카드로 전송하며, 제목·원문·원본 X 링크를
-담는다. 메시지에는 `@everyone`, 역할, 사용자 멘션을 넣지 않고
+담는다. 원문이 Embed 한 장의 제한보다 길면 여러 메시지로 나누되 내용을 버리지 않는다.
+메시지에는 `@everyone`, 역할, 사용자 멘션을 넣지 않고
 `allowed_mentions.parse`를 빈 배열로 설정한다. 전송 실패 시 제한된 횟수만큼 간격을
 두고 재시도하며, 로그에는 Bot Token이나 전체 Discord 응답 본문을 남기지 않는다.
 

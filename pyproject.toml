@@ -12,7 +12,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest==9.1.1"]
+test = [
+  "PyYAML==6.0.2",
+  "pytest==9.1.1",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

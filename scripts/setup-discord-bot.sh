@@ -184,6 +184,86 @@ finish() {
 # Replace the example below. Set TOTAL_STAGES to match the stages you write.
 # ──────────────────────────────────────────────────────────────────────────
 
+# 이 프로젝트의 사용자 안내는 한국어로 제공한다. 공용 마법사 라이브러리는 그대로
+# 유지하고, 아래 단계 영역에서 화면 출력 함수만 한국어로 재정의한다.
+banner() {
+  _clear
+  printf '\n%s%s  %s%s\n' "$BOLD" "$BLUE" "$1" "$RESET"
+  printf '%s  전체 %s단계%s\n\n' "$DIM" "$TOTAL_STAGES" "$RESET"
+  printf '%s  브라우저 작업은 직접 진행하고, 마법사가 복사한 값을 안전하게 등록합니다.\n' "$DIM"
+  printf '  언제든 Ctrl-C로 중단할 수 있지만 Bot Token 저장 단계에서는 안내에 따라\n'
+  printf '  저장 성공 여부를 반드시 확인하세요.%s\n' "$RESET"
+  pause "시작하려면 Enter를 누르세요."
+}
+
+stage() {
+  _clear
+  _STAGE_INDEX=$((_STAGE_INDEX + 1))
+  printf '\n%s%s▸ %s/%s단계 · %s%s\n' \
+    "$BOLD" "$BLUE" "$_STAGE_INDEX" "$TOTAL_STAGES" "$1" "$RESET"
+}
+
+open_url() {
+  local url="$1"
+  printf '  %s↗ 브라우저에서 열기%s %s\n' "$GREEN" "$RESET" "$url"
+  { if   command -v wslview      >/dev/null 2>&1; then wslview "$url"
+    elif command -v explorer.exe >/dev/null 2>&1; then explorer.exe "$url"
+    elif command -v xdg-open     >/dev/null 2>&1; then xdg-open "$url"
+    elif command -v open         >/dev/null 2>&1; then open "$url"
+    else warn "브라우저를 열 수 없습니다. 직접 방문하세요: $url"; fi
+  } >/dev/null 2>&1 || warn "브라우저를 열 수 없습니다. 직접 방문하세요: $url"
+}
+
+pause() {
+  printf '  %s%s%s ' "$DIM" "${1:-계속하려면 Enter를 누르세요.}" "$RESET"
+  read -r _ || true
+}
+
+confirm() {
+  local reply=""
+  printf '  %s? %s [y/N] ' "$YELLOW" "$1"
+  read -r reply || true
+  [[ "$reply" =~ ^[Yy] ]]
+}
+
+finish() {
+  _clear
+  printf '\n%s%s  ✓ 설정 완료%s\n' "$BOLD" "$GREEN" "$RESET"
+  (( ${#WRITTEN_SECRET[@]} )) && note "GitHub Secret ${#WRITTEN_SECRET[@]}개 등록: ${WRITTEN_SECRET[*]}"
+  note "티보햄이 선택한 Discord 채널로 알림을 보낼 준비를 마쳤습니다."
+  printf '\n'
+}
+
+require_github_cli() {
+  if ! command -v gh >/dev/null 2>&1 || ! gh auth status >/dev/null 2>&1; then
+    warn "Bot Token을 발급하기 전에 GitHub CLI 설치와 로그인이 필요합니다."
+    say "설치 후 'gh auth login'을 실행하고 이 마법사를 다시 시작하세요."
+    exit 1
+  fi
+}
+
+save_bot_token() {
+  local token="$1"
+  while ! printf '%s' "$token" | gh secret set DISCORD_BOT_TOKEN >/dev/null 2>&1; do
+    warn "GitHub Secret 저장에 실패했습니다. Bot Token은 아직 메모리에만 있습니다."
+    if ! confirm "같은 토큰으로 저장을 다시 시도할까요?"; then
+      warn "저장되지 않았으므로 설정을 중단합니다. Discord에서 토큰을 재발급해야 할 수 있습니다."
+      return 1
+    fi
+  done
+  WRITTEN_SECRET+=("DISCORD_BOT_TOKEN")
+  printf '  %s✓ 등록 완료%s GitHub Secret DISCORD_BOT_TOKEN\n' "$GREEN" "$RESET"
+}
+
+save_channel_id() {
+  local channel_id="$1"
+  if ! gh variable set DISCORD_CHANNEL_ID --body "$channel_id" >/dev/null 2>&1; then
+    warn "GitHub Variable DISCORD_CHANNEL_ID 등록에 실패해 설정을 중단합니다."
+    return 1
+  fi
+  printf '  %s✓ 등록 완료%s GitHub Variable DISCORD_CHANNEL_ID\n' "$GREEN" "$RESET"
+}
+
 TOTAL_STAGES=5
 REPO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
 
@@ -204,7 +284,11 @@ done
 
 stage "비공개 봇 토큰 등록"
 say "Bot 설정에서 티보햄을 비공개 봇으로 구성합니다."
+require_github_cli
 open_url "https://discord.com/developers/applications/$DISCORD_APPLICATION_ID/bot"
+step "Bot의 Username이 '티보햄'인지 확인하세요. 다르면 이 이름으로 수정하세요."
+step "Bot의 Avatar에 다음 이미지를 등록하세요:"
+note "$REPO_ROOT/assets/tiboham-avatar.png"
 step "Public Bot을 끄고, Privileged Gateway Intents는 모두 끈 상태로 두세요."
 step "Reset Token을 눌러 토큰을 복사하세요. 이 값은 다시 확인하기 어렵습니다."
 ask_secret DISCORD_BOT_TOKEN "Bot Token:"
@@ -212,7 +296,7 @@ while [[ -z "$DISCORD_BOT_TOKEN" ]]; do
   warn "Bot Token은 비워둘 수 없습니다."
   ask_secret DISCORD_BOT_TOKEN "Bot Token을 다시 입력하세요:"
 done
-set_secret DISCORD_BOT_TOKEN "$DISCORD_BOT_TOKEN"
+save_bot_token "$DISCORD_BOT_TOKEN"
 unset DISCORD_BOT_TOKEN
 
 stage "Discord 서버에 티보햄 초대"
@@ -230,7 +314,7 @@ while [[ ! "$DISCORD_CHANNEL_ID" =~ ^[0-9]{17,20}$ ]]; do
   warn "Channel ID는 17~20자리 숫자여야 합니다."
   ask DISCORD_CHANNEL_ID "Channel ID를 다시 입력하세요:"
 done
-set_var DISCORD_CHANNEL_ID "$DISCORD_CHANNEL_ID"
+save_channel_id "$DISCORD_CHANNEL_ID"
 
 stage "연결 테스트"
 say "PR을 main에 병합한 뒤 GitHub Actions에서 test-bot을 실행할 수 있습니다."

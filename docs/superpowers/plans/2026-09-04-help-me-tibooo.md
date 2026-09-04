@@ -130,7 +130,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest==9.1.1"]
+test = [
+  "PyYAML==6.0.2",
+  "pytest==9.1.1",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -485,8 +488,9 @@ git commit -m "feat: 중요 OpenAI 소식 분류 추가"
 **인터페이스:**
 
 - 소비: `Post`, `AlertCategory`
-- 제공: `build_alert_payload(post: Post, categories: tuple[AlertCategory, ...]) -> dict[str, object]`
+- 제공: `build_alert_payloads(post: Post, categories: tuple[AlertCategory, ...]) -> tuple[dict[str, object], ...]`
 - 제공: `build_health_payload(failure_count: int) -> dict[str, object]`
+- 제공: `DiscordBotCredentials(token: str, channel_id: str)`
 - 제공: `DiscordBot.send(payload: dict[str, object]) -> None`
 
 - [ ] **1단계: payload 보안과 길이 실패 테스트 작성**
@@ -494,7 +498,7 @@ git commit -m "feat: 중요 OpenAI 소식 분류 추가"
 ```python
 def test_alert_payload_disables_mentions(make_post) -> None:
     post = make_post(text="@everyone reset landed")
-    payload = build_alert_payload(post, (AlertCategory.RESET,))
+    payload = build_alert_payloads(post, (AlertCategory.RESET,))[0]
 
     assert payload["allowed_mentions"] == {"parse": []}
     assert payload["embeds"][0]["title"] == "티보햄 · 리셋"
@@ -515,20 +519,24 @@ def test_health_payload_names_three_failures() -> None:
 
 - [ ] **3단계: payload 생성 최소 구현**
 
-원문은 Discord Embed 설명의 4,096 UTF-16 코드 단위 제한 안에서 자른다. 제목에는
-`티보햄`과 한국어 범주, URL에는 검증된 원본 X 링크, 색상에는 첫 범주의 지정 색을 넣는다.
+원문은 Discord Embed 설명의 4,096 UTF-16 코드 단위 제한에 맞춰 여러 메시지로 나누고
+내용은 버리지 않는다. 제목에는 `티보햄`과 한국어 범주, URL에는 검증된 원본 X 링크,
+색상에는 첫 범주의 지정 색을 넣는다. 빈 범주 목록은 명시적으로 거부한다.
 
 ```python
-def build_alert_payload(post: Post, categories: tuple[AlertCategory, ...]) -> dict[str, object]:
+def build_alert_payloads(
+    post: Post,
+    categories: tuple[AlertCategory, ...],
+) -> tuple[dict[str, object], ...]:
     labels = " · ".join(category.value for category in categories)
-    return {
+    return ({
         "embeds": [{
             "title": f"티보햄 · {labels}",
             "description": post.text,
             "url": post.url,
         }],
         "allowed_mentions": {"parse": []},
-    }
+    },)
 ```
 
 - [ ] **4단계: 재시도 실패 테스트 작성과 구현**
@@ -548,7 +556,8 @@ def test_bot_retries_server_error_then_succeeds() -> None:
 
     client = httpx.Client(transport=httpx.MockTransport(handler))
     sleeps: list[float] = []
-    bot = DiscordBot("secret.bot.token", "123456789", client, sleeps.append)
+    credentials = DiscordBotCredentials("secret.bot.token", "123456789")
+    bot = DiscordBot(credentials, client, sleeps.append)
 
     bot.send({"content": "test", "allowed_mentions": {"parse": []}})
 

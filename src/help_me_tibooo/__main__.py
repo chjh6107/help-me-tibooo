@@ -8,7 +8,8 @@ import httpx
 
 from help_me_tibooo.discord import (
     DiscordBot,
-    build_alert_payload,
+    DiscordBotCredentials,
+    build_alert_payloads,
     build_health_payload,
 )
 from help_me_tibooo.models import AlertCategory, Post, SourceBatch, WatcherState
@@ -19,27 +20,31 @@ from help_me_tibooo.watcher import WatcherRunError, run_watcher
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
-    bot_token = os.environ.get("DISCORD_BOT_TOKEN")
-    channel_id = os.environ.get("DISCORD_CHANNEL_ID")
-    if args.command in {"watch", "test-bot"}:
-        missing = tuple(
-            name
-            for name, value in (
-                ("DISCORD_BOT_TOKEN", bot_token),
-                ("DISCORD_CHANNEL_ID", channel_id),
-            )
-            if not value
-        )
-        if missing:
-            for name in missing:
-                print(f"{name} 환경 변수가 필요합니다.", file=sys.stderr)
-            return 2
-
     try:
+        credentials: DiscordBotCredentials | None = None
+        if args.command in {"watch", "test-bot"}:
+            bot_token = os.environ.get("DISCORD_BOT_TOKEN")
+            channel_id = os.environ.get("DISCORD_CHANNEL_ID")
+            missing = tuple(
+                name
+                for name, value in (
+                    ("DISCORD_BOT_TOKEN", bot_token),
+                    ("DISCORD_CHANNEL_ID", channel_id),
+                )
+                if not value
+            )
+            if missing:
+                for name in missing:
+                    print(f"{name} 환경 변수가 필요합니다.", file=sys.stderr)
+                return 2
+            credentials = DiscordBotCredentials(bot_token, channel_id)
+
         if args.command == "watch":
-            return _watch(Path(args.state_path), bot_token, channel_id)
+            assert credentials is not None
+            return _watch(Path(args.state_path), credentials)
         if args.command == "test-bot":
-            return _test_bot(bot_token, channel_id)
+            assert credentials is not None
+            return _test_bot(credentials)
         return _smoke()
     except WatcherRunError as error:
         print(f"감시 실행 실패: {error}", file=sys.stderr)
@@ -59,11 +64,11 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _watch(state_path: Path, bot_token: str, channel_id: str) -> int:
+def _watch(state_path: Path, credentials: DiscordBotCredentials) -> int:
     state = load_state(state_path)
     state_to_save: WatcherState | None = state
     with httpx.Client() as client:
-        bot = DiscordBot(bot_token, channel_id, client, time.sleep)
+        bot = DiscordBot(credentials, client, time.sleep)
         try:
             batches = fetch_all_sources(client)
             _log_source_statuses(batches)
@@ -87,9 +92,9 @@ def _watch(state_path: Path, bot_token: str, channel_id: str) -> int:
     return 0
 
 
-def _test_bot(bot_token: str, channel_id: str) -> int:
+def _test_bot(credentials: DiscordBotCredentials) -> int:
     with httpx.Client() as client:
-        DiscordBot(bot_token, channel_id, client, time.sleep).send(
+        DiscordBot(credentials, client, time.sleep).send(
             {
                 "embeds": [
                     {
@@ -125,7 +130,8 @@ def _send_alert(
     labels = ", ".join(category.value for category in categories)
     print(f"게시물 {post.id} 분류: {labels}")
     try:
-        bot.send(build_alert_payload(post, categories))
+        for payload in build_alert_payloads(post, categories):
+            bot.send(payload)
     except Exception:
         print(f"게시물 {post.id} Discord 알림 전송 실패", file=sys.stderr)
         raise

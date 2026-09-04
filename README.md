@@ -28,12 +28,13 @@ Discord 서버에 실제 비공개 봇 `티보햄`을 초대해 사용합니다.
 6. PR을 병합한 뒤 `Actions → Tibo watcher → Run workflow`에서 `test-bot`을 선택해
    연결을 확인합니다.
 
-마법사를 사용하려면 GitHub CLI의 로그인이 필요합니다. 직접 설정하려면 Discord
+마법사는 Bot Token 발급 전에 GitHub CLI 로그인을 확인하며, Secret 등록에 성공해야
+다음 단계로 진행합니다. 직접 설정하려면 Discord
 Developer Portal에서 같은 봇을 만들고, GitHub 저장소의
 `Settings → Secrets and variables → Actions`에 위 Secret과 Variable을 등록하면 됩니다.
 
 예약 실행은 10분마다 요청됩니다. GitHub Actions의 작업량이나 서비스 상태에 따라
-   실제 시작 시각은 늦어질 수 있습니다.
+실제 시작 시각은 늦어질 수 있습니다.
 
 Bot Token은 저장소 파일, 이슈, 로그에 붙여 넣지 마세요. 노출되었다면 Discord
 Developer Portal의 Bot 화면에서 즉시 토큰을 재발급하세요.
@@ -67,6 +68,9 @@ python -m help_me_tibooo watch --state-path .state/watcher.json
 나중에 복구된 소스의 과거 글을 한꺼번에 보내지 않습니다. 그다음부터 새 게시물을 오래된
 순서로 처리하며, 여러 소스에 같은 게시물이 있으면 한 번만 보냅니다. 모든 공개 소스가
 3회 연속 실패하면 감시 장애 알림을 한 번 보냅니다.
+
+원문이 Discord Embed 한 장의 제한보다 길면 여러 카드로 이어 보내므로 본문을 잘라
+버리지 않습니다. 원문에 멘션 문법이 있어도 사용자나 역할 알림은 발생하지 않습니다.
 
 응답 형식이 정상이더라도 게시물이 하나도 없으면 최신 기준점을 확인할 수 없으므로 해당
 소스는 아직 초기화하지 않습니다. 모든 소스가 비어 있거나 실패한 실행도 연속 감시
