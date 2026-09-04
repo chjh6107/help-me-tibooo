@@ -17,7 +17,13 @@ LIMIT_TERMS = ("usage limit", "rate limit", "weekly limit", "5h limit", "quota")
 LAUNCH_TERMS = ("release", "launch", "rollout", "rolling out", "ship", "landing tomorrow")
 PLAN_TERMS = ("plus", "pro", "business", "enterprise", "subscription", "pricing", "access")
 NAMED_PLAN_TERMS = ("plus", "pro", "business", "enterprise")
-INCIDENT_TERMS = ("outage", "degraded", "elevated errors", "investigating", "incident", "recovery")
+STRONG_INCIDENT_TERMS = (
+    "elevated errors",
+    "degraded service",
+    "investigating an issue",
+    "service disruption",
+)
+GENERIC_INCIDENT_TERMS = ("outage", "degraded", "investigating", "incident", "recovery")
 
 
 def classify(post: Post) -> tuple[AlertCategory, ...]:
@@ -60,7 +66,9 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
     ):
         categories.add(AlertCategory.PLANS)
 
-    if has_product_context and _contains_any(text, INCIDENT_TERMS):
+    if _contains_any(text, STRONG_INCIDENT_TERMS) or (
+        has_product_context and _contains_any(text, GENERIC_INCIDENT_TERMS)
+    ):
         categories.add(AlertCategory.INCIDENT)
 
     return tuple(category for category in AlertCategory if category in categories)

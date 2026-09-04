@@ -1,7 +1,14 @@
 from pathlib import Path
 
 from help_me_tibooo.__main__ import main
-from help_me_tibooo.models import Post, SourceBatch, SourceCheckpoint, SourceName, WatcherState
+from help_me_tibooo.models import (
+    CheckpointPosition,
+    Post,
+    SourceBatch,
+    SourceCheckpoint,
+    SourceName,
+    WatcherState,
+)
 from help_me_tibooo.state import load_state, save_state
 
 
@@ -119,7 +126,12 @@ def test_watch_persists_updated_state(monkeypatch, tmp_path: Path) -> None:
         latest_id="501",
         seen_ids=("500", "501"),
         initialized=True,
-        source_checkpoints=(SourceCheckpoint(source="reset", latest_id="501"),),
+        source_checkpoints=(
+            SourceCheckpoint(
+                source=SourceName.RESET,
+                position=CheckpointPosition(id="501"),
+            ),
+        ),
     )
 
 
@@ -195,7 +207,12 @@ def test_watch_persists_partial_state_after_delivery_failure(
         latest_id="701",
         seen_ids=("700", "701"),
         initialized=True,
-        source_checkpoints=(SourceCheckpoint(source="reset", latest_id="701"),),
+        source_checkpoints=(
+            SourceCheckpoint(
+                source=SourceName.RESET,
+                position=CheckpointPosition(id="701"),
+            ),
+        ),
     )
     captured = capsys.readouterr()
     assert captured.err.splitlines() == [

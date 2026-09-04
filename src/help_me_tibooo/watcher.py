@@ -35,7 +35,7 @@ def run_watcher(
     was_initialized = current_state.initialized
     baseline_posts: list[Post] = []
     candidate_posts: dict[str, Post] = {}
-    candidate_sources: dict[str, list[str]] = {}
+    candidate_sources: dict[str, list[SourceName]] = {}
     new_source_batches: list[SourceBatch] = []
 
     for batch in usable_batches:
@@ -151,7 +151,7 @@ def _set_checkpoint(state: WatcherState, checkpoint: SourceCheckpoint) -> Watche
     return replace(state, initialized=True, source_checkpoints=tuple(checkpoints))
 
 
-def _baseline_checkpoint(source: str, posts: tuple[Post, ...]) -> SourceCheckpoint:
+def _baseline_checkpoint(source: SourceName, posts: tuple[Post, ...]) -> SourceCheckpoint:
     checkpoint = SourceCheckpoint(source=source)
     for post in _oldest_first(posts):
         checkpoint = _advance_checkpoint(checkpoint, post)
@@ -159,15 +159,10 @@ def _baseline_checkpoint(source: str, posts: tuple[Post, ...]) -> SourceCheckpoi
 
 
 def _advance_checkpoint(checkpoint: SourceCheckpoint, post: Post) -> SourceCheckpoint:
-    if not _post_is_after_checkpoint(post, checkpoint):
+    position = _advance_position(checkpoint.position, post)
+    if position is checkpoint.position:
         return checkpoint
-    return replace(
-        checkpoint,
-        position=CheckpointPosition(
-            id=post.id,
-            created_at=_aware_datetime(post.created_at),
-        ),
-    )
+    return replace(checkpoint, position=position)
 
 
 def _complete_checkpoint_post(checkpoint: SourceCheckpoint, post: Post) -> SourceCheckpoint:
@@ -180,14 +175,11 @@ def _complete_checkpoint_post(checkpoint: SourceCheckpoint, post: Post) -> Sourc
             deferred_position=None,
         )
     if updated.pending_ids:
-        deferred = SourceCheckpoint(
-            source=updated.source,
-            position=updated.deferred_position or updated.position,
-        )
-        advanced = _advance_checkpoint(deferred, post)
+        deferred_position = updated.deferred_position or updated.position
+        advanced = _advance_position(deferred_position, post)
         return replace(
             updated,
-            deferred_position=advanced.position,
+            deferred_position=advanced,
         )
     return _advance_checkpoint(updated, post)
 
@@ -196,27 +188,29 @@ def _post_is_eligible(post: Post, checkpoint: SourceCheckpoint) -> bool:
     if post.id in checkpoint.pending_ids:
         return True
     if checkpoint.deferred_position is not None:
-        deferred = SourceCheckpoint(
-            source=checkpoint.source,
-            position=checkpoint.deferred_position,
-        )
-        return _post_is_after_checkpoint(post, deferred)
-    return _post_is_after_checkpoint(post, checkpoint)
+        return _post_is_after_position(post, checkpoint.deferred_position)
+    return _post_is_after_position(post, checkpoint.position)
 
 
-def _post_is_after_checkpoint(post: Post, checkpoint: SourceCheckpoint) -> bool:
-    if checkpoint.latest_id is None:
+def _advance_position(position: CheckpointPosition, post: Post) -> CheckpointPosition:
+    if not _post_is_after_position(post, position):
+        return position
+    return CheckpointPosition(id=post.id, created_at=_aware_datetime(post.created_at))
+
+
+def _post_is_after_position(post: Post, position: CheckpointPosition) -> bool:
+    if position.id is None:
         return True
-    if post.id == checkpoint.latest_id:
+    if post.id == position.id:
         return False
-    if post.id.isdigit() and checkpoint.latest_id.isdigit():
-        return int(post.id) > int(checkpoint.latest_id)
+    if post.id.isdigit() and position.id.isdigit():
+        return int(post.id) > int(position.id)
 
     post_created_at = _aware_datetime(post.created_at)
-    checkpoint_created_at = _aware_datetime(checkpoint.latest_created_at)
+    checkpoint_created_at = _aware_datetime(position.created_at)
     if post_created_at is not None and checkpoint_created_at is not None:
-        return (post_created_at, post.id) > (checkpoint_created_at, checkpoint.latest_id)
-    return post.id > checkpoint.latest_id
+        return (post_created_at, post.id) > (checkpoint_created_at, position.id)
+    return post.id > position.id
 
 
 def _clear_failure_state(state: WatcherState) -> WatcherState:

@@ -42,7 +42,12 @@ def test_legacy_state_with_checkpoint_is_initialized(tmp_path: Path) -> None:
         latest_id="102",
         seen_ids=("102",),
         initialized=True,
-        source_checkpoints=(SourceCheckpoint(source="*", latest_id="102"),),
+        source_checkpoints=(
+            SourceCheckpoint(
+                source=SourceName.LEGACY,
+                position=CheckpointPosition(id="102"),
+            ),
+        ),
     )
 
 
@@ -73,8 +78,11 @@ def test_state_round_trip_preserves_per_source_checkpoints(tmp_path: Path) -> No
         seen_ids=("900", "901"),
         initialized=True,
         source_checkpoints=(
-            SourceCheckpoint(source="reset", latest_id="901"),
-            SourceCheckpoint(source="twiscan", latest_id=None),
+            SourceCheckpoint(
+                source=SourceName.RESET,
+                position=CheckpointPosition(id="901"),
+            ),
+            SourceCheckpoint(source=SourceName.TWISCAN),
         ),
     )
 
@@ -85,7 +93,10 @@ def test_state_round_trip_preserves_per_source_checkpoints(tmp_path: Path) -> No
 
 def test_save_truncates_seen_ids_without_losing_source_checkpoint(tmp_path: Path) -> None:
     path = tmp_path / "watcher.json"
-    expected_checkpoint = SourceCheckpoint(source="reset", latest_id="1000")
+    expected_checkpoint = SourceCheckpoint(
+        source=SourceName.RESET,
+        position=CheckpointPosition(id="1000"),
+    )
 
     save_state(
         path,
@@ -114,7 +125,12 @@ def test_version_one_state_migrates_to_a_legacy_global_checkpoint(tmp_path: Path
     state = load_state(path)
 
     assert state is not None
-    assert state.source_checkpoints == (SourceCheckpoint(source="*", latest_id="102"),)
+    assert state.source_checkpoints == (
+        SourceCheckpoint(
+            source=SourceName.LEGACY,
+            position=CheckpointPosition(id="102"),
+        ),
+    )
 
 
 def test_version_one_seen_only_state_uses_last_seen_id_for_migration(tmp_path: Path) -> None:
@@ -127,7 +143,12 @@ def test_version_one_seen_only_state_uses_last_seen_id_for_migration(tmp_path: P
     state = load_state(path)
 
     assert state is not None
-    assert state.source_checkpoints == (SourceCheckpoint(source="*", latest_id="102"),)
+    assert state.source_checkpoints == (
+        SourceCheckpoint(
+            source=SourceName.LEGACY,
+            position=CheckpointPosition(id="102"),
+        ),
+    )
 
 
 def test_version_two_source_string_loads_as_source_enum(tmp_path: Path) -> None:

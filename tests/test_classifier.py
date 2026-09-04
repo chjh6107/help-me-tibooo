@@ -12,7 +12,7 @@ from help_me_tibooo.sources import parse_reset_feed
         ("We are bringing back the 5h limit for Plus.", "limits", (AlertCategory.LIMITS,)),
         ("We are starting to release GPT-6 Astra.", None, (AlertCategory.LAUNCH,)),
         ("Plus users now get access at no extra cost.", None, (AlertCategory.PLANS,)),
-        ("OpenAI found elevated errors and is mitigating the issue.", None, (AlertCategory.INCIDENT,)),
+        ("We found elevated errors and are rolling out a fix.", None, (AlertCategory.INCIDENT,)),
     ],
 )
 def test_classifies_important_news(make_post, text, source_kind, expected) -> None:
@@ -105,6 +105,36 @@ def test_generic_access_does_not_match_plan_news(make_post) -> None:
 
 def test_personal_outage_does_not_match_incident_news(make_post) -> None:
     assert classify(make_post(text="The outage at home is fixed")) == ()
+
+
+@pytest.mark.parametrize(
+    "text",
+    (
+        "Users are seeing degraded service.",
+        "We are investigating an issue affecting requests.",
+        "A service disruption is affecting customers.",
+    ),
+)
+def test_strong_service_incident_phrases_do_not_need_product_name(make_post, text) -> None:
+    assert classify(make_post(text=text)) == (AlertCategory.INCIDENT,)
+
+
+@pytest.mark.parametrize(
+    "text",
+    (
+        "The incident at home is over.",
+        "My recovery after the race is going well.",
+        "The old building looks degraded.",
+    ),
+)
+def test_generic_incident_words_without_product_context_are_ignored(make_post, text) -> None:
+    assert classify(make_post(text=text)) == ()
+
+
+def test_generic_incident_word_with_product_context_is_classified(make_post) -> None:
+    assert classify(make_post(text="The OpenAI outage is resolved.")) == (
+        AlertCategory.INCIDENT,
+    )
 
 
 @pytest.mark.parametrize("plan_name", ("Plus", "Pro", "Business", "Enterprise"))

@@ -72,16 +72,21 @@ def save_state(path: Path, state: WatcherState) -> None:
         "source_checkpoints": [
             {
                 "source": checkpoint.source,
-                "latest_id": checkpoint.latest_id,
+                "latest_id": checkpoint.position.id,
                 "latest_created_at": (
-                    checkpoint.latest_created_at.isoformat()
-                    if checkpoint.latest_created_at is not None
+                    checkpoint.position.created_at.isoformat()
+                    if checkpoint.position.created_at is not None
                     else None
                 ),
-                "deferred_latest_id": checkpoint.deferred_latest_id,
+                "deferred_latest_id": (
+                    checkpoint.deferred_position.id
+                    if checkpoint.deferred_position is not None
+                    else None
+                ),
                 "deferred_latest_created_at": (
-                    checkpoint.deferred_latest_created_at.isoformat()
-                    if checkpoint.deferred_latest_created_at is not None
+                    checkpoint.deferred_position.created_at.isoformat()
+                    if checkpoint.deferred_position is not None
+                    and checkpoint.deferred_position.created_at is not None
                     else None
                 ),
                 "pending_ids": list(checkpoint.pending_ids),
