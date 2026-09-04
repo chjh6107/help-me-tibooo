@@ -1,0 +1,62 @@
+import pytest
+
+from help_me_tibooo.classifier import classify
+from help_me_tibooo.models import AlertCategory
+
+
+@pytest.mark.parametrize(
+    ("text", "source_kind", "expected"),
+    [
+        ("Your Codex usage reset will land at 6pm.", "candidate", (AlertCategory.RESET,)),
+        ("We are bringing back the 5h limit for Plus.", "limits", (AlertCategory.LIMITS,)),
+        ("We are starting to release GPT-6 Astra.", None, (AlertCategory.LAUNCH,)),
+        ("Plus users now get access at no extra cost.", None, (AlertCategory.PLANS,)),
+        ("We found elevated errors and are rolling out a fix.", None, (AlertCategory.INCIDENT,)),
+    ],
+)
+def test_classifies_important_news(make_post, text, source_kind, expected) -> None:
+    assert classify(make_post(text=text, source_kind=source_kind)) == expected
+
+
+def test_ignores_plain_repost(make_post) -> None:
+    assert classify(make_post(text="GPT-6 launch", is_repost=True)) == ()
+
+
+def test_ignores_conversational_reset_without_product_context(make_post) -> None:
+    assert classify(make_post(text="Feeling reset after sleeping.")) == ()
+
+
+def test_recall_first_rule_keeps_ambiguous_openai_shipment(make_post) -> None:
+    post = make_post(text="Big Codex news is landing tomorrow.")
+
+    assert classify(post) == (AlertCategory.LAUNCH,)
+
+
+def test_special_reset_source_requires_reset_context(make_post) -> None:
+    assert classify(make_post(text="Codex availability is improving.", source_kind="signal")) == ()
+
+
+def test_limits_source_kind_is_classified_without_limit_wording(make_post) -> None:
+    assert classify(make_post(text="New capacity details.", source_kind="limits")) == (AlertCategory.LIMITS,)
+
+
+def test_ordinary_limit_terms_require_product_context(make_post) -> None:
+    assert classify(make_post(text="My quota is exhausted.")) == ()
+
+
+def test_does_not_match_plan_term_inside_an_unrelated_word(make_post) -> None:
+    assert classify(make_post(text="OpenAI is improving reliability.")) == ()
+
+
+def test_returns_multiple_categories_in_declaration_order_without_duplicates(make_post) -> None:
+    post = make_post(text="OpenAI is rolling out GPT-6 Plus after elevated errors.")
+
+    assert classify(post) == (
+        AlertCategory.LAUNCH,
+        AlertCategory.PLANS,
+        AlertCategory.INCIDENT,
+    )
+
+
+def test_major_product_update_is_treated_as_launch_news(make_post) -> None:
+    assert classify(make_post(text="Major OpenAI update coming soon.")) == (AlertCategory.LAUNCH,)
