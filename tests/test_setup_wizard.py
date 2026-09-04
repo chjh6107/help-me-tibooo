@@ -37,14 +37,14 @@ fi
         encoding="utf-8",
     )
     fake_gh.chmod(0o755)
-    fake_open = fake_bin / "open"
-    fake_open.write_text(
+    fake_opener = fake_bin / "wslview"
+    fake_opener.write_text(
         """#!/bin/sh
 printf '%s\n' "$1" >> "$OPENED_URLS"
 """,
         encoding="utf-8",
     )
-    fake_open.chmod(0o755)
+    fake_opener.chmod(0o755)
 
     environment = os.environ.copy()
     environment.update(
