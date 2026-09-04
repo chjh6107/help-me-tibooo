@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 import pytest
 
 from help_me_tibooo.models import Post, SourceBatch, WatcherState
-from help_me_tibooo.watcher import run_watcher
+from help_me_tibooo.watcher import WatcherRunError, run_watcher
 
 
 def important_post(post_id: str, **changes: object) -> Post:
@@ -128,7 +128,7 @@ def test_failed_alert_is_retried_and_later_posts_are_not_sent() -> None:
         if post.id == "502":
             raise RuntimeError("webhook unavailable")
 
-    with pytest.raises(RuntimeError, match="webhook unavailable"):
+    with pytest.raises(WatcherRunError, match="alert delivery failed"):
         run_watcher(batches, WatcherState(), fail_on_second, lambda _: None)
 
     retried: list[str] = []
@@ -142,6 +142,34 @@ def test_failed_alert_is_retried_and_later_posts_are_not_sent() -> None:
     assert attempts == ["501", "502"]
     assert retried == ["501", "502", "503"]
     assert state.seen_ids == ("501", "502", "503")
+
+
+def test_failed_alert_carries_state_after_earlier_success() -> None:
+    attempts: list[str] = []
+    batches = (
+        SourceBatch(
+            "reset",
+            posts=(important_post("702"), important_post("701")),
+        ),
+    )
+
+    def fail_on_second(post: Post, _categories: object) -> None:
+        attempts.append(post.id)
+        if post.id == "702":
+            raise RuntimeError("webhook unavailable")
+
+    with pytest.raises(WatcherRunError, match="alert delivery failed") as error:
+        run_watcher(
+            batches,
+            WatcherState(latest_id="700", seen_ids=("700",)),
+            fail_on_second,
+            lambda _: None,
+        )
+
+    assert attempts == ["701", "702"]
+    assert str(error.value) == "alert delivery failed"
+    assert error.value.__cause__ is None
+    assert error.value.state == WatcherState(latest_id="701", seen_ids=("700", "701"))
 
 
 def test_one_healthy_source_clears_failure_state_and_processes_posts() -> None:

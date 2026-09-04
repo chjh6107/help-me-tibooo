@@ -6,6 +6,12 @@ from help_me_tibooo.classifier import classify
 from help_me_tibooo.models import AlertCategory, Post, SourceBatch, WatcherState
 
 
+class WatcherRunError(RuntimeError):
+    def __init__(self, state: WatcherState) -> None:
+        super().__init__("alert delivery failed")
+        self.state = state
+
+
 def run_watcher(
     batches: tuple[SourceBatch, ...],
     state: WatcherState | None,
@@ -24,7 +30,10 @@ def run_watcher(
     for post in _unseen_posts_oldest_first(posts, state.seen_ids):
         categories = classify(post)
         if categories:
-            send_alert(post, categories)
+            try:
+                send_alert(post, categories)
+            except Exception:
+                raise WatcherRunError(next_state) from None
         next_state = _remember(next_state, post.id)
     return next_state
 
