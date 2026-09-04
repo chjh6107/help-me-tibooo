@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from help_me_tibooo.__main__ import main
-from help_me_tibooo.models import Post, SourceBatch, SourceCheckpoint, WatcherState
+from help_me_tibooo.models import Post, SourceBatch, SourceCheckpoint, SourceName, WatcherState
 from help_me_tibooo.state import load_state, save_state
 
 
@@ -11,7 +11,7 @@ def make_post(post_id: str, text: str = "Codex usage reset") -> Post:
         text=text,
         created_at=None,
         url=f"https://x.com/thsottiaux/status/{post_id}",
-        source="test",
+        source=SourceName.RESET,
         source_kind="candidate",
     )
 

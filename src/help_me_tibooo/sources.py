@@ -5,7 +5,7 @@ from datetime import datetime
 import httpx
 from bs4 import BeautifulSoup
 
-from help_me_tibooo.models import Post, SourceBatch
+from help_me_tibooo.models import Post, ResetSourceKind, SourceBatch, SourceName
 
 
 RESET_FEED_URL = "https://codex-reset.com/api/feed"
@@ -52,15 +52,19 @@ def parse_reset_feed(payload: object) -> tuple[Post, ...]:
             continue
 
         kind = tweet.get("kind")
+        try:
+            source_kind = ResetSourceKind(kind) if isinstance(kind, str) else None
+        except ValueError:
+            source_kind = None
         posts.append(
             Post(
                 id=post_id,
                 text=text,
                 created_at=created_at,
                 url=url,
-                source="reset",
+                source=SourceName.RESET,
                 is_reply=tweet.get("is_reply") is True,
-                source_kind=kind if isinstance(kind, str) else None,
+                source_kind=source_kind,
             )
         )
 
@@ -85,7 +89,7 @@ def parse_twiscan_html(html: str) -> tuple[Post, ...]:
                 text=text,
                 created_at=None,
                 url=f"https://x.com/thsottiaux/status/{post_id}",
-                source="twiscan",
+                source=SourceName.TWISCAN,
                 is_repost=repost_id != "0",
             )
         )
@@ -95,14 +99,14 @@ def parse_twiscan_html(html: str) -> tuple[Post, ...]:
 
 def fetch_all_sources(client: httpx.Client) -> tuple[SourceBatch, ...]:
     return (
-        _fetch_source(client, "reset", RESET_FEED_URL, _decode_reset_feed),
-        _fetch_source(client, "twiscan", TWISCAN_TIMELINE_URL, _decode_twiscan_timeline),
+        _fetch_source(client, SourceName.RESET, RESET_FEED_URL, _decode_reset_feed),
+        _fetch_source(client, SourceName.TWISCAN, TWISCAN_TIMELINE_URL, _decode_twiscan_timeline),
     )
 
 
 def _fetch_source(
     client: httpx.Client,
-    source: str,
+    source: SourceName,
     url: str,
     parser: Callable[[bytes], tuple[Post, ...]],
 ) -> SourceBatch:

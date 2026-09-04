@@ -1,6 +1,14 @@
+from datetime import UTC, datetime
 from pathlib import Path
 
-from help_me_tibooo.models import SourceCheckpoint, WatcherState
+import pytest
+
+from help_me_tibooo.models import (
+    CheckpointPosition,
+    SourceCheckpoint,
+    SourceName,
+    WatcherState,
+)
 from help_me_tibooo.state import load_state, save_state
 
 
@@ -120,3 +128,58 @@ def test_version_one_seen_only_state_uses_last_seen_id_for_migration(tmp_path: P
 
     assert state is not None
     assert state.source_checkpoints == (SourceCheckpoint(source="*", latest_id="102"),)
+
+
+def test_version_two_source_string_loads_as_source_enum(tmp_path: Path) -> None:
+    path = tmp_path / "watcher.json"
+    path.write_text(
+        '{"version": 2, "initialized": true, "source_checkpoints": '
+        '[{"source": "reset", "latest_id": "102"}]}',
+        encoding="utf-8",
+    )
+
+    state = load_state(path)
+
+    assert state is not None
+    assert state.source_checkpoints[0].source is SourceName.RESET
+
+
+def test_version_two_rejects_unknown_source_name(tmp_path: Path) -> None:
+    path = tmp_path / "watcher.json"
+    path.write_text(
+        '{"version": 2, "initialized": true, "source_checkpoints": '
+        '[{"source": "resset", "latest_id": "102"}]}',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="source_checkpoints"):
+        load_state(path)
+
+
+def test_checkpoint_positions_round_trip_through_legacy_flat_json_fields(tmp_path: Path) -> None:
+    path = tmp_path / "watcher.json"
+    expected = WatcherState(
+        initialized=True,
+        source_checkpoints=(
+            SourceCheckpoint(
+                source=SourceName.RESET,
+                position=CheckpointPosition(
+                    id="101",
+                    created_at=datetime(2026, 9, 4, 10, tzinfo=UTC),
+                ),
+                deferred_position=CheckpointPosition(
+                    id="103",
+                    created_at=datetime(2026, 9, 4, 12, tzinfo=UTC),
+                ),
+                pending_ids=("102",),
+            ),
+        ),
+    )
+
+    save_state(path, expected)
+
+    assert load_state(path) == expected
+    raw = path.read_text(encoding="utf-8")
+    assert '"latest_id": "101"' in raw
+    assert '"deferred_latest_id": "103"' in raw
+    assert '"position"' not in raw

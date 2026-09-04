@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from .models import SourceCheckpoint, WatcherState
+from .models import CheckpointPosition, SourceCheckpoint, SourceName, WatcherState
 
 
 def load_state(path: Path) -> WatcherState | None:
@@ -37,7 +37,12 @@ def load_state(path: Path) -> WatcherState | None:
             latest_id if latest_id is not None else (seen_ids[-1] if seen_ids else None)
         )
         source_checkpoints = (
-            (SourceCheckpoint(source="*", latest_id=legacy_latest_id),)
+            (
+                SourceCheckpoint(
+                    source=SourceName.LEGACY,
+                    position=CheckpointPosition(id=legacy_latest_id),
+                ),
+            )
             if initialized and legacy_latest_id is not None
             else ()
         )
@@ -105,6 +110,10 @@ def _load_source_checkpoints(payload: object) -> tuple[SourceCheckpoint, ...]:
         pending_ids = item.get("pending_ids", [])
         if not isinstance(source, str) or not source or source in sources:
             raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
+        try:
+            source_name = SourceName(source)
+        except ValueError:
+            raise ValueError("source_checkpoints의 형식이 잘못되었습니다") from None
         if latest_id is not None and not isinstance(latest_id, str):
             raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
         if deferred_latest_id is not None and not isinstance(deferred_latest_id, str):
@@ -118,11 +127,16 @@ def _load_source_checkpoints(payload: object) -> tuple[SourceCheckpoint, ...]:
         sources.add(source)
         checkpoints.append(
             SourceCheckpoint(
-                source=source,
-                latest_id=latest_id,
-                latest_created_at=parsed_created_at,
-                deferred_latest_id=deferred_latest_id,
-                deferred_latest_created_at=parsed_deferred_created_at,
+                source=source_name,
+                position=CheckpointPosition(id=latest_id, created_at=parsed_created_at),
+                deferred_position=(
+                    CheckpointPosition(
+                        id=deferred_latest_id,
+                        created_at=parsed_deferred_created_at,
+                    )
+                    if deferred_latest_id is not None
+                    else None
+                ),
                 pending_ids=tuple(pending_ids),
             )
         )

@@ -1,13 +1,22 @@
 import re
 
-from help_me_tibooo.models import AlertCategory, Post
+from help_me_tibooo.models import AlertCategory, Post, ResetSourceKind
 
 
 PRODUCT_TERMS = ("openai", "codex", "chatgpt", "gpt-", "astra")
-RESET_TERMS = ("usage reset", "limits reset", "banked reset", "reset button", "reset will")
+RESET_TERMS = (
+    "usage reset",
+    "limits reset",
+    "banked reset",
+    "reset button",
+    "reset will",
+    "reset availability",
+    "reset limit",
+)
 LIMIT_TERMS = ("usage limit", "rate limit", "weekly limit", "5h limit", "quota")
 LAUNCH_TERMS = ("release", "launch", "rollout", "rolling out", "ship", "landing tomorrow")
 PLAN_TERMS = ("plus", "pro", "business", "enterprise", "subscription", "pricing", "access")
+NAMED_PLAN_TERMS = ("plus", "pro", "business", "enterprise")
 INCIDENT_TERMS = ("outage", "degraded", "elevated errors", "investigating", "incident", "recovery")
 
 
@@ -20,12 +29,21 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
     has_reset_context = _contains_any(text, RESET_TERMS)
     categories: set[AlertCategory] = set()
 
-    if post.source_kind in {"candidate", "banked", "signal"} and has_reset_context:
+    if post.source_kind in {
+        ResetSourceKind.CANDIDATE,
+        ResetSourceKind.BANKED,
+        ResetSourceKind.SIGNAL,
+        ResetSourceKind.ANNOUNCEMENT,
+    } and (
+        has_reset_context or _contains_any_term(text, ("reset",))
+    ):
         categories.add(AlertCategory.RESET)
     elif has_product_context and has_reset_context:
         categories.add(AlertCategory.RESET)
 
-    if post.source_kind == "limits" or (has_product_context and _contains_any(text, LIMIT_TERMS)):
+    if post.source_kind == ResetSourceKind.LIMITS or (
+        has_product_context and _contains_any(text, LIMIT_TERMS)
+    ):
         categories.add(AlertCategory.LIMITS)
 
     has_ambiguous_news_context = _contains_any(text, ("big", "major", "important")) and _contains_any(
@@ -34,10 +52,15 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
     if has_product_context and (_contains_any(text, LAUNCH_TERMS) or has_ambiguous_news_context):
         categories.add(AlertCategory.LAUNCH)
 
-    if post.source_kind is None and _contains_any_term(text, PLAN_TERMS):
+    has_named_plan_context = _contains_any_term(text, NAMED_PLAN_TERMS)
+    if (
+        post.source_kind is None
+        and _contains_any_term(text, PLAN_TERMS)
+        and (has_product_context or has_named_plan_context)
+    ):
         categories.add(AlertCategory.PLANS)
 
-    if _contains_any(text, INCIDENT_TERMS):
+    if has_product_context and _contains_any(text, INCIDENT_TERMS):
         categories.add(AlertCategory.INCIDENT)
 
     return tuple(category for category in AlertCategory if category in categories)

@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import httpx
 import pytest
 
+from help_me_tibooo.models import ResetSourceKind, SourceName
 from help_me_tibooo.sources import RESET_FEED_URL, fetch_all_sources, parse_reset_feed, parse_twiscan_html
 
 
@@ -13,6 +14,8 @@ def test_reset_feed_keeps_replies(load_json_fixture) -> None:
     assert posts[1].is_reply is True
     assert posts[1].source_kind == "signal"
     assert posts[0].created_at == datetime(2026, 9, 4, tzinfo=timezone.utc)
+    assert posts[0].source is SourceName.RESET
+    assert posts[0].source_kind is ResetSourceKind.ANNOUNCEMENT
 
 
 def test_twiscan_parser_marks_plain_repost(load_text_fixture) -> None:
@@ -232,3 +235,21 @@ def test_repeated_malformed_responses_accumulate_total_failure_state() -> None:
     assert state.consecutive_failures == 3
     assert state.outage_notified is True
     assert health_alerts == [3]
+
+
+def test_unknown_reset_source_kind_is_discarded() -> None:
+    posts = parse_reset_feed(
+        {
+            "tweets": [
+                {
+                    "id": "205",
+                    "text": "Codex availability changed.",
+                    "at": "2026-09-04T00:00:00Z",
+                    "url": "https://x.com/thsottiaux/status/205",
+                    "kind": "announcemnet",
+                }
+            ]
+        }
+    )
+
+    assert posts[0].source_kind is None

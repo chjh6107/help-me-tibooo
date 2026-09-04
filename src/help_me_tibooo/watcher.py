@@ -5,9 +5,11 @@ from datetime import UTC, datetime
 from help_me_tibooo.classifier import classify
 from help_me_tibooo.models import (
     AlertCategory,
+    CheckpointPosition,
     Post,
     SourceBatch,
     SourceCheckpoint,
+    SourceName,
     WatcherState,
 )
 
@@ -24,8 +26,8 @@ def run_watcher(
     send_alert: Callable[[Post, tuple[AlertCategory, ...]], None],
     send_health: Callable[[int], None],
 ) -> WatcherState:
-    healthy_batches = tuple(batch for batch in batches if batch.error is None)
-    if not healthy_batches:
+    usable_batches = tuple(batch for batch in batches if batch.error is None and batch.posts)
+    if not usable_batches:
         return _record_total_failure(state or WatcherState(), send_health)
 
     current_state = state or WatcherState()
@@ -36,10 +38,13 @@ def run_watcher(
     candidate_sources: dict[str, list[str]] = {}
     new_source_batches: list[SourceBatch] = []
 
-    for batch in healthy_batches:
+    for batch in usable_batches:
         checkpoint = _find_checkpoint(current_state, batch.source)
         if checkpoint is None and current_state.initialized and not current_state.source_checkpoints:
-            checkpoint = SourceCheckpoint(source=batch.source, latest_id=current_state.latest_id)
+            checkpoint = SourceCheckpoint(
+                source=batch.source,
+                position=CheckpointPosition(id=current_state.latest_id),
+            )
 
         if checkpoint is None:
             new_source_batches.append(batch)
@@ -69,8 +74,7 @@ def run_watcher(
         if pending_ids:
             safe_checkpoint = replace(
                 safe_checkpoint,
-                deferred_latest_id=full_checkpoint.latest_id,
-                deferred_latest_created_at=full_checkpoint.latest_created_at,
+                deferred_position=full_checkpoint.position,
                 pending_ids=tuple(pending_ids),
             )
         else:
@@ -126,12 +130,12 @@ def _record_total_failure(
     return replace(next_state, outage_notified=True)
 
 
-def _find_checkpoint(state: WatcherState, source: str) -> SourceCheckpoint | None:
+def _find_checkpoint(state: WatcherState, source: SourceName) -> SourceCheckpoint | None:
     legacy: SourceCheckpoint | None = None
     for checkpoint in state.source_checkpoints:
         if checkpoint.source == source:
             return checkpoint
-        if checkpoint.source == "*":
+        if checkpoint.source == SourceName.LEGACY:
             legacy = checkpoint
     return legacy
 
@@ -159,8 +163,10 @@ def _advance_checkpoint(checkpoint: SourceCheckpoint, post: Post) -> SourceCheck
         return checkpoint
     return replace(
         checkpoint,
-        latest_id=post.id,
-        latest_created_at=_aware_datetime(post.created_at),
+        position=CheckpointPosition(
+            id=post.id,
+            created_at=_aware_datetime(post.created_at),
+        ),
     )
 
 
@@ -170,22 +176,18 @@ def _complete_checkpoint_post(checkpoint: SourceCheckpoint, post: Post) -> Sourc
     if checkpoint.pending_ids and not pending_ids:
         updated = replace(
             updated,
-            latest_id=checkpoint.deferred_latest_id,
-            latest_created_at=checkpoint.deferred_latest_created_at,
-            deferred_latest_id=None,
-            deferred_latest_created_at=None,
+            position=checkpoint.deferred_position or checkpoint.position,
+            deferred_position=None,
         )
     if updated.pending_ids:
         deferred = SourceCheckpoint(
             source=updated.source,
-            latest_id=updated.deferred_latest_id,
-            latest_created_at=updated.deferred_latest_created_at,
+            position=updated.deferred_position or updated.position,
         )
         advanced = _advance_checkpoint(deferred, post)
         return replace(
             updated,
-            deferred_latest_id=advanced.latest_id,
-            deferred_latest_created_at=advanced.latest_created_at,
+            deferred_position=advanced.position,
         )
     return _advance_checkpoint(updated, post)
 
@@ -193,11 +195,10 @@ def _complete_checkpoint_post(checkpoint: SourceCheckpoint, post: Post) -> Sourc
 def _post_is_eligible(post: Post, checkpoint: SourceCheckpoint) -> bool:
     if post.id in checkpoint.pending_ids:
         return True
-    if checkpoint.deferred_latest_id is not None:
+    if checkpoint.deferred_position is not None:
         deferred = SourceCheckpoint(
             source=checkpoint.source,
-            latest_id=checkpoint.deferred_latest_id,
-            latest_created_at=checkpoint.deferred_latest_created_at,
+            position=checkpoint.deferred_position,
         )
         return _post_is_after_checkpoint(post, deferred)
     return _post_is_after_checkpoint(post, checkpoint)

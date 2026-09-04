@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from help_me_tibooo.models import Post
+from help_me_tibooo.models import Post, SourceName
 
 
 @pytest.fixture
@@ -23,6 +23,6 @@ def make_post():
         text=changes.pop("text", ""),
         created_at=changes.pop("created_at", None),
         url=changes.pop("url", "https://x.com/thsottiaux/status/999"),
-        source=changes.pop("source", "test"),
+        source=changes.pop("source", SourceName.RESET),
         **changes,
     )

@@ -2,6 +2,7 @@ import pytest
 
 from help_me_tibooo.classifier import classify
 from help_me_tibooo.models import AlertCategory
+from help_me_tibooo.sources import parse_reset_feed
 
 
 @pytest.mark.parametrize(
@@ -11,7 +12,7 @@ from help_me_tibooo.models import AlertCategory
         ("We are bringing back the 5h limit for Plus.", "limits", (AlertCategory.LIMITS,)),
         ("We are starting to release GPT-6 Astra.", None, (AlertCategory.LAUNCH,)),
         ("Plus users now get access at no extra cost.", None, (AlertCategory.PLANS,)),
-        ("We found elevated errors and are rolling out a fix.", None, (AlertCategory.INCIDENT,)),
+        ("OpenAI found elevated errors and is mitigating the issue.", None, (AlertCategory.INCIDENT,)),
     ],
 )
 def test_classifies_important_news(make_post, text, source_kind, expected) -> None:
@@ -73,3 +74,41 @@ def test_returns_multiple_categories_in_declaration_order_without_duplicates(mak
 
 def test_major_product_update_is_treated_as_launch_news(make_post) -> None:
     assert classify(make_post(text="Major OpenAI update coming soon.")) == (AlertCategory.LAUNCH,)
+
+
+def test_reset_fixture_posts_are_classified_as_reset_news(load_json_fixture) -> None:
+    posts = parse_reset_feed(load_json_fixture("codex_reset_feed.json"))
+
+    assert [classify(post) for post in posts] == [
+        (AlertCategory.RESET,),
+        (AlertCategory.RESET,),
+    ]
+
+
+@pytest.mark.parametrize(
+    "text",
+    (
+        "The reset availability at the gym was expanded.",
+        "That reset limit applies to the board game too.",
+    ),
+)
+def test_reset_announcement_phrases_need_product_or_structured_context(
+    make_post,
+    text,
+) -> None:
+    assert classify(make_post(text=text, source_kind=None)) == ()
+
+
+def test_generic_access_does_not_match_plan_news(make_post) -> None:
+    assert classify(make_post(text="I now have access to the venue")) == ()
+
+
+def test_personal_outage_does_not_match_incident_news(make_post) -> None:
+    assert classify(make_post(text="The outage at home is fixed")) == ()
+
+
+@pytest.mark.parametrize("plan_name", ("Plus", "Pro", "Business", "Enterprise"))
+def test_named_openai_plan_is_strong_product_context(make_post, plan_name) -> None:
+    assert classify(make_post(text=f"{plan_name} users now get more access.")) == (
+        AlertCategory.PLANS,
+    )

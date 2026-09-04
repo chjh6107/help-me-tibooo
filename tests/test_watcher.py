@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from help_me_tibooo.models import Post, SourceBatch, SourceCheckpoint, WatcherState
+from help_me_tibooo.models import Post, SourceBatch, SourceCheckpoint, SourceName, WatcherState
 from help_me_tibooo.watcher import WatcherRunError, run_watcher
 
 
@@ -12,7 +12,7 @@ def important_post(post_id: str, **changes: object) -> Post:
         "text": "Your Codex usage reset will land soon.",
         "created_at": None,
         "url": f"https://x.com/thsottiaux/status/{post_id}",
-        "source": "test",
+        "source": SourceName.RESET,
         "source_kind": "candidate",
     }
     fields.update(changes)
@@ -517,3 +517,77 @@ def test_recovery_baseline_stays_suppressed_after_failed_overlap_and_seen_trunca
 
     assert retried == ["101"]
     assert recovered_state.source_checkpoints[-1].latest_id == "702"
+
+
+def test_first_empty_result_does_not_initialize_or_backfill_later_history() -> None:
+    empty_state = run_watcher(
+        (SourceBatch("reset"), SourceBatch("twiscan")),
+        None,
+        no_alert,
+        lambda _: None,
+    )
+    alerts: list[str] = []
+
+    baseline_state = run_watcher(
+        (
+            SourceBatch("reset", posts=(important_post("800"),)),
+            SourceBatch("twiscan"),
+        ),
+        empty_state,
+        lambda post, _: alerts.append(post.id),
+        lambda _: None,
+    )
+
+    assert empty_state.initialized is False
+    assert empty_state.consecutive_failures == 1
+    assert alerts == []
+    assert baseline_state.consecutive_failures == 0
+    assert baseline_state.source_checkpoints == (
+        SourceCheckpoint(source="reset", latest_id="800"),
+    )
+
+
+def test_three_all_empty_runs_send_one_health_alert() -> None:
+    state = WatcherState()
+    health_alerts: list[int] = []
+    empty = (SourceBatch("reset"), SourceBatch("twiscan"))
+
+    for _ in range(4):
+        state = run_watcher(empty, state, no_alert, health_alerts.append)
+
+    assert health_alerts == [3]
+    assert state.consecutive_failures == 4
+    assert state.outage_notified is True
+    assert state.initialized is False
+
+
+def test_empty_source_remains_uninitialized_while_nonempty_source_progresses() -> None:
+    first_state = run_watcher(
+        (
+            SourceBatch("reset", posts=(important_post("100"),)),
+            SourceBatch("twiscan"),
+        ),
+        None,
+        no_alert,
+        lambda _: None,
+    )
+    alerts: list[str] = []
+
+    recovered_state = run_watcher(
+        (
+            SourceBatch("reset", posts=(important_post("101"), important_post("100"))),
+            SourceBatch("twiscan", posts=(important_post("50"), important_post("49"))),
+        ),
+        first_state,
+        lambda post, _: alerts.append(post.id),
+        lambda _: None,
+    )
+
+    assert first_state.source_checkpoints == (
+        SourceCheckpoint(source="reset", latest_id="100"),
+    )
+    assert alerts == ["101"]
+    assert recovered_state.source_checkpoints == (
+        SourceCheckpoint(source="reset", latest_id="101"),
+        SourceCheckpoint(source="twiscan", latest_id="50"),
+    )
