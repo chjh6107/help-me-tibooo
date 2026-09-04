@@ -36,3 +36,4 @@ class WatcherState:
     seen_ids: tuple[str, ...] = ()
     consecutive_failures: int = 0
     outage_notified: bool = False
+    initialized: bool = False

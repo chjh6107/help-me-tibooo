@@ -16,6 +16,7 @@ def load_state(path: Path) -> WatcherState | None:
     seen_ids = payload.get("seen_ids", [])
     consecutive_failures = payload.get("consecutive_failures", 0)
     outage_notified = payload.get("outage_notified", False)
+    initialized = payload.get("initialized", False)
     if latest_id is not None and not isinstance(latest_id, str):
         raise ValueError("latest_id의 형식이 잘못되었습니다")
     if not isinstance(seen_ids, list) or not all(isinstance(item, str) for item in seen_ids):
@@ -24,12 +25,15 @@ def load_state(path: Path) -> WatcherState | None:
         raise ValueError("consecutive_failures의 형식이 잘못되었습니다")
     if not isinstance(outage_notified, bool):
         raise ValueError("outage_notified의 형식이 잘못되었습니다")
+    if not isinstance(initialized, bool):
+        raise ValueError("initialized의 형식이 잘못되었습니다")
 
     return WatcherState(
         latest_id=latest_id,
         seen_ids=tuple(seen_ids),
         consecutive_failures=consecutive_failures,
         outage_notified=outage_notified,
+        initialized=initialized,
     )
 
 
@@ -42,6 +46,7 @@ def save_state(path: Path, state: WatcherState) -> None:
         "seen_ids": list(state.seen_ids[-500:]),
         "consecutive_failures": state.consecutive_failures,
         "outage_notified": state.outage_notified,
+        "initialized": state.initialized,
     }
     temporary.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
     temporary.replace(path)

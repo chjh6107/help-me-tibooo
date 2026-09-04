@@ -32,6 +32,7 @@ def test_first_run_baselines_without_alerting() -> None:
     assert alerts == []
     assert state.latest_id == "401"
     assert state.seen_ids == ("401",)
+    assert state.initialized is True
 
 
 def test_cross_source_duplicate_sends_once() -> None:
@@ -44,7 +45,7 @@ def test_cross_source_duplicate_sends_once() -> None:
 
     state = run_watcher(
         batches,
-        WatcherState(latest_id="401", seen_ids=("401",)),
+        WatcherState(latest_id="401", seen_ids=("401",), initialized=True),
         lambda post, _: alerts.append(post.id),
         lambda _: None,
     )
@@ -59,7 +60,7 @@ def test_sends_new_posts_oldest_first_when_sources_return_newest_first() -> None
 
     run_watcher(
         batches,
-        WatcherState(latest_id="402", seen_ids=("402",)),
+        WatcherState(latest_id="402", seen_ids=("402",), initialized=True),
         lambda post, _: alerts.append(post.id),
         lambda _: None,
     )
@@ -82,7 +83,7 @@ def test_non_numeric_ids_fall_back_to_created_at_then_input_order() -> None:
 
     run_watcher(
         batches,
-        WatcherState(),
+        WatcherState(initialized=True),
         lambda post, _: alerts.append(post.id),
         lambda _: None,
     )
@@ -104,7 +105,7 @@ def test_marks_reposts_and_irrelevant_posts_seen_without_alerting() -> None:
 
     state = run_watcher(
         batches,
-        WatcherState(latest_id="404", seen_ids=("404",)),
+        WatcherState(latest_id="404", seen_ids=("404",), initialized=True),
         lambda post, _: alerts.append(post.id),
         lambda _: None,
     )
@@ -128,19 +129,19 @@ def test_failed_alert_is_retried_and_later_posts_are_not_sent() -> None:
         if post.id == "502":
             raise RuntimeError("webhook unavailable")
 
-    with pytest.raises(WatcherRunError, match="alert delivery failed"):
-        run_watcher(batches, WatcherState(), fail_on_second, lambda _: None)
+    with pytest.raises(WatcherRunError, match="alert delivery failed") as error:
+        run_watcher(batches, WatcherState(initialized=True), fail_on_second, lambda _: None)
 
     retried: list[str] = []
     state = run_watcher(
         batches,
-        WatcherState(),
+        error.value.state,
         lambda post, _: retried.append(post.id),
         lambda _: None,
     )
 
     assert attempts == ["501", "502"]
-    assert retried == ["501", "502", "503"]
+    assert retried == ["502", "503"]
     assert state.seen_ids == ("501", "502", "503")
 
 
@@ -161,7 +162,7 @@ def test_failed_alert_carries_state_after_earlier_success() -> None:
     with pytest.raises(WatcherRunError, match="alert delivery failed") as error:
         run_watcher(
             batches,
-            WatcherState(latest_id="700", seen_ids=("700",)),
+            WatcherState(latest_id="700", seen_ids=("700",), initialized=True),
             fail_on_second,
             lambda _: None,
         )
@@ -169,7 +170,30 @@ def test_failed_alert_carries_state_after_earlier_success() -> None:
     assert attempts == ["701", "702"]
     assert str(error.value) == "alert delivery failed"
     assert error.value.__cause__ is None
-    assert error.value.state == WatcherState(latest_id="701", seen_ids=("700", "701"))
+    assert error.value.__suppress_context__ is True
+    assert error.value.state == WatcherState(
+        latest_id="701",
+        seen_ids=("700", "701"),
+        initialized=True,
+    )
+
+
+def test_failed_first_run_baselines_historical_posts_after_recovery() -> None:
+    alerts: list[str] = []
+    failed = (SourceBatch("reset", error="down"), SourceBatch("twiscan", error="down"))
+    historical = (SourceBatch("reset", posts=(important_post("800"),)),)
+
+    failed_state = run_watcher(failed, None, no_alert, lambda _: None)
+    state = run_watcher(
+        historical,
+        failed_state,
+        lambda post, _: alerts.append(post.id),
+        lambda _: None,
+    )
+
+    assert failed_state.initialized is False
+    assert alerts == []
+    assert state == WatcherState(latest_id="800", seen_ids=("800",), initialized=True)
 
 
 def test_one_healthy_source_clears_failure_state_and_processes_posts() -> None:
@@ -181,7 +205,7 @@ def test_one_healthy_source_clears_failure_state_and_processes_posts() -> None:
 
     state = run_watcher(
         batches,
-        WatcherState(consecutive_failures=2, outage_notified=True),
+        WatcherState(consecutive_failures=2, outage_notified=True, initialized=True),
         lambda post, _: alerts.append(post.id),
         lambda _: None,
     )

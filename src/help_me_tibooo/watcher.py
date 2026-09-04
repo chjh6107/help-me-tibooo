@@ -23,7 +23,7 @@ def run_watcher(
         return _record_total_failure(state or WatcherState(), send_health)
 
     posts = _deduplicate_posts(healthy_batches)
-    if state is None:
+    if state is None or not state.initialized:
         return _baseline(posts)
 
     next_state = _clear_failure_state(state)
@@ -62,7 +62,7 @@ def _deduplicate_posts(batches: tuple[SourceBatch, ...]) -> tuple[Post, ...]:
 
 
 def _baseline(posts: tuple[Post, ...]) -> WatcherState:
-    state = WatcherState()
+    state = WatcherState(initialized=True)
     for post in _oldest_first(posts):
         state = _remember(state, post.id)
     return state
