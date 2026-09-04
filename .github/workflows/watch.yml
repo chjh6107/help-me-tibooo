@@ -1,0 +1,68 @@
+name: Tibo watcher
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 실행 방식
+        required: true
+        default: test-discord
+        type: choice
+        options:
+          - test-discord
+          - watch
+          - smoke
+
+permissions:
+  contents: read
+
+concurrency:
+  group: help-me-tibooo-watcher
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e .
+      - name: 실행 방식 결정
+        id: mode
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REQUESTED_MODE: ${{ inputs.mode }}
+        run: |
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            echo "value=watch" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=$REQUESTED_MODE" >> "$GITHUB_OUTPUT"
+          fi
+      - name: 감시 상태 복원
+        if: steps.mode.outputs.value == 'watch'
+        uses: actions/cache/restore@v4
+        with:
+          path: .state
+          key: help-me-tibooo-state-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: help-me-tibooo-state-
+      - name: 실행
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          MODE: ${{ steps.mode.outputs.value }}
+        run: |
+          if [ "$MODE" = "watch" ]; then
+            python -m help_me_tibooo watch --state-path .state/watcher.json
+          else
+            python -m help_me_tibooo "$MODE"
+          fi
+      - name: 감시 상태 저장
+        if: ${{ always() && steps.mode.outputs.value == 'watch' && hashFiles('.state/watcher.json') != '' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .state
+          key: help-me-tibooo-state-${{ github.run_id }}-${{ github.run_attempt }}
