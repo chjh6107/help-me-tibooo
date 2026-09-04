@@ -73,6 +73,13 @@ def save_state(path: Path, state: WatcherState) -> None:
                     if checkpoint.latest_created_at is not None
                     else None
                 ),
+                "deferred_latest_id": checkpoint.deferred_latest_id,
+                "deferred_latest_created_at": (
+                    checkpoint.deferred_latest_created_at.isoformat()
+                    if checkpoint.deferred_latest_created_at is not None
+                    else None
+                ),
+                "pending_ids": list(checkpoint.pending_ids),
             }
             for checkpoint in state.source_checkpoints
         ],
@@ -93,27 +100,44 @@ def _load_source_checkpoints(payload: object) -> tuple[SourceCheckpoint, ...]:
         source = item.get("source")
         latest_id = item.get("latest_id")
         latest_created_at = item.get("latest_created_at")
+        deferred_latest_id = item.get("deferred_latest_id")
+        deferred_latest_created_at = item.get("deferred_latest_created_at")
+        pending_ids = item.get("pending_ids", [])
         if not isinstance(source, str) or not source or source in sources:
             raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
         if latest_id is not None and not isinstance(latest_id, str):
             raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
-        if latest_created_at is not None:
-            if not isinstance(latest_created_at, str):
-                raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
-            try:
-                parsed_created_at = datetime.fromisoformat(latest_created_at)
-            except ValueError:
-                raise ValueError("source_checkpoints의 형식이 잘못되었습니다") from None
-            if parsed_created_at.tzinfo is None:
-                raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
-        else:
-            parsed_created_at = None
+        if deferred_latest_id is not None and not isinstance(deferred_latest_id, str):
+            raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
+        if not isinstance(pending_ids, list) or not all(
+            isinstance(post_id, str) for post_id in pending_ids
+        ):
+            raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
+        parsed_created_at = _load_checkpoint_datetime(latest_created_at)
+        parsed_deferred_created_at = _load_checkpoint_datetime(deferred_latest_created_at)
         sources.add(source)
         checkpoints.append(
             SourceCheckpoint(
                 source=source,
                 latest_id=latest_id,
                 latest_created_at=parsed_created_at,
+                deferred_latest_id=deferred_latest_id,
+                deferred_latest_created_at=parsed_deferred_created_at,
+                pending_ids=tuple(pending_ids),
             )
         )
     return tuple(checkpoints)
+
+
+def _load_checkpoint_datetime(value: object) -> datetime | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        raise ValueError("source_checkpoints의 형식이 잘못되었습니다") from None
+    if parsed.tzinfo is None:
+        raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
+    return parsed

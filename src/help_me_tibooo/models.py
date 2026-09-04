@@ -35,6 +35,9 @@ class SourceCheckpoint:
     source: str
     latest_id: str | None = None
     latest_created_at: datetime | None = None
+    deferred_latest_id: str | None = None
+    deferred_latest_created_at: datetime | None = None
+    pending_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

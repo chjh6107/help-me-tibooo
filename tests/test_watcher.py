@@ -437,7 +437,12 @@ def test_failed_overlap_from_recovered_source_is_retried_when_original_source_is
 
     assert error.value.state.source_checkpoints == (
         SourceCheckpoint(source="reset", latest_id="100"),
-        SourceCheckpoint(source="twiscan", latest_id="50"),
+        SourceCheckpoint(
+            source="twiscan",
+            latest_id="50",
+            deferred_latest_id="102",
+            pending_ids=("101",),
+        ),
     )
     retried: list[str] = []
     recovered_state = run_watcher(
@@ -458,3 +463,57 @@ def test_failed_overlap_from_recovered_source_is_retried_when_original_source_is
         source="twiscan",
         latest_id="102",
     )
+
+
+def test_recovery_baseline_stays_suppressed_after_failed_overlap_and_seen_truncation(
+    tmp_path,
+) -> None:
+    from help_me_tibooo.state import load_state, save_state
+
+    history = tuple(important_post(str(post_id)) for post_id in range(702, 101, -1))
+    initial_state = WatcherState(
+        latest_id="100",
+        seen_ids=("100",),
+        initialized=True,
+        source_checkpoints=(SourceCheckpoint(source="reset", latest_id="100"),),
+    )
+
+    def fail_delivery(_post: Post, _categories: object) -> None:
+        raise RuntimeError("down")
+
+    with pytest.raises(WatcherRunError) as error:
+        run_watcher(
+            (
+                SourceBatch("reset", posts=(important_post("101"),)),
+                SourceBatch(
+                    "twiscan",
+                    posts=(*history, important_post("101"), important_post("50")),
+                ),
+            ),
+            initial_state,
+            fail_delivery,
+            lambda _: None,
+        )
+
+    state_path = tmp_path / "watcher.json"
+    save_state(state_path, error.value.state)
+    persisted = load_state(state_path)
+    assert persisted is not None
+    assert len(persisted.seen_ids) == 500
+
+    retried: list[str] = []
+    recovered_state = run_watcher(
+        (
+            SourceBatch("reset", error="down"),
+            SourceBatch(
+                "twiscan",
+                posts=(*history, important_post("101"), important_post("50")),
+            ),
+        ),
+        persisted,
+        lambda post, _: retried.append(post.id),
+        lambda _: None,
+    )
+
+    assert retried == ["101"]
+    assert recovered_state.source_checkpoints[-1].latest_id == "702"

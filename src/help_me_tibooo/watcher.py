@@ -35,7 +35,6 @@ def run_watcher(
     candidate_posts: dict[str, Post] = {}
     candidate_sources: dict[str, list[str]] = {}
     new_source_batches: list[SourceBatch] = []
-    final_baseline_checkpoints: list[SourceCheckpoint] = []
 
     for batch in healthy_batches:
         checkpoint = _find_checkpoint(current_state, batch.source)
@@ -49,7 +48,7 @@ def run_watcher(
         source_checkpoint = replace(checkpoint, source=batch.source)
         next_state = _set_checkpoint(next_state, source_checkpoint)
         for post in batch.posts:
-            if not _post_is_after_checkpoint(post, source_checkpoint):
+            if not _post_is_eligible(post, source_checkpoint):
                 continue
             candidate_posts.setdefault(post.id, post)
             candidate_sources.setdefault(post.id, []).append(batch.source)
@@ -57,15 +56,26 @@ def run_watcher(
     for batch in new_source_batches:
         safe_checkpoint = SourceCheckpoint(source=batch.source)
         overlap_found = False
+        pending_ids: list[str] = []
         for post in _oldest_first(batch.posts):
             baseline_posts.append(post)
             if post.id in candidate_posts:
                 overlap_found = True
+                pending_ids.append(post.id)
                 candidate_sources[post.id].append(batch.source)
             elif not overlap_found:
                 safe_checkpoint = _advance_checkpoint(safe_checkpoint, post)
+        full_checkpoint = _baseline_checkpoint(batch.source, batch.posts)
+        if pending_ids:
+            safe_checkpoint = replace(
+                safe_checkpoint,
+                deferred_latest_id=full_checkpoint.latest_id,
+                deferred_latest_created_at=full_checkpoint.latest_created_at,
+                pending_ids=tuple(pending_ids),
+            )
+        else:
+            safe_checkpoint = full_checkpoint
         next_state = _set_checkpoint(next_state, safe_checkpoint)
-        final_baseline_checkpoints.append(_baseline_checkpoint(batch.source, batch.posts))
 
     for post in _oldest_first(tuple(baseline_posts)):
         if post.id not in candidate_posts:
@@ -84,16 +94,19 @@ def run_watcher(
                 except Exception:
                     raise WatcherRunError(next_state) from None
         next_state = _remember(next_state, post.id)
-        for source in candidate_sources[post.id]:
+        tracking_sources = set(candidate_sources[post.id])
+        tracking_sources.update(
+            checkpoint.source
+            for checkpoint in next_state.source_checkpoints
+            if post.id in checkpoint.pending_ids
+        )
+        for source in tracking_sources:
             checkpoint = _find_checkpoint(next_state, source)
             if checkpoint is not None:
                 next_state = _set_checkpoint(
                     next_state,
-                    _advance_checkpoint(checkpoint, post),
+                    _complete_checkpoint_post(checkpoint, post),
                 )
-
-    for checkpoint in final_baseline_checkpoints:
-        next_state = _set_checkpoint(next_state, checkpoint)
 
     return next_state
 
@@ -149,6 +162,45 @@ def _advance_checkpoint(checkpoint: SourceCheckpoint, post: Post) -> SourceCheck
         latest_id=post.id,
         latest_created_at=_aware_datetime(post.created_at),
     )
+
+
+def _complete_checkpoint_post(checkpoint: SourceCheckpoint, post: Post) -> SourceCheckpoint:
+    pending_ids = tuple(post_id for post_id in checkpoint.pending_ids if post_id != post.id)
+    updated = replace(checkpoint, pending_ids=pending_ids)
+    if checkpoint.pending_ids and not pending_ids:
+        updated = replace(
+            updated,
+            latest_id=checkpoint.deferred_latest_id,
+            latest_created_at=checkpoint.deferred_latest_created_at,
+            deferred_latest_id=None,
+            deferred_latest_created_at=None,
+        )
+    if updated.pending_ids:
+        deferred = SourceCheckpoint(
+            source=updated.source,
+            latest_id=updated.deferred_latest_id,
+            latest_created_at=updated.deferred_latest_created_at,
+        )
+        advanced = _advance_checkpoint(deferred, post)
+        return replace(
+            updated,
+            deferred_latest_id=advanced.latest_id,
+            deferred_latest_created_at=advanced.latest_created_at,
+        )
+    return _advance_checkpoint(updated, post)
+
+
+def _post_is_eligible(post: Post, checkpoint: SourceCheckpoint) -> bool:
+    if post.id in checkpoint.pending_ids:
+        return True
+    if checkpoint.deferred_latest_id is not None:
+        deferred = SourceCheckpoint(
+            source=checkpoint.source,
+            latest_id=checkpoint.deferred_latest_id,
+            latest_created_at=checkpoint.deferred_latest_created_at,
+        )
+        return _post_is_after_checkpoint(post, deferred)
+    return _post_is_after_checkpoint(post, checkpoint)
 
 
 def _post_is_after_checkpoint(post: Post, checkpoint: SourceCheckpoint) -> bool:
