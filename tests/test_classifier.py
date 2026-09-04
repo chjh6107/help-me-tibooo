@@ -26,10 +26,23 @@ def test_ignores_conversational_reset_without_product_context(make_post) -> None
     assert classify(make_post(text="Feeling reset after sleeping.")) == ()
 
 
+def test_ordinary_reset_terms_with_product_context_are_classified(make_post) -> None:
+    assert classify(make_post(text="Codex usage reset is tonight.")) == (AlertCategory.RESET,)
+
+
+def test_ordinary_reset_terms_without_product_context_are_ignored(make_post) -> None:
+    assert classify(make_post(text="My usage reset is tonight.")) == ()
+
+
 def test_recall_first_rule_keeps_ambiguous_openai_shipment(make_post) -> None:
     post = make_post(text="Big Codex news is landing tomorrow.")
 
     assert classify(post) == (AlertCategory.LAUNCH,)
+
+
+@pytest.mark.parametrize("source_kind", ("candidate", "banked", "signal"))
+def test_special_reset_sources_classify_reset_context(make_post, source_kind) -> None:
+    assert classify(make_post(text="Usage reset is tonight.", source_kind=source_kind)) == (AlertCategory.RESET,)
 
 
 def test_special_reset_source_requires_reset_context(make_post) -> None:
