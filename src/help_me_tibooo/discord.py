@@ -17,7 +17,8 @@ def build_alert_payload(
     labels = " · ".join(f"[{category.value}]" for category in unique_categories)
     prefix = f"**{labels} Tibo 알림**\n"
     suffix = f"\n<{_canonical_post_url(post)}>"
-    body = _truncate_utf16(post.text, 2_000 - _utf16_length(prefix) - _utf16_length(suffix))
+    safe_text = _replace_unpaired_surrogates(post.text)
+    body = _truncate_utf16(safe_text, 2_000 - _utf16_length(prefix) - _utf16_length(suffix))
     return {
         "content": f"{prefix}{body}{suffix}",
         "allowed_mentions": {"parse": []},
@@ -57,6 +58,13 @@ def _canonical_post_url(post: Post) -> str:
 
 def _utf16_length(value: str) -> int:
     return len(value.encode("utf-16-le")) // 2
+
+
+def _replace_unpaired_surrogates(value: str) -> str:
+    return "".join(
+        "\N{REPLACEMENT CHARACTER}" if 0xD800 <= ord(character) <= 0xDFFF else character
+        for character in value
+    )
 
 
 def _truncate_utf16(value: str, maximum: int) -> str:

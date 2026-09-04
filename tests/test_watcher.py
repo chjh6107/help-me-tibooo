@@ -407,3 +407,54 @@ def test_fallback_checkpoint_uses_created_at_for_eligibility() -> None:
             latest_created_at=datetime(2026, 9, 4, 11, tzinfo=UTC),
         ),
     )
+
+
+def test_failed_overlap_from_recovered_source_is_retried_when_original_source_is_down() -> None:
+    initial_state = WatcherState(
+        latest_id="100",
+        seen_ids=("100",),
+        initialized=True,
+        source_checkpoints=(SourceCheckpoint(source="reset", latest_id="100"),),
+    )
+    overlapping_batches = (
+        SourceBatch("reset", posts=(important_post("101"),)),
+        SourceBatch(
+            "twiscan",
+            posts=(important_post("102"), important_post("101"), important_post("50")),
+        ),
+    )
+
+    def fail_delivery(_post: Post, _categories: object) -> None:
+        raise RuntimeError("down")
+
+    with pytest.raises(WatcherRunError) as error:
+        run_watcher(
+            overlapping_batches,
+            initial_state,
+            fail_delivery,
+            lambda _: None,
+        )
+
+    assert error.value.state.source_checkpoints == (
+        SourceCheckpoint(source="reset", latest_id="100"),
+        SourceCheckpoint(source="twiscan", latest_id="50"),
+    )
+    retried: list[str] = []
+    recovered_state = run_watcher(
+        (
+            SourceBatch("reset", error="down"),
+            SourceBatch(
+                "twiscan",
+                posts=(important_post("102"), important_post("101"), important_post("50")),
+            ),
+        ),
+        error.value.state,
+        lambda post, _: retried.append(post.id),
+        lambda _: None,
+    )
+
+    assert retried == ["101"]
+    assert recovered_state.source_checkpoints[-1] == SourceCheckpoint(
+        source="twiscan",
+        latest_id="102",
+    )

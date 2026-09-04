@@ -34,6 +34,8 @@ def run_watcher(
     baseline_posts: list[Post] = []
     candidate_posts: dict[str, Post] = {}
     candidate_sources: dict[str, list[str]] = {}
+    new_source_batches: list[SourceBatch] = []
+    final_baseline_checkpoints: list[SourceCheckpoint] = []
 
     for batch in healthy_batches:
         checkpoint = _find_checkpoint(current_state, batch.source)
@@ -41,9 +43,7 @@ def run_watcher(
             checkpoint = SourceCheckpoint(source=batch.source, latest_id=current_state.latest_id)
 
         if checkpoint is None:
-            source_checkpoint = _baseline_checkpoint(batch.source, batch.posts)
-            next_state = _set_checkpoint(next_state, source_checkpoint)
-            baseline_posts.extend(batch.posts)
+            new_source_batches.append(batch)
             continue
 
         source_checkpoint = replace(checkpoint, source=batch.source)
@@ -53,6 +53,19 @@ def run_watcher(
                 continue
             candidate_posts.setdefault(post.id, post)
             candidate_sources.setdefault(post.id, []).append(batch.source)
+
+    for batch in new_source_batches:
+        safe_checkpoint = SourceCheckpoint(source=batch.source)
+        overlap_found = False
+        for post in _oldest_first(batch.posts):
+            baseline_posts.append(post)
+            if post.id in candidate_posts:
+                overlap_found = True
+                candidate_sources[post.id].append(batch.source)
+            elif not overlap_found:
+                safe_checkpoint = _advance_checkpoint(safe_checkpoint, post)
+        next_state = _set_checkpoint(next_state, safe_checkpoint)
+        final_baseline_checkpoints.append(_baseline_checkpoint(batch.source, batch.posts))
 
     for post in _oldest_first(tuple(baseline_posts)):
         if post.id not in candidate_posts:
@@ -78,6 +91,9 @@ def run_watcher(
                     next_state,
                     _advance_checkpoint(checkpoint, post),
                 )
+
+    for checkpoint in final_baseline_checkpoints:
+        next_state = _set_checkpoint(next_state, checkpoint)
 
     return next_state
 

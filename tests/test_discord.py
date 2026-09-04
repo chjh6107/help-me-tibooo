@@ -1,3 +1,4 @@
+import json
 from datetime import UTC, datetime
 
 import httpx
@@ -9,6 +10,7 @@ from help_me_tibooo.discord import (
     build_health_payload,
 )
 from help_me_tibooo.models import AlertCategory
+from help_me_tibooo.sources import parse_reset_feed
 
 
 def test_alert_payload_disables_mentions_and_preserves_labels_and_url(make_post) -> None:
@@ -63,6 +65,33 @@ def test_alert_payload_respects_discord_utf16_limit_at_emoji_boundary(make_post)
 
     assert len(content.encode("utf-16-le")) // 2 <= 2_000
     assert content.endswith(f"\n<{post.url}>")
+
+
+@pytest.mark.parametrize("escaped_surrogate", (r"\ud800", r"\udfff"))
+def test_alert_payload_sanitizes_unpaired_surrogate_from_reset_json(
+    escaped_surrogate: str,
+) -> None:
+    payload = json.loads(
+        """
+        {
+          "tweets": [{
+            "id": "123",
+            "text": "before %s after 🚀",
+            "at": "2026-09-04T00:00:00Z",
+            "url": "https://x.com/thsottiaux/status/123"
+          }]
+        }
+        """
+        % escaped_surrogate
+    )
+    post = parse_reset_feed(payload)[0]
+
+    alert = build_alert_payload(post, (AlertCategory.RESET,))
+    content = alert["content"]
+
+    assert "before � after 🚀" in content
+    assert not any(0xD800 <= ord(character) <= 0xDFFF for character in content)
+    assert len(content.encode("utf-16-le")) // 2 <= 2_000
 
 
 def test_health_payload_names_consecutive_failure_count() -> None:
