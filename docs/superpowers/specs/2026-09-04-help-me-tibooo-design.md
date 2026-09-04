@@ -1,152 +1,142 @@
-# Help Me Tibooo Design
+# Help Me Tibooo 설계
 
-## Purpose
+## 목적
 
-`help-me-tibooo` watches public posts and replies from Tibo
-([@thsottiaux](https://x.com/thsottiaux)) and forwards relevant OpenAI news to a
-Discord text channel. It runs without paid X or language-model APIs.
+`help-me-tibooo`는 Tibo([@thsottiaux](https://x.com/thsottiaux))의 공개 게시물과
+답글을 감시하고, 중요한 OpenAI 소식을 Discord 텍스트 채널로 전달한다. 유료 X API나
+언어 모델 API 없이 동작한다.
 
-## Scope
+## 범위
 
-The first milestone will:
+첫 번째 마일스톤에서는 다음 기능을 제공한다.
 
-- run publicly in a GitHub repository under the MIT license;
-- check for new source items approximately every 10 minutes with GitHub Actions;
-- inspect Tibo's original posts and replies while ignoring plain reposts;
-- detect reset announcements and hints, usage-limit changes, major model or
-  product launches, plan or pricing changes, and significant incidents or
-  recoveries;
-- favor recall over precision when a post is ambiguous;
-- send a Discord message containing a category label, the unmodified source
-  text, and the original X URL;
-- establish a baseline without sending old posts on its first run;
-- send a monitoring-health alert after three consecutive failed checks; and
-- expose a manually triggered workflow for sending a test notification.
+- MIT 라이선스를 적용한 공개 GitHub 저장소로 운영한다.
+- GitHub Actions를 사용해 약 10분마다 새 게시물을 확인한다.
+- Tibo의 원글과 답글을 확인하되 단순 리포스트는 제외한다.
+- 리셋 발표와 힌트, 사용량 한도 변경, 주요 모델 또는 제품 출시, 요금제나 가격 변경,
+  중대한 장애와 복구를 감지한다.
+- 게시물의 중요성이 애매할 때는 정확도보다 누락 방지를 우선한다.
+- Discord 메시지에는 분류, 수정하지 않은 원문, 원본 X 링크를 담는다.
+- 첫 실행에서는 과거 게시물을 보내지 않고 현재 시점만 기준으로 저장한다.
+- 전체 데이터 소스 확인이 3회 연속 실패하면 감시 장애 알림을 보낸다.
+- GitHub Actions에서 테스트 알림을 직접 실행할 수 있게 한다.
 
-Scheduled quiet hours are explicitly deferred to a later milestone. A future
-version may send nighttime webhook messages with Discord's
-`SUPPRESS_NOTIFICATIONS` message flag.
+예약된 야간 무음 알림은 후속 마일스톤으로 명확히 분리한다. 향후 버전에서는 밤에
+보내는 웹훅 메시지에 Discord의 `SUPPRESS_NOTIFICATIONS` 메시지 플래그를 적용할 수
+있다.
 
-## Architecture
+## 아키텍처
 
-The project will be a small Python application invoked by GitHub Actions.
-Modules will be separated by responsibility:
+프로젝트는 GitHub Actions에서 실행하는 작은 Python 애플리케이션으로 구성한다. 각
+모듈은 다음과 같이 하나의 책임만 담당한다.
 
-1. A source client fetches JSON from the Codex Reset public feed and public HTML
-   from a Tibo timeline mirror.
-2. A normalizer converts both sources into one post model containing the post
-   ID, text, timestamp, URL, reply status, and repost status.
-3. A rules classifier assigns zero or more alert categories. Reset-feed
-   classifications are used when available; explicit, version-controlled rules
-   cover the broader news categories.
-4. A state component tracks the newest processed post and the consecutive
-   source-failure count in the GitHub Actions cache.
-5. A Discord client formats and sends webhook payloads. It disables mention
-   parsing so source text cannot accidentally ping users or roles.
+1. 소스 클라이언트가 Codex Reset 공개 피드의 JSON과 Tibo 타임라인 미러의 공개
+   HTML을 가져온다.
+2. 정규화 모듈이 두 소스의 데이터를 게시물 ID, 본문, 작성 시각, URL, 답글 여부,
+   리포스트 여부를 포함한 하나의 게시물 모델로 변환한다.
+3. 규칙 기반 분류기가 게시물에 하나 이상의 알림 범주를 지정한다. 가능한 경우
+   리셋 피드가 제공하는 분류를 활용하고, 더 넓은 뉴스 범주는 버전 관리되는 명시적
+   규칙으로 판별한다.
+4. 상태 모듈이 마지막으로 처리한 게시물과 연속 소스 실패 횟수를 GitHub Actions
+   캐시에 저장한다.
+5. Discord 클라이언트가 웹훅 메시지를 만들고 전송한다. 원문에 포함된 문자열이
+   사용자나 역할을 실수로 호출하지 않도록 멘션 해석을 비활성화한다.
 
-The workflow restores the latest state, runs the watcher, and saves new state
-under a key derived from the newest processed post. If no state exists, the
-watcher records the current newest post and exits without notifying Discord.
+워크플로는 가장 최근 상태를 복원하고 감시 프로그램을 실행한 뒤, 마지막으로 처리한
+게시물 ID를 포함한 키로 새 상태를 저장한다. 기존 상태가 없으면 현재 가장 최신
+게시물을 기록하고 알림 없이 종료한다.
 
-## Data Sources and Fallbacks
+## 데이터 소스와 대체 경로
 
-The primary reset source is `https://codex-reset.com/api/feed`. It exposes
-Tibo's reset-related original posts and replies as structured JSON. A public
-Tibo timeline mirror supplies posts outside the reset lane so the project can
-detect major product news.
+리셋 정보의 기본 소스는 `https://codex-reset.com/api/feed`이다. 이 피드는 Tibo가
+작성한 리셋 관련 원글과 답글을 구조화된 JSON으로 제공한다. 리셋 이외의 주요 제품
+소식을 감지하기 위해 공개 Tibo 타임라인 미러도 함께 사용한다.
 
-Both sources are unofficial dependencies and may change without notice. A
-single-source failure will not stop items from the healthy source from being
-processed. A run is considered failed for health tracking only when no source
-can provide usable fresh data. Three consecutive failed runs produce one
-Discord health alert; recovery clears the failure state.
+두 소스 모두 예고 없이 변경될 수 있는 비공식 의존성이다. 한 소스가 실패하더라도
+정상 소스에서 받은 게시물은 계속 처리한다. 어떤 소스에서도 사용할 수 있는 최신
+데이터를 얻지 못했을 때만 해당 실행을 감시 실패로 기록한다. 3회 연속 실패하면
+Discord에 장애 알림을 한 번 보내고, 정상화되면 실패 상태를 초기화한다.
 
-Parsers will reject malformed records, enforce request timeouts, and cap input
-sizes. Source URLs and request behavior will be isolated so a broken provider
-can be replaced without changing classification or delivery code.
+파서는 형식이 잘못된 레코드를 거부하고 요청 시간제한과 입력 크기 제한을 적용한다.
+소스 URL과 요청 동작을 별도 모듈로 격리해, 제공자가 중단되더라도 분류나 전송 코드를
+건드리지 않고 교체할 수 있게 한다.
 
-## Classification
+## 알림 분류
 
-Classification will be deterministic and free of paid APIs. Rules will cover:
+유료 API 없이 결정론적 규칙으로 분류한다. 규칙은 다음 범주를 다룬다.
 
-- **Reset:** reset, banked reset, refreshed usage, reset-button hints, and
-  scheduled reset timing.
-- **Limits:** usage or rate-limit changes, quota behavior, and material plan
-  allocation changes.
-- **Launch:** named model launches, major Codex or ChatGPT releases, and broad
-  rollouts.
-- **Plans:** significant subscription, access, or pricing changes.
-- **Incident:** widespread service degradation, investigation, mitigation, or
-  recovery.
+- **리셋:** 리셋, banked reset, 사용량 갱신, 리셋 버튼 힌트, 예정된 리셋 시각
+- **한도:** 사용량 또는 속도 제한 변경, 할당량 동작, 요금제별 사용량 배분의 중대한
+  변경
+- **출시:** 이름이 명시된 모델 출시, 주요 Codex 또는 ChatGPT 릴리스, 대규모 배포
+- **요금제:** 구독, 접근 권한, 가격의 중대한 변경
+- **장애:** 광범위한 서비스 성능 저하, 조사, 완화, 복구
 
-Positive rules will combine phrases and product context instead of matching
-isolated words such as `reset`, which may be conversational. The classifier
-will still favor sending an uncertain but plausibly important OpenAI post over
-silently discarding it. Rules will live in code with fixture-based tests so
-changes are reviewable.
+일상 대화에서도 쓰일 수 있는 `reset` 같은 단어 하나만으로 판단하지 않고, 여러
+표현과 제품 문맥을 함께 확인한다. 다만 중요한 OpenAI 소식일 가능성이 있는 애매한
+게시물은 조용히 버리기보다 알림을 보내는 쪽을 택한다. 규칙은 코드에 두고 fixture
+기반 테스트로 변경 사항을 검토할 수 있게 한다.
 
-## Discord Delivery
+## Discord 전송
 
-The user creates an incoming webhook in an existing Discord server and stores
-its URL as the repository secret `DISCORD_WEBHOOK_URL`. No Discord bot,
-application registration, or bot invitation is required.
+사용자는 기존 Discord 서버에 Incoming Webhook을 만들고, 그 URL을 저장소 Secret인
+`DISCORD_WEBHOOK_URL`에 저장한다. Discord 봇이나 개발자 애플리케이션 등록, 봇
+초대는 필요하지 않다.
 
-Messages will contain no `@everyone`, role, or user mention. The webhook payload
-will set `allowed_mentions.parse` to an empty list. Delivery failures will be
-retried with bounded backoff, and logs will never include the webhook URL.
+메시지에는 `@everyone`, 역할, 사용자 멘션을 넣지 않는다. 웹훅 payload의
+`allowed_mentions.parse`를 빈 배열로 설정한다. 전송 실패 시 제한된 횟수만큼 간격을
+두고 재시도하며, 로그에는 웹훅 URL을 절대 남기지 않는다.
 
-The manual GitHub Actions workflow will send a clearly labeled test message
-without reading or changing watcher state.
+수동 GitHub Actions 워크플로는 감시 상태를 읽거나 변경하지 않고, 테스트임을 명확히
+표시한 메시지를 전송한다.
 
-## State and Duplicate Prevention
+## 상태와 중복 방지
 
-State will contain:
+상태에는 다음 정보를 저장한다.
 
-- the highest processed post ID or equivalent source cursor;
-- a bounded set of recently processed IDs for cross-source deduplication;
-- the consecutive total-source-failure count; and
-- whether a health alert has already been emitted for the current outage.
+- 마지막으로 처리한 게시물 ID 또는 이에 해당하는 소스 커서
+- 서로 다른 소스 사이의 중복을 제거하기 위한 제한된 개수의 최근 게시물 ID
+- 전체 소스의 연속 실패 횟수
+- 현재 장애에 대해 상태 알림을 이미 보냈는지 여부
 
-The first successful run initializes these fields from current source data and
-sends no historical alerts. Later runs process unseen items from oldest to
-newest so Discord messages remain chronological. Repeated source items and
-overlap between the reset feed and timeline mirror produce only one alert.
+첫 번째 정상 실행은 현재 소스 데이터로 상태를 초기화하고 과거 게시물 알림을 보내지
+않는다. 이후 실행은 확인하지 않은 게시물을 오래된 순서부터 처리해 Discord 메시지의
+시간 순서를 유지한다. 리셋 피드와 타임라인 미러에 같은 게시물이 있더라도 알림은 한
+번만 보낸다.
 
-## Repository and Operations
+## 저장소와 운영
 
-The public repository will be named `help-me-tibooo`. It will include:
+공개 저장소 이름은 `help-me-tibooo`로 한다. 저장소에는 다음 항목을 포함한다.
 
-- a concise README with setup, webhook creation, GitHub Secret configuration,
-  manual testing, limitations, and troubleshooting;
-- an MIT license;
-- pinned Python dependencies;
-- a scheduled workflow using `*/10 * * * *` plus `workflow_dispatch`;
-- least-privilege GitHub Actions permissions; and
-- no committed credentials or user-specific Discord identifiers.
+- 설치, 웹훅 생성, GitHub Secret 설정, 수동 테스트, 제약 사항, 문제 해결 방법을
+  담은 간결한 README
+- MIT 라이선스
+- 버전이 고정된 Python 의존성
+- `*/10 * * * *` 예약 실행과 `workflow_dispatch`를 지원하는 워크플로
+- 최소 권한으로 설정된 GitHub Actions 권한
+- 커밋되지 않는 인증 정보와 사용자별 Discord 식별자
 
-The implementation will log source status, classification results, and delivery
-outcomes without logging secrets or full response bodies.
+구현은 소스 상태, 분류 결과, 전송 결과를 로그로 남기되 Secret이나 전체 응답 본문은
+기록하지 않는다.
 
-## Testing and Acceptance
+## 테스트와 완료 조건
 
-Unit tests will cover normalization, reply inclusion, repost exclusion, each
-alert category, ambiguous-news behavior, first-run baselining, chronological
-delivery, cross-source deduplication, and three-failure health alerts.
+단위 테스트에서는 정규화, 답글 포함, 리포스트 제외, 각 알림 범주, 애매한 뉴스 처리,
+첫 실행 기준점 설정, 시간순 전송, 소스 간 중복 제거, 3회 실패 후 장애 알림을
+검증한다.
 
-HTTP tests will use recorded local fixtures rather than live services. A
-separate smoke command may fetch live public sources without sending Discord
-messages. Before release, the GitHub Actions workflow will run tests and the
-manual test action will verify the configured Discord webhook.
+HTTP 테스트에는 실제 서비스 대신 로컬에 저장된 fixture를 사용한다. Discord
+메시지를 보내지 않고 공개 소스만 실제로 확인하는 별도 스모크 명령을 제공할 수 있다.
+배포 전에는 GitHub Actions에서 테스트를 실행하고, 수동 테스트 작업으로 설정된
+Discord 웹훅을 검증한다.
 
-The milestone is accepted when a fresh deployment sends no historical posts,
-a qualifying fixture produces exactly one correctly formatted alert, an
-irrelevant repost produces none, and three simulated total-source failures
-produce a single health alert.
+새 배포에서 과거 게시물을 보내지 않고, 알림 대상 fixture가 정확히 하나의 올바른
+메시지를 만들며, 관련 없는 리포스트는 메시지를 만들지 않고, 전체 소스 실패를 3회
+재현했을 때 장애 알림을 한 번만 만들면 첫 번째 마일스톤의 완료 조건을 충족한다.
 
-## Known Limitations
+## 알려진 제약 사항
 
-- GitHub Actions schedules can run later than the nominal 10-minute interval.
-- Unofficial public sources can become unavailable or change format.
-- Deterministic classification can occasionally produce false positives or
-  miss unusually phrased news.
-- The first milestone does not suppress nighttime notifications.
+- GitHub Actions 예약 작업은 명시된 10분 간격보다 늦게 실행될 수 있다.
+- 비공식 공개 데이터 소스가 중단되거나 응답 형식이 바뀔 수 있다.
+- 결정론적 분류는 가끔 잘못된 알림을 보내거나 특이하게 표현된 뉴스를 놓칠 수 있다.
+- 첫 번째 마일스톤에는 야간 알림 억제 기능이 포함되지 않는다.
