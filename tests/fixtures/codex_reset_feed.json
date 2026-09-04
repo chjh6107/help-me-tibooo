@@ -1,0 +1,36 @@
+{
+  "tweets": [
+    {
+      "id": "201",
+      "text": "Codex reset availability has been expanded.",
+      "at": "2026-09-04T00:00:00Z",
+      "url": "https://x.com/thsottiaux/status/201",
+      "is_reply": false,
+      "kind": "announcement"
+    },
+    {
+      "id": "202",
+      "text": "The reset limit applies to this reply too.",
+      "at": "2026-09-04T00:05:00Z",
+      "url": "https://x.com/thsottiaux/status/202",
+      "is_reply": true,
+      "kind": "signal"
+    },
+    {
+      "id": "not-a-number",
+      "text": "This malformed tweet must be ignored.",
+      "at": "2026-09-04T00:10:00Z",
+      "url": "https://x.com/thsottiaux/status/not-a-number",
+      "is_reply": false,
+      "kind": "signal"
+    },
+    {
+      "id": "204",
+      "text": "",
+      "at": "2026-09-04T00:15:00Z",
+      "url": "https://x.com/thsottiaux/status/204",
+      "is_reply": false,
+      "kind": "signal"
+    }
+  ]
+}
