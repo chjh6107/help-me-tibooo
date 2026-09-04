@@ -107,3 +107,16 @@ def test_version_one_state_migrates_to_a_legacy_global_checkpoint(tmp_path: Path
 
     assert state is not None
     assert state.source_checkpoints == (SourceCheckpoint(source="*", latest_id="102"),)
+
+
+def test_version_one_seen_only_state_uses_last_seen_id_for_migration(tmp_path: Path) -> None:
+    path = tmp_path / "watcher.json"
+    path.write_text(
+        '{"version": 1, "seen_ids": ["101", "102"]}',
+        encoding="utf-8",
+    )
+
+    state = load_state(path)
+
+    assert state is not None
+    assert state.source_checkpoints == (SourceCheckpoint(source="*", latest_id="102"),)

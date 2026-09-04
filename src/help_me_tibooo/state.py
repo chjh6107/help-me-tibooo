@@ -33,9 +33,12 @@ def load_state(path: Path) -> WatcherState | None:
         initialized = bool(latest_id) or bool(seen_ids)
 
     if payload["version"] == 1:
+        legacy_latest_id = (
+            latest_id if latest_id is not None else (seen_ids[-1] if seen_ids else None)
+        )
         source_checkpoints = (
-            (SourceCheckpoint(source="*", latest_id=latest_id),)
-            if initialized and latest_id is not None
+            (SourceCheckpoint(source="*", latest_id=legacy_latest_id),)
+            if initialized and legacy_latest_id is not None
             else ()
         )
     else:
