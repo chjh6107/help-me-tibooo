@@ -23,10 +23,30 @@ def test_missing_state_returns_none(tmp_path: Path) -> None:
     assert load_state(tmp_path / "missing.json") is None
 
 
-def test_old_state_defaults_to_uninitialized(tmp_path: Path) -> None:
+def test_legacy_state_with_checkpoint_is_initialized(tmp_path: Path) -> None:
     path = tmp_path / "watcher.json"
     path.write_text(
         '{"version": 1, "latest_id": "102", "seen_ids": ["102"]}',
+        encoding="utf-8",
+    )
+
+    assert load_state(path) == WatcherState(latest_id="102", seen_ids=("102",), initialized=True)
+
+
+def test_legacy_failure_state_without_checkpoint_is_uninitialized(tmp_path: Path) -> None:
+    path = tmp_path / "watcher.json"
+    path.write_text(
+        '{"version": 1, "consecutive_failures": 2, "outage_notified": false}',
+        encoding="utf-8",
+    )
+
+    assert load_state(path) == WatcherState(consecutive_failures=2, initialized=False)
+
+
+def test_explicit_uninitialized_state_is_preserved(tmp_path: Path) -> None:
+    path = tmp_path / "watcher.json"
+    path.write_text(
+        '{"version": 1, "latest_id": "102", "seen_ids": ["102"], "initialized": false}',
         encoding="utf-8",
     )
 
