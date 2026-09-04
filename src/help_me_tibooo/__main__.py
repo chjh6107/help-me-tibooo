@@ -15,7 +15,11 @@ from help_me_tibooo.discord import (
 from help_me_tibooo.models import AlertCategory, Post, SourceBatch, WatcherState
 from help_me_tibooo.sources import fetch_all_sources
 from help_me_tibooo.state import load_state, save_state
-from help_me_tibooo.watcher import WatcherRunError, run_watcher
+from help_me_tibooo.watcher import (
+    AlertDeliveryInterrupted,
+    WatcherRunError,
+    run_watcher,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -80,6 +84,7 @@ def _watch(state_path: Path, credentials: DiscordBotCredentials) -> int:
                         bot,
                         post,
                         categories,
+                        _next_payload_index(state, post),
                     ),
                     lambda failure_count: _send_health(bot, failure_count),
                 )
@@ -126,16 +131,31 @@ def _send_alert(
     bot: DiscordBot,
     post: Post,
     categories: tuple[AlertCategory, ...],
+    next_payload_index: int = 0,
 ) -> None:
     labels = ", ".join(category.value for category in categories)
     print(f"게시물 {post.id} 분류: {labels}")
-    try:
-        for payload in build_alert_payloads(post, categories):
+    payloads = build_alert_payloads(post, categories)
+    if next_payload_index > len(payloads):
+        raise RuntimeError("Discord 알림 재개 지점이 잘못되었습니다")
+    for payload_index, payload in enumerate(
+        payloads[next_payload_index:],
+        start=next_payload_index,
+    ):
+        try:
             bot.send(payload)
-    except Exception:
-        print(f"게시물 {post.id} Discord 알림 전송 실패", file=sys.stderr)
-        raise
+        except Exception:
+            print(f"게시물 {post.id} Discord 알림 전송 실패", file=sys.stderr)
+            raise AlertDeliveryInterrupted(payload_index) from None
     print(f"게시물 {post.id} Discord 알림 전송 성공")
+
+
+def _next_payload_index(state: WatcherState | None, post: Post) -> int:
+    if state is None or state.alert_delivery is None:
+        return 0
+    if state.alert_delivery.post_id != post.id:
+        return 0
+    return state.alert_delivery.next_payload_index
 
 
 def _send_health(bot: DiscordBot, failure_count: int) -> None:

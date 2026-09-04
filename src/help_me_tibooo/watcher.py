@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 
 from help_me_tibooo.classifier import classify
 from help_me_tibooo.models import (
+    AlertDeliveryCheckpoint,
     AlertCategory,
     CheckpointPosition,
     Post,
@@ -18,6 +19,12 @@ class WatcherRunError(RuntimeError):
     def __init__(self, state: WatcherState) -> None:
         super().__init__("alert delivery failed")
         self.state = state
+
+
+class AlertDeliveryInterrupted(RuntimeError):
+    def __init__(self, next_payload_index: int) -> None:
+        super().__init__("alert delivery interrupted")
+        self.next_payload_index = next_payload_index
 
 
 def run_watcher(
@@ -95,8 +102,22 @@ def run_watcher(
             if categories:
                 try:
                     send_alert(post, categories)
+                except AlertDeliveryInterrupted as error:
+                    next_state = replace(
+                        next_state,
+                        alert_delivery=AlertDeliveryCheckpoint(
+                            post_id=post.id,
+                            next_payload_index=error.next_payload_index,
+                        ),
+                    )
+                    raise WatcherRunError(next_state) from None
                 except Exception:
                     raise WatcherRunError(next_state) from None
+            if (
+                next_state.alert_delivery is not None
+                and next_state.alert_delivery.post_id == post.id
+            ):
+                next_state = replace(next_state, alert_delivery=None)
         next_state = _remember(next_state, post.id)
         tracking_sources = set(candidate_sources[post.id])
         tracking_sources.update(

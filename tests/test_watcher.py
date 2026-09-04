@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 import pytest
 
 from help_me_tibooo.models import (
+    AlertDeliveryCheckpoint,
     CheckpointPosition,
     Post,
     SourceBatch,
@@ -10,7 +11,7 @@ from help_me_tibooo.models import (
     SourceName,
     WatcherState,
 )
-from help_me_tibooo.watcher import WatcherRunError, run_watcher
+from help_me_tibooo.watcher import AlertDeliveryInterrupted, WatcherRunError, run_watcher
 
 
 def important_post(post_id: str, **changes: object) -> Post:
@@ -150,6 +151,36 @@ def test_failed_alert_is_retried_and_later_posts_are_not_sent() -> None:
     assert attempts == ["501", "502"]
     assert retried == ["502", "503"]
     assert state.seen_ids == ("501", "502", "503")
+
+
+def test_partial_alert_delivery_checkpoint_is_saved_and_cleared_after_retry() -> None:
+    batches = (SourceBatch("reset", posts=(important_post("502"),)),)
+
+    def fail_after_first_payload(_post: Post, _categories: object) -> None:
+        raise AlertDeliveryInterrupted(next_payload_index=1)
+
+    with pytest.raises(WatcherRunError) as error:
+        run_watcher(
+            batches,
+            WatcherState(latest_id="501", seen_ids=("501",), initialized=True),
+            fail_after_first_payload,
+            lambda _: None,
+        )
+
+    assert error.value.state.alert_delivery == AlertDeliveryCheckpoint(
+        post_id="502",
+        next_payload_index=1,
+    )
+
+    state = run_watcher(
+        batches,
+        error.value.state,
+        lambda _post, _categories: None,
+        lambda _: None,
+    )
+
+    assert state.alert_delivery is None
+    assert state.seen_ids == ("501", "502")
 
 
 def test_failed_alert_carries_state_after_earlier_success() -> None:

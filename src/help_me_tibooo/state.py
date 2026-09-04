@@ -2,7 +2,13 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from .models import CheckpointPosition, SourceCheckpoint, SourceName, WatcherState
+from .models import (
+    AlertDeliveryCheckpoint,
+    CheckpointPosition,
+    SourceCheckpoint,
+    SourceName,
+    WatcherState,
+)
 
 
 def load_state(path: Path) -> WatcherState | None:
@@ -10,7 +16,7 @@ def load_state(path: Path) -> WatcherState | None:
         return None
 
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("version") not in {1, 2}:
+    if not isinstance(payload, dict) or payload.get("version") not in {1, 2, 3}:
         raise ValueError("지원하지 않는 상태 버전입니다")
 
     latest_id = payload.get("latest_id")
@@ -48,6 +54,11 @@ def load_state(path: Path) -> WatcherState | None:
         )
     else:
         source_checkpoints = _load_source_checkpoints(payload.get("source_checkpoints", []))
+    alert_delivery = (
+        _load_alert_delivery(payload.get("alert_delivery"))
+        if payload["version"] == 3
+        else None
+    )
 
     return WatcherState(
         latest_id=latest_id,
@@ -56,6 +67,7 @@ def load_state(path: Path) -> WatcherState | None:
         outage_notified=outage_notified,
         initialized=initialized,
         source_checkpoints=source_checkpoints,
+        alert_delivery=alert_delivery,
     )
 
 
@@ -63,7 +75,7 @@ def save_state(path: Path, state: WatcherState) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
     payload = {
-        "version": 2,
+        "version": 3,
         "latest_id": state.latest_id,
         "seen_ids": list(state.seen_ids[-500:]),
         "consecutive_failures": state.consecutive_failures,
@@ -93,6 +105,14 @@ def save_state(path: Path, state: WatcherState) -> None:
             }
             for checkpoint in state.source_checkpoints
         ],
+        "alert_delivery": (
+            {
+                "post_id": state.alert_delivery.post_id,
+                "next_payload_index": state.alert_delivery.next_payload_index,
+            }
+            if state.alert_delivery is not None
+            else None
+        ),
     }
     temporary.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
     temporary.replace(path)
@@ -160,3 +180,25 @@ def _load_checkpoint_datetime(value: object) -> datetime | None:
     if parsed.tzinfo is None:
         raise ValueError("source_checkpoints의 형식이 잘못되었습니다")
     return parsed
+
+
+def _load_alert_delivery(value: object) -> AlertDeliveryCheckpoint | None:
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        raise ValueError("alert_delivery의 형식이 잘못되었습니다")
+
+    post_id = value.get("post_id")
+    next_payload_index = value.get("next_payload_index")
+    if not isinstance(post_id, str) or not post_id:
+        raise ValueError("alert_delivery의 형식이 잘못되었습니다")
+    if (
+        isinstance(next_payload_index, bool)
+        or not isinstance(next_payload_index, int)
+        or next_payload_index < 0
+    ):
+        raise ValueError("alert_delivery의 형식이 잘못되었습니다")
+    return AlertDeliveryCheckpoint(
+        post_id=post_id,
+        next_payload_index=next_payload_index,
+    )

@@ -1,9 +1,11 @@
+import json
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 
 from help_me_tibooo.models import (
+    AlertDeliveryCheckpoint,
     CheckpointPosition,
     SourceCheckpoint,
     SourceName,
@@ -20,11 +22,37 @@ def test_state_round_trip(tmp_path: Path) -> None:
         consecutive_failures=2,
         outage_notified=False,
         initialized=True,
+        alert_delivery=AlertDeliveryCheckpoint(post_id="103", next_payload_index=2),
     )
 
     save_state(path, expected)
 
     assert load_state(path) == expected
+
+
+@pytest.mark.parametrize(
+    "alert_delivery",
+    (
+        {},
+        {"post_id": 103, "next_payload_index": 1},
+        {"post_id": "103", "next_payload_index": -1},
+        {"post_id": "103", "next_payload_index": True},
+    ),
+)
+def test_version_three_rejects_invalid_alert_delivery(
+    tmp_path: Path,
+    alert_delivery: object,
+) -> None:
+    path = tmp_path / "watcher.json"
+    path.write_text(
+        '{"version": 3, "alert_delivery": '
+        + json.dumps(alert_delivery)
+        + "}",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="alert_delivery"):
+        load_state(path)
 
 
 def test_missing_state_returns_none(tmp_path: Path) -> None:

@@ -67,6 +67,12 @@ class SourceCheckpoint:
 
 
 @dataclass(frozen=True, slots=True)
+class AlertDeliveryCheckpoint:
+    post_id: str
+    next_payload_index: int
+
+
+@dataclass(frozen=True, slots=True)
 class WatcherState:
     latest_id: str | None = None
     seen_ids: tuple[str, ...] = ()
@@ -74,3 +80,4 @@ class WatcherState:
     outage_notified: bool = False
     initialized: bool = False
     source_checkpoints: tuple[SourceCheckpoint, ...] = ()
+    alert_delivery: AlertDeliveryCheckpoint | None = None

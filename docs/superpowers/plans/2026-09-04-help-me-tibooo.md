@@ -194,23 +194,32 @@ class SourceBatch:
 
 
 @dataclass(frozen=True, slots=True)
+class AlertDeliveryCheckpoint:
+    post_id: str
+    next_payload_index: int
+
+
+@dataclass(frozen=True, slots=True)
 class WatcherState:
     latest_id: str | None = None
     seen_ids: tuple[str, ...] = ()
     consecutive_failures: int = 0
     outage_notified: bool = False
+    alert_delivery: AlertDeliveryCheckpoint | None = None
 ```
 
-`state.py`는 JSON 객체의 버전이 `1`인지 확인하고, 임시 파일을 같은 디렉터리에 쓴 뒤
-`Path.replace()`로 원자적으로 교체한다. 알 수 없는 필드는 무시하되 타입이 잘못된
-핵심 필드는 `ValueError`를 발생시킨다. `seen_ids`는 저장 직전에 최근 500개로 제한한다.
+`state.py`는 기존 버전 1·2를 읽어 마이그레이션하고 버전 3으로 저장한다. 임시 파일을
+같은 디렉터리에 쓴 뒤 `Path.replace()`로 원자적으로 교체한다. 알 수 없는 필드는
+무시하되 타입이 잘못된 핵심 필드는 `ValueError`를 발생시킨다. `seen_ids`는 저장 직전에
+최근 500개로 제한한다. 버전 3에는 장문 알림의 `post_id`와 다음 payload 번호를 함께
+저장해 부분 전송 실패 시 이미 성공한 조각 다음부터 재개한다.
 
 ```python
 def load_state(path: Path) -> WatcherState | None:
     if not path.exists():
         return None
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if payload.get("version") != 1:
+    if payload.get("version") not in {1, 2, 3}:
         raise ValueError("지원하지 않는 상태 버전입니다")
     return WatcherState(
         latest_id=payload.get("latest_id"),
@@ -224,7 +233,7 @@ def save_state(path: Path, state: WatcherState) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
     payload = {
-        "version": 1,
+        "version": 3,
         "latest_id": state.latest_id,
         "seen_ids": list(state.seen_ids[-500:]),
         "consecutive_failures": state.consecutive_failures,

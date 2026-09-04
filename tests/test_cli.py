@@ -2,6 +2,7 @@ from pathlib import Path
 
 from help_me_tibooo.__main__ import main
 from help_me_tibooo.models import (
+    AlertDeliveryCheckpoint,
     CheckpointPosition,
     Post,
     SourceBatch,
@@ -241,6 +242,10 @@ def test_watch_persists_partial_state_after_delivery_failure(
                 position=CheckpointPosition(id="701"),
             ),
         ),
+        alert_delivery=AlertDeliveryCheckpoint(
+            post_id="702",
+            next_payload_index=0,
+        ),
     )
     captured = capsys.readouterr()
     assert captured.err.splitlines() == [
@@ -248,6 +253,73 @@ def test_watch_persists_partial_state_after_delivery_failure(
         "감시 실행 실패: alert delivery failed",
     ]
     assert "secret.bot.token" not in captured.out + captured.err
+
+
+def test_watch_resumes_long_alert_from_first_unsent_payload(
+    monkeypatch,
+    capsys,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    save_state(
+        state_path,
+        WatcherState(
+            latest_id="900",
+            seen_ids=("900",),
+            initialized=True,
+            source_checkpoints=(
+                SourceCheckpoint(
+                    source=SourceName.RESET,
+                    position=CheckpointPosition(id="900"),
+                ),
+            ),
+        ),
+    )
+    text = "Codex usage reset " + ("a" * 8_200)
+    post = make_post("901", text)
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        lambda _client: (SourceBatch("reset", posts=(post,)),),
+    )
+    first_attempt: list[str] = []
+
+    def fail_second_payload(_self: object, payload: dict[str, object]) -> None:
+        first_attempt.append(payload["embeds"][0]["description"])
+        if len(first_attempt) == 2:
+            raise RuntimeError("bot unavailable")
+
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.DiscordBot.send",
+        fail_second_payload,
+    )
+
+    assert main(["watch", "--state-path", str(state_path)]) == 1
+    interrupted_state = load_state(state_path)
+    assert interrupted_state is not None
+    assert interrupted_state.alert_delivery == AlertDeliveryCheckpoint(
+        post_id="901",
+        next_payload_index=1,
+    )
+
+    resumed_payloads: list[str] = []
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.DiscordBot.send",
+        lambda _self, payload: resumed_payloads.append(
+            payload["embeds"][0]["description"]
+        ),
+    )
+
+    assert main(["watch", "--state-path", str(state_path)]) == 0
+    final_state = load_state(state_path)
+    assert final_state is not None
+    assert final_state.alert_delivery is None
+    assert final_state.seen_ids == ("900", "901")
+    assert len(first_attempt) == 2
+    assert "".join(resumed_payloads) == text[4_096:]
+    assert first_attempt[0] not in resumed_payloads
+    assert "bot unavailable" not in capsys.readouterr().err
 
 
 def test_watch_logs_successful_health_delivery_safely(
