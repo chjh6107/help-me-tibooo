@@ -31,9 +31,17 @@ class SourceBatch:
 
 
 @dataclass(frozen=True, slots=True)
+class SourceCheckpoint:
+    source: str
+    latest_id: str | None = None
+    latest_created_at: datetime | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class WatcherState:
     latest_id: str | None = None
     seen_ids: tuple[str, ...] = ()
     consecutive_failures: int = 0
     outage_notified: bool = False
     initialized: bool = False
+    source_checkpoints: tuple[SourceCheckpoint, ...] = ()

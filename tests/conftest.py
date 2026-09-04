@@ -21,8 +21,8 @@ def make_post():
     return lambda **changes: Post(
         id=changes.pop("id", "999"),
         text=changes.pop("text", ""),
-        created_at=None,
-        url="https://x.com/thsottiaux/status/999",
-        source="test",
+        created_at=changes.pop("created_at", None),
+        url=changes.pop("url", "https://x.com/thsottiaux/status/999"),
+        source=changes.pop("source", "test"),
         **changes,
     )

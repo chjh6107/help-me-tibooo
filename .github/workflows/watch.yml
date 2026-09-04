@@ -50,16 +50,19 @@ jobs:
           path: .state
           key: help-me-tibooo-state-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: help-me-tibooo-state-
-      - name: 실행
+      - name: 감시 실행
+        if: steps.mode.outputs.value == 'watch'
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          MODE: ${{ steps.mode.outputs.value }}
-        run: |
-          if [ "$MODE" = "watch" ]; then
-            python -m help_me_tibooo watch --state-path .state/watcher.json
-          else
-            python -m help_me_tibooo "$MODE"
-          fi
+        run: python -m help_me_tibooo watch --state-path .state/watcher.json
+      - name: Discord 테스트
+        if: steps.mode.outputs.value == 'test-discord'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python -m help_me_tibooo test-discord
+      - name: 공개 소스 smoke
+        if: steps.mode.outputs.value == 'smoke'
+        run: python -m help_me_tibooo smoke
       - name: 감시 상태 저장
         if: ${{ always() && steps.mode.outputs.value == 'watch' && hashFiles('.state/watcher.json') != '' }}
         uses: actions/cache/save@v4

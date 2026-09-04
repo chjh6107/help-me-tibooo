@@ -33,6 +33,38 @@ def test_alert_payload_limits_content_to_discord_maximum(make_post) -> None:
     assert payload["content"].endswith(f"\n<{post.url}>")
 
 
+def test_alert_payload_preserves_original_source_text_when_it_fits(make_post) -> None:
+    original = "@everyone  리셋이 왔어요! 🚀\n둘째 줄도 그대로예요."
+    post = make_post(text=original)
+
+    payload = build_alert_payload(post, (AlertCategory.RESET,))
+
+    assert original in payload["content"]
+
+
+def test_alert_payload_bounds_hostile_id_and_url(make_post) -> None:
+    post = make_post(
+        id="9" * 10_000,
+        url="https://evil.example/" + "x" * 10_000,
+        text="중요한 원문",
+    )
+
+    payload = build_alert_payload(post, (AlertCategory.RESET,))
+
+    assert len(payload["content"]) <= 2_000
+    assert "evil.example" not in payload["content"]
+
+
+def test_alert_payload_respects_discord_utf16_limit_at_emoji_boundary(make_post) -> None:
+    post = make_post(text="🚀" * 2_000)
+
+    payload = build_alert_payload(post, (AlertCategory.LAUNCH,))
+    content = payload["content"]
+
+    assert len(content.encode("utf-16-le")) // 2 <= 2_000
+    assert content.endswith(f"\n<{post.url}>")
+
+
 def test_health_payload_names_consecutive_failure_count() -> None:
     payload = build_health_payload(3)
 

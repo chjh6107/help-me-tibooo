@@ -10,7 +10,7 @@ from help_me_tibooo.models import Post, SourceBatch
 
 RESET_FEED_URL = "https://codex-reset.com/api/feed"
 TWISCAN_TIMELINE_URL = "https://twiscan.com/en/x/thsottiaux"
-POST_ID_PATTERN = re.compile(r"^clamp-(\d+)-(\d+)$")
+POST_ID_PATTERN = re.compile(r"^clamp-(\d{1,20})-(\d{1,20})$")
 RESPONSE_LIMIT_BYTES = 2 * 1024 * 1024
 
 
@@ -33,7 +33,9 @@ def parse_reset_feed(payload: object) -> tuple[Post, ...]:
         url = tweet.get("url")
         if not (
             isinstance(post_id, str)
+            and post_id.isascii()
             and post_id.isdigit()
+            and 1 <= len(post_id) <= 20
             and isinstance(text, str)
             and text
             and isinstance(posted_at, str)
@@ -111,7 +113,7 @@ def _fetch_source(
             headers={"User-Agent": "help-me-tibooo/0.1"},
             timeout=15.0,
         ) as response:
-            if response.status_code >= 400:
+            if not 200 <= response.status_code < 300:
                 return SourceBatch(source=source, error=f"HTTP status {response.status_code}")
             content_length = response.headers.get("Content-Length")
             if content_length is not None and content_length.isdigit() and int(content_length) > RESPONSE_LIMIT_BYTES:
@@ -132,8 +134,27 @@ def _fetch_source(
 
 
 def _decode_reset_feed(content: bytes) -> tuple[Post, ...]:
-    return parse_reset_feed(httpx.Response(200, content=content).json())
+    payload = httpx.Response(200, content=content).json()
+    if not isinstance(payload, Mapping):
+        raise ValueError("invalid reset feed")
+    tweets = payload.get("tweets")
+    if not isinstance(tweets, list):
+        raise ValueError("invalid reset feed")
+    posts = parse_reset_feed(payload)
+    if tweets and not posts:
+        raise ValueError("invalid reset feed")
+    return posts
 
 
 def _decode_twiscan_timeline(content: bytes) -> tuple[Post, ...]:
-    return parse_twiscan_html(content.decode())
+    html = content.decode()
+    soup = BeautifulSoup(html, "html.parser")
+    candidates = soup.select("div[id^='clamp-']")
+    posts = parse_twiscan_html(html)
+    if candidates:
+        if not posts:
+            raise ValueError("invalid TwiScan timeline")
+        return posts
+    if soup.select_one("#timeline") is not None:
+        return ()
+    raise ValueError("invalid TwiScan timeline")

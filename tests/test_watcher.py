@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from help_me_tibooo.models import Post, SourceBatch, WatcherState
+from help_me_tibooo.models import Post, SourceBatch, SourceCheckpoint, WatcherState
 from help_me_tibooo.watcher import WatcherRunError, run_watcher
 
 
@@ -175,6 +175,7 @@ def test_failed_alert_carries_state_after_earlier_success() -> None:
         latest_id="701",
         seen_ids=("700", "701"),
         initialized=True,
+        source_checkpoints=(SourceCheckpoint(source="reset", latest_id="701"),),
     )
 
 
@@ -193,7 +194,12 @@ def test_failed_first_run_baselines_historical_posts_after_recovery() -> None:
 
     assert failed_state.initialized is False
     assert alerts == []
-    assert state == WatcherState(latest_id="800", seen_ids=("800",), initialized=True)
+    assert state == WatcherState(
+        latest_id="800",
+        seen_ids=("800",),
+        initialized=True,
+        source_checkpoints=(SourceCheckpoint(source="reset", latest_id="800"),),
+    )
 
 
 def test_one_healthy_source_clears_failure_state_and_processes_posts() -> None:
@@ -249,3 +255,155 @@ def test_failed_health_alert_is_retried_on_the_next_total_failure() -> None:
     assert health_alerts == [4]
     assert state.consecutive_failures == 4
     assert state.outage_notified is True
+
+
+def test_partial_first_run_baselines_only_the_healthy_source(tmp_path) -> None:
+    from help_me_tibooo.state import load_state, save_state
+
+    first_alerts: list[str] = []
+    first_state = run_watcher(
+        (
+            SourceBatch("reset", posts=(important_post("100"),)),
+            SourceBatch("twiscan", error="down"),
+        ),
+        None,
+        lambda post, _: first_alerts.append(post.id),
+        lambda _: None,
+    )
+
+    assert first_alerts == []
+    assert first_state.source_checkpoints == (
+        SourceCheckpoint(source="reset", latest_id="100"),
+    )
+    state_path = tmp_path / "watcher.json"
+    save_state(state_path, first_state)
+    first_state = load_state(state_path)
+    assert first_state is not None
+
+    recovered_alerts: list[str] = []
+    recovered_state = run_watcher(
+        (
+            SourceBatch(
+                "reset",
+                posts=(important_post("101"), important_post("100")),
+            ),
+            SourceBatch(
+                "twiscan",
+                posts=(important_post("101"), important_post("50"), important_post("49")),
+            ),
+        ),
+        first_state,
+        lambda post, _: recovered_alerts.append(post.id),
+        lambda _: None,
+    )
+
+    assert recovered_alerts == ["101"]
+    assert recovered_state.source_checkpoints == (
+        SourceCheckpoint(source="reset", latest_id="101"),
+        SourceCheckpoint(source="twiscan", latest_id="101"),
+    )
+
+
+def test_source_checkpoint_prevents_resend_after_seen_ids_are_truncated(tmp_path) -> None:
+    from help_me_tibooo.state import load_state, save_state
+
+    path = tmp_path / "watcher.json"
+    save_state(
+        path,
+        WatcherState(
+            latest_id="1000",
+            seen_ids=tuple(str(post_id) for post_id in range(1, 1001)),
+            initialized=True,
+            source_checkpoints=(SourceCheckpoint(source="reset", latest_id="1000"),),
+        ),
+    )
+    state = load_state(path)
+    assert state is not None
+
+    alerts: list[str] = []
+    next_state = run_watcher(
+        (
+            SourceBatch(
+                "reset",
+                posts=(important_post("1001"), important_post("1")),
+            ),
+        ),
+        state,
+        lambda post, _: alerts.append(post.id),
+        lambda _: None,
+    )
+
+    assert "1" not in state.seen_ids
+    assert alerts == ["1001"]
+    assert next_state.source_checkpoints == (
+        SourceCheckpoint(source="reset", latest_id="1001"),
+    )
+
+
+def test_cross_source_duplicate_advances_each_source_checkpoint() -> None:
+    duplicate = important_post("402")
+
+    state = run_watcher(
+        (
+            SourceBatch("reset", posts=(duplicate,)),
+            SourceBatch("twiscan", posts=(duplicate,)),
+        ),
+        WatcherState(
+            latest_id="401",
+            seen_ids=("401",),
+            initialized=True,
+            source_checkpoints=(
+                SourceCheckpoint(source="reset", latest_id="401"),
+                SourceCheckpoint(source="twiscan", latest_id="401"),
+            ),
+        ),
+        lambda _post, _categories: None,
+        lambda _: None,
+    )
+
+    assert state.source_checkpoints == (
+        SourceCheckpoint(source="reset", latest_id="402"),
+        SourceCheckpoint(source="twiscan", latest_id="402"),
+    )
+
+
+def test_fallback_checkpoint_uses_created_at_for_eligibility() -> None:
+    alerts: list[str] = []
+    state = run_watcher(
+        (
+            SourceBatch(
+                "twiscan",
+                posts=(
+                    important_post(
+                        "newer",
+                        created_at=datetime(2026, 9, 4, 11, tzinfo=UTC),
+                    ),
+                    important_post(
+                        "older",
+                        created_at=datetime(2026, 9, 4, 9, tzinfo=UTC),
+                    ),
+                ),
+            ),
+        ),
+        WatcherState(
+            initialized=True,
+            source_checkpoints=(
+                SourceCheckpoint(
+                    source="twiscan",
+                    latest_id="current",
+                    latest_created_at=datetime(2026, 9, 4, 10, tzinfo=UTC),
+                ),
+            ),
+        ),
+        lambda post, _: alerts.append(post.id),
+        lambda _: None,
+    )
+
+    assert alerts == ["newer"]
+    assert state.source_checkpoints == (
+        SourceCheckpoint(
+            source="twiscan",
+            latest_id="newer",
+            latest_created_at=datetime(2026, 9, 4, 11, tzinfo=UTC),
+        ),
+    )
