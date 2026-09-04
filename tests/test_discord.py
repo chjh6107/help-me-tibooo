@@ -1,3 +1,5 @@
+from datetime import UTC, datetime
+
 import httpx
 import pytest
 
@@ -74,6 +76,51 @@ def test_webhook_retries_rate_limit_using_capped_retry_after() -> None:
     webhook.send({"content": "test", "allowed_mentions": {"parse": []}})
 
     assert sleeps == [10.0]
+
+
+def test_webhook_uses_future_http_date_retry_after_with_injected_utc_clock() -> None:
+    statuses = iter(
+        (
+            httpx.Response(429, headers={"Retry-After": "Fri, 04 Sep 2026 00:00:05 GMT"}),
+            httpx.Response(204),
+        )
+    )
+
+    def handler(_: httpx.Request) -> httpx.Response:
+        return next(statuses)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    sleeps: list[float] = []
+    webhook = DiscordWebhook(
+        "https://discord.example/webhook",
+        client,
+        sleeps.append,
+        lambda: datetime(2026, 9, 4, tzinfo=UTC),
+    )
+
+    webhook.send({"content": "test", "allowed_mentions": {"parse": []}})
+
+    assert sleeps == [5.0]
+
+
+def test_webhook_uses_backoff_for_nan_retry_after() -> None:
+    statuses = iter(
+        (
+            httpx.Response(500, headers={"Retry-After": "NaN"}),
+            httpx.Response(204),
+        )
+    )
+
+    def handler(_: httpx.Request) -> httpx.Response:
+        return next(statuses)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    sleeps: list[float] = []
+    webhook = DiscordWebhook("https://discord.example/webhook", client, sleeps.append)
+
+    webhook.send({"content": "test", "allowed_mentions": {"parse": []}})
+
+    assert sleeps == [1.0]
 
 
 def test_webhook_rejects_non_retryable_client_error_immediately() -> None:

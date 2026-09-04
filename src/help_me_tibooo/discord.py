@@ -1,4 +1,7 @@
 from collections.abc import Callable
+from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
+from math import isfinite
 
 import httpx
 
@@ -32,10 +35,12 @@ class DiscordWebhook:
         webhook_url: str,
         client: httpx.Client,
         sleep: Callable[[float], None],
+        now: Callable[[], datetime] | None = None,
     ) -> None:
         self._webhook_url = webhook_url
         self._client = client
         self._sleep = sleep
+        self._now = now or (lambda: datetime.now(UTC))
 
     def send(self, payload: dict[str, object]) -> None:
         for attempt in range(1, 5):
@@ -60,13 +65,29 @@ class DiscordWebhook:
 
             self._sleep(self._retry_delay(response, attempt))
 
-    @staticmethod
-    def _retry_delay(response: httpx.Response, attempt: int) -> float:
+    def _retry_delay(self, response: httpx.Response, attempt: int) -> float:
         retry_after = response.headers.get("Retry-After")
         if retry_after is None:
             return float(attempt)
 
         try:
-            return min(max(float(retry_after), 0.0), 10.0)
+            delay = float(retry_after)
         except ValueError:
+            return self._retry_date_delay(retry_after, attempt)
+
+        if not isfinite(delay) or delay < 0:
             return float(attempt)
+        return min(delay, 10.0)
+
+    def _retry_date_delay(self, retry_after: str, attempt: int) -> float:
+        try:
+            retry_at = parsedate_to_datetime(retry_after)
+            if retry_at.tzinfo is None:
+                return float(attempt)
+            delay = (retry_at.astimezone(UTC) - self._now().astimezone(UTC)).total_seconds()
+        except (IndexError, OverflowError, TypeError, ValueError):
+            return float(attempt)
+
+        if not isfinite(delay) or delay < 0:
+            return float(attempt)
+        return min(delay, 10.0)
