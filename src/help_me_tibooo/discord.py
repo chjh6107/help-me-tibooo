@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 
 import httpx
 
-from help_me_tibooo.models import AlertCategory, Post
+from help_me_tibooo.models import AlertCategory, Post, SourceBatch
 
 
 ALERT_COLORS = {
@@ -61,18 +61,56 @@ def build_alert_payloads(
     )
 
 
-def build_health_payload(failure_count: int) -> dict[str, object]:
+def build_health_payload(
+    failure_count: int,
+    batches: tuple[SourceBatch, ...] = (),
+    actions_url: str | None = None,
+) -> dict[str, object]:
     bounded_failure_count = min(max(failure_count, 0), 999_999)
+    description_parts = [f"Tibo 감시가 {bounded_failure_count}회 연속 실패했습니다."]
+    if batches:
+        description_parts.append(
+            "\n".join(
+                f"{batch.source}: {format_source_diagnostic(batch)}"
+                for batch in batches[:2]
+            )
+        )
+    if actions_url and len(actions_url) <= 300:
+        description_parts.append(
+            f"실행 로그: [GitHub Actions에서 열기]({actions_url})"
+        )
     return {
         "embeds": [
             {
                 "title": "티보햄 · 감시 장애",
-                "description": f"Tibo 감시가 {bounded_failure_count}회 연속 실패했습니다.",
+                "description": "\n\n".join(description_parts),
                 "color": ALERT_COLORS[AlertCategory.INCIDENT],
             }
         ],
         "allowed_mentions": {"parse": []},
     }
+
+
+def format_source_diagnostic(batch: SourceBatch) -> str:
+    if batch.error is None:
+        return f"정상 응답 · 게시물 {len(batch.posts)}개"
+
+    safe_error = "알 수 없는 오류"
+    if (
+        len(batch.error) == len("HTTP status 000")
+        and batch.error.startswith("HTTP status ")
+        and batch.error.removeprefix("HTTP status ").isascii()
+        and batch.error.removeprefix("HTTP status ").isdigit()
+    ):
+        safe_error = f"HTTP {batch.error.removeprefix('HTTP status ')}"
+    elif batch.error in {
+        "response exceeds 2 MiB",
+        "request timed out",
+        "request failed",
+        "invalid response",
+    }:
+        safe_error = batch.error
+    return f"실패 · {safe_error}"
 
 
 def _canonical_post_url(post: Post) -> str:

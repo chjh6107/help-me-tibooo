@@ -10,7 +10,7 @@ from help_me_tibooo.discord import (
     build_alert_payloads,
     build_health_payload,
 )
-from help_me_tibooo.models import AlertCategory
+from help_me_tibooo.models import AlertCategory, SourceBatch
 from help_me_tibooo.sources import parse_reset_feed
 
 
@@ -116,16 +116,80 @@ def test_alert_payload_sanitizes_unpaired_surrogate_from_reset_json(
 
 
 def test_health_payload_names_consecutive_failure_count() -> None:
-    payload = build_health_payload(3)
+    payload = build_health_payload(
+        3,
+        (
+            SourceBatch("reset", error="HTTP status 503"),
+            SourceBatch("twiscan"),
+        ),
+        "https://github.com/chjh6107/help-me-tibooo/actions/runs/123456789",
+    )
 
     assert payload["allowed_mentions"] == {"parse": []}
     assert payload["embeds"] == [
         {
             "title": "티보햄 · 감시 장애",
-            "description": "Tibo 감시가 3회 연속 실패했습니다.",
+            "description": (
+                "Tibo 감시가 3회 연속 실패했습니다.\n\n"
+                "reset: 실패 · HTTP 503\n"
+                "twiscan: 정상 응답 · 게시물 0개\n\n"
+                "실행 로그: [GitHub Actions에서 열기]"
+                "(https://github.com/chjh6107/help-me-tibooo/actions/runs/123456789)"
+            ),
             "color": 0xEF4444,
         }
     ]
+
+
+def test_health_payload_redacts_unknown_source_error_and_omits_missing_run_url() -> None:
+    payload = build_health_payload(
+        3,
+        (
+            SourceBatch("reset", error="private reset response"),
+            SourceBatch("twiscan", error="request timed out"),
+        ),
+    )
+
+    description = payload["embeds"][0]["description"]
+    assert description == (
+        "Tibo 감시가 3회 연속 실패했습니다.\n\n"
+        "reset: 실패 · 알 수 없는 오류\n"
+        "twiscan: 실패 · request timed out"
+    )
+    assert "private reset response" not in json.dumps(payload)
+    assert "실행 로그" not in description
+
+
+@pytest.mark.parametrize(
+    ("error", "expected"),
+    (
+        ("HTTP status 429", "HTTP 429"),
+        ("response exceeds 2 MiB", "response exceeds 2 MiB"),
+        ("request timed out", "request timed out"),
+        ("request failed", "request failed"),
+        ("invalid response", "invalid response"),
+    ),
+)
+def test_health_payload_displays_each_allowlisted_source_error(
+    error: str,
+    expected: str,
+) -> None:
+    payload = build_health_payload(3, (SourceBatch("reset", error=error),))
+
+    assert payload["embeds"][0]["description"].endswith(f"reset: 실패 · {expected}")
+
+
+def test_health_payload_bounds_diagnostics_and_actions_url_to_embed_limit() -> None:
+    payload = build_health_payload(
+        3,
+        tuple(SourceBatch("reset", error="invalid response") for _ in range(1_000)),
+        "https://github.com/" + ("x" * 5_000),
+    )
+
+    description = payload["embeds"][0]["description"]
+    assert len(description.encode("utf-16-le")) // 2 <= 4_096
+    assert description.count("reset: 실패 · invalid response") == 2
+    assert "실행 로그" not in description
 
 
 def test_bot_posts_to_channel_with_authorization_and_retries_server_error() -> None:
