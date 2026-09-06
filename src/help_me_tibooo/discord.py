@@ -67,7 +67,18 @@ def build_health_payload(
     actions_url: str | None = None,
 ) -> dict[str, object]:
     bounded_failure_count = min(max(failure_count, 0), 999_999)
-    description_parts = [f"Tibo 감시가 {bounded_failure_count}회 연속 실패했습니다."]
+    return _build_monitor_payload(
+        "티보햄 · 감시 장애",
+        f"Tibo 감시가 {bounded_failure_count}회 연속 실패했습니다.",
+        ALERT_COLORS[AlertCategory.INCIDENT], batches, actions_url,
+    )
+
+
+def _build_monitor_payload(
+    title: str, description: str, color: int,
+    batches: tuple[SourceBatch, ...], actions_url: str | None,
+) -> dict[str, object]:
+    description_parts = [description]
     if batches:
         description_parts.append(
             "\n".join(
@@ -82,9 +93,9 @@ def build_health_payload(
     return {
         "embeds": [
             {
-                "title": "티보햄 · 감시 장애",
+                "title": title,
                 "description": "\n\n".join(description_parts),
-                "color": ALERT_COLORS[AlertCategory.INCIDENT],
+                "color": color,
             }
         ],
         "allowed_mentions": {"parse": []},
@@ -111,6 +122,16 @@ def format_source_diagnostic(batch: SourceBatch) -> str:
     }:
         safe_error = batch.error
     return f"실패 · {safe_error}"
+
+
+def build_recovery_payload(
+    batches: tuple[SourceBatch, ...], actions_url: str | None = None,
+) -> dict[str, object]:
+    return _build_monitor_payload(
+        "티보햄 · 감시 복구",
+        "일부 소스에서 게시물 수집이 재개되어 Tibo 감시가 복구되었습니다.",
+        0x22C55E, batches, actions_url,
+    )
 
 
 def _canonical_post_url(post: Post) -> str:

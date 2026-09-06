@@ -25,6 +25,10 @@ def load_state(path: Path) -> WatcherState | None:
     seen_ids = payload.get("seen_ids", [])
     consecutive_failures = payload.get("consecutive_failures", 0)
     outage_notified = payload.get("outage_notified", False)
+    last_outage_alert_at = _load_checkpoint_datetime(payload.get("last_outage_alert_at"))
+    recovery_pending = payload.get("recovery_pending", False)
+    if not isinstance(recovery_pending, bool):
+        raise ValueError("recovery_pending의 형식이 잘못되었습니다")
     if latest_id is not None and not isinstance(latest_id, str):
         raise ValueError("latest_id의 형식이 잘못되었습니다")
     if not isinstance(seen_ids, list) or not all(isinstance(item, str) for item in seen_ids):
@@ -70,6 +74,8 @@ def load_state(path: Path) -> WatcherState | None:
         initialized=initialized,
         source_checkpoints=source_checkpoints,
         alert_delivery=alert_delivery,
+        last_outage_alert_at=last_outage_alert_at,
+        recovery_pending=recovery_pending,
     )
 
 
@@ -82,6 +88,11 @@ def save_state(path: Path, state: WatcherState) -> None:
         "seen_ids": list(state.seen_ids[-500:]),
         "consecutive_failures": state.consecutive_failures,
         "outage_notified": state.outage_notified,
+        "last_outage_alert_at": (
+            state.last_outage_alert_at.isoformat()
+            if state.last_outage_alert_at is not None else None
+        ),
+        "recovery_pending": state.recovery_pending,
         "initialized": state.initialized,
         "source_checkpoints": [
             {

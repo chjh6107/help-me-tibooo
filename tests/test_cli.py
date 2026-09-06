@@ -196,6 +196,7 @@ def test_watch_logs_source_classification_and_successful_delivery_safely(
         "twiscan: 실패 · 알 수 없는 오류",
         "게시물 901 분류: 리셋",
         "게시물 901 Discord 알림 전송 성공",
+        "실행 요약: 수집 정상 · 게시물 알림 1건",
     ]
     assert captured.err == ""
     assert "Codex usage reset" not in captured.out
@@ -367,6 +368,7 @@ def test_watch_logs_successful_health_delivery_safely(
         "reset: 실패 · 알 수 없는 오류",
         "twiscan: 실패 · 알 수 없는 오류",
         "Discord 감시 장애 알림 전송 성공: 연속 실패 3회",
+        "실행 요약: 수집 실패 · 게시물 알림 0건",
     ]
     assert captured.err == ""
     assert "private reset response" not in captured.out
@@ -469,6 +471,39 @@ def test_watch_logs_failed_health_delivery_without_error_details(
         "Discord 감시 장애 알림 전송 실패: 연속 실패 3회"
     ]
     assert "secret.bot.token" not in captured.out + captured.err
+
+
+def test_watch_reports_recovery_and_distinguishes_no_alerts_from_failed_collection(
+    monkeypatch, capsys, tmp_path,
+):
+    path = tmp_path / "state.json"
+    save_state(path, WatcherState(outage_notified=True, consecutive_failures=3))
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    monkeypatch.setattr("help_me_tibooo.__main__.fetch_all_sources", lambda _: (
+        SourceBatch("reset", posts=(make_post("123", "quiet day"),)),
+        SourceBatch("twiscan", error="private failure details"),
+    ))
+    sent = []
+    monkeypatch.setattr("help_me_tibooo.__main__.DiscordBot.send", lambda _, p: sent.append(p))
+    assert main(["watch", "--state-path", str(path)]) == 0
+    assert sent[0]["embeds"][0]["title"] == "티보햄 · 감시 복구"
+    assert sent[0]["allowed_mentions"] == {"parse": []}
+    assert "일부 소스" in sent[0]["embeds"][0]["description"]
+    assert "수집 정상 · 게시물 알림 0건" in capsys.readouterr().out
+    assert "private failure details" not in str(sent)
+    assert main(["watch", "--state-path", str(path)]) == 0
+    assert len(sent) == 1
+
+
+def test_watch_summary_marks_failed_collection(monkeypatch, capsys, tmp_path):
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    monkeypatch.setattr("help_me_tibooo.__main__.fetch_all_sources", lambda _: (
+        SourceBatch("reset"), SourceBatch("twiscan", error="HTTP status 403"),
+    ))
+    assert main(["watch", "--state-path", str(tmp_path / "state.json")]) == 0
+    assert "수집 실패 · 게시물 알림 0건" in capsys.readouterr().out
 
 
 def test_watch_retains_last_valid_state_after_unexpected_failure(

@@ -87,3 +87,5 @@ class WatcherState:
     initialized: bool = False
     source_checkpoints: tuple[SourceCheckpoint, ...] = ()
     alert_delivery: AlertDeliveryCheckpoint | None = None
+    last_outage_alert_at: datetime | None = None
+    recovery_pending: bool = False
