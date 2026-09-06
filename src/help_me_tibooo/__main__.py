@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -11,6 +12,7 @@ from help_me_tibooo.discord import (
     DiscordBotCredentials,
     build_alert_payloads,
     build_health_payload,
+    format_source_diagnostic,
 )
 from help_me_tibooo.models import AlertCategory, Post, SourceBatch, WatcherState
 from help_me_tibooo.sources import fetch_all_sources
@@ -76,6 +78,7 @@ def _watch(state_path: Path, credentials: DiscordBotCredentials) -> int:
         try:
             batches = fetch_all_sources(client)
             _log_source_statuses(batches)
+            actions_url = _github_actions_run_url()
             try:
                 state_to_save = run_watcher(
                     batches,
@@ -86,7 +89,12 @@ def _watch(state_path: Path, credentials: DiscordBotCredentials) -> int:
                         categories,
                         _next_payload_index(state, post),
                     ),
-                    lambda failure_count: _send_health(bot, failure_count),
+                    lambda failure_count: _send_health(
+                        bot,
+                        failure_count,
+                        batches,
+                        actions_url,
+                    ),
                 )
             except WatcherRunError as error:
                 state_to_save = error.state
@@ -123,8 +131,24 @@ def _smoke() -> int:
 
 def _log_source_statuses(batches: tuple[SourceBatch, ...]) -> None:
     for batch in batches:
-        status = "정상" if batch.error is None else "실패"
-        print(f"{batch.source}: {status}, 게시물 {len(batch.posts)}개")
+        print(f"{batch.source}: {format_source_diagnostic(batch)}")
+
+
+def _github_actions_run_url() -> str | None:
+    repository = os.environ.get("GITHUB_REPOSITORY")
+    run_id = os.environ.get("GITHUB_RUN_ID")
+    if not (
+        repository
+        and len(repository) <= 200
+        and re.fullmatch(r"[A-Za-z0-9._-]+/[A-Za-z0-9._-]+", repository)
+        and all(part not in {".", ".."} for part in repository.split("/"))
+        and run_id
+        and run_id.isascii()
+        and run_id.isdigit()
+        and 1 <= len(run_id) <= 20
+    ):
+        return None
+    return f"https://github.com/{repository}/actions/runs/{run_id}"
 
 
 def _send_alert(
@@ -158,9 +182,14 @@ def _next_payload_index(state: WatcherState | None, post: Post) -> int:
     return state.alert_delivery.next_payload_index
 
 
-def _send_health(bot: DiscordBot, failure_count: int) -> None:
+def _send_health(
+    bot: DiscordBot,
+    failure_count: int,
+    batches: tuple[SourceBatch, ...],
+    actions_url: str | None,
+) -> None:
     try:
-        bot.send(build_health_payload(failure_count))
+        bot.send(build_health_payload(failure_count, batches, actions_url))
     except Exception:
         print(
             f"Discord 감시 장애 알림 전송 실패: 연속 실패 {failure_count}회",

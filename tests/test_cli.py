@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from help_me_tibooo.__main__ import main
 from help_me_tibooo.models import (
     AlertDeliveryCheckpoint,
@@ -56,8 +58,8 @@ def test_smoke_does_not_require_bot_credentials_or_call_discord(monkeypatch, cap
 
     assert main(["smoke"]) == 0
     assert capsys.readouterr().out.splitlines() == [
-        "reset: 정상, 게시물 1개",
-        "twiscan: 실패, 게시물 0개",
+        "reset: 정상 응답 · 게시물 1개",
+        "twiscan: 실패 · 알 수 없는 오류",
     ]
 
 
@@ -75,8 +77,8 @@ def test_smoke_returns_failure_when_every_source_fails(monkeypatch, capsys) -> N
     assert main(["smoke"]) == 1
     captured = capsys.readouterr()
     assert captured.out.splitlines() == [
-        "reset: 실패, 게시물 0개",
-        "twiscan: 실패, 게시물 0개",
+        "reset: 실패 · 알 수 없는 오류",
+        "twiscan: 실패 · 알 수 없는 오류",
     ]
     assert captured.err == ""
     assert "private reset response" not in captured.out
@@ -190,8 +192,8 @@ def test_watch_logs_source_classification_and_successful_delivery_safely(
     assert main(["watch", "--state-path", str(state_path)]) == 0
     captured = capsys.readouterr()
     assert captured.out.splitlines() == [
-        "reset: 정상, 게시물 1개",
-        "twiscan: 실패, 게시물 0개",
+        "reset: 정상 응답 · 게시물 1개",
+        "twiscan: 실패 · 알 수 없는 오류",
         "게시물 901 분류: 리셋",
         "게시물 901 Discord 알림 전송 성공",
     ]
@@ -344,6 +346,8 @@ def test_watch_logs_successful_health_delivery_safely(
     save_state(state_path, WatcherState(consecutive_failures=2, initialized=True))
     monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
     monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "chjh6107/help-me-tibooo")
+    monkeypatch.setenv("GITHUB_RUN_ID", "987654321")
     monkeypatch.setattr(
         "help_me_tibooo.__main__.fetch_all_sources",
         lambda _client: (
@@ -351,22 +355,87 @@ def test_watch_logs_successful_health_delivery_safely(
             SourceBatch("twiscan", error="private timeline response"),
         ),
     )
+    sent_payloads: list[dict[str, object]] = []
     monkeypatch.setattr(
         "help_me_tibooo.__main__.DiscordBot.send",
-        lambda _self, _payload: None,
+        lambda _self, payload: sent_payloads.append(payload),
     )
 
     assert main(["watch", "--state-path", str(state_path)]) == 0
     captured = capsys.readouterr()
     assert captured.out.splitlines() == [
-        "reset: 실패, 게시물 0개",
-        "twiscan: 실패, 게시물 0개",
+        "reset: 실패 · 알 수 없는 오류",
+        "twiscan: 실패 · 알 수 없는 오류",
         "Discord 감시 장애 알림 전송 성공: 연속 실패 3회",
     ]
     assert captured.err == ""
     assert "private reset response" not in captured.out
     assert "private timeline response" not in captured.out
     assert "discord.example" not in captured.out
+    description = sent_payloads[0]["embeds"][0]["description"]
+    assert "reset: 실패 · 알 수 없는 오류" in description
+    assert "twiscan: 실패 · 알 수 없는 오류" in description
+    assert (
+        "실행 로그: [GitHub Actions에서 열기]"
+        "(https://github.com/chjh6107/help-me-tibooo/actions/runs/987654321)"
+        in description
+    )
+    assert "private reset response" not in str(sent_payloads)
+    assert "private timeline response" not in str(sent_payloads)
+
+
+@pytest.mark.parametrize(
+    ("repository", "run_id"),
+    (
+        (None, None),
+        ("owner/..", "123"),
+        ("./repo", "123"),
+        ("owner/.", "123"),
+        ("../repo", "123"),
+        ("chjh6107/help-me-tibooo/extra", "123"),
+        ("chjh6107/help me tibooo", "123"),
+        ("chjh6107/help-me-tibooo", "not-a-run"),
+        ("chjh6107/help-me-tibooo", "１２３"),
+        (("a" * 201) + "/help-me-tibooo", "123"),
+    ),
+)
+def test_watch_omits_actions_link_for_missing_or_invalid_environment(
+    monkeypatch,
+    tmp_path: Path,
+    repository: str | None,
+    run_id: str | None,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    save_state(state_path, WatcherState(consecutive_failures=2, initialized=True))
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    if repository is None:
+        monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
+    else:
+        monkeypatch.setenv("GITHUB_REPOSITORY", repository)
+    if run_id is None:
+        monkeypatch.delenv("GITHUB_RUN_ID", raising=False)
+    else:
+        monkeypatch.setenv("GITHUB_RUN_ID", run_id)
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        lambda _client: (
+            SourceBatch("reset", error="HTTP status 503"),
+            SourceBatch("twiscan", error="request failed"),
+        ),
+    )
+    sent_payloads: list[dict[str, object]] = []
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.DiscordBot.send",
+        lambda _self, payload: sent_payloads.append(payload),
+    )
+
+    assert main(["watch", "--state-path", str(state_path)]) == 0
+
+    description = sent_payloads[0]["embeds"][0]["description"]
+    assert "reset: 실패 · HTTP 503" in description
+    assert "twiscan: 실패 · request failed" in description
+    assert "실행 로그" not in description
 
 
 def test_watch_logs_failed_health_delivery_without_error_details(
