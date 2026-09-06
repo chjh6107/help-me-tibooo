@@ -12,6 +12,7 @@ from help_me_tibooo.discord import (
     DiscordBotCredentials,
     build_alert_payloads,
     build_health_payload,
+    build_recovery_payload,
     format_source_diagnostic,
 )
 from help_me_tibooo.models import AlertCategory, Post, SourceBatch, WatcherState
@@ -73,8 +74,15 @@ def _build_parser() -> argparse.ArgumentParser:
 def _watch(state_path: Path, credentials: DiscordBotCredentials) -> int:
     state = load_state(state_path)
     state_to_save: WatcherState | None = state
+    sent_count = 0
     with httpx.Client() as client:
         bot = DiscordBot(credentials, client, time.sleep)
+
+        def send_post(post: Post, categories: tuple[AlertCategory, ...]) -> None:
+            nonlocal sent_count
+            _send_alert(bot, post, categories, _next_payload_index(state, post))
+            sent_count += 1
+
         try:
             batches = fetch_all_sources(client)
             _log_source_statuses(batches)
@@ -83,22 +91,23 @@ def _watch(state_path: Path, credentials: DiscordBotCredentials) -> int:
                 state_to_save = run_watcher(
                     batches,
                     state,
-                    lambda post, categories: _send_alert(
-                        bot,
-                        post,
-                        categories,
-                        _next_payload_index(state, post),
-                    ),
+                    send_post,
                     lambda failure_count: _send_health(
                         bot,
                         failure_count,
                         batches,
                         actions_url,
                     ),
+                    send_recovery=lambda: _send_recovery(bot, batches, actions_url),
                 )
             except WatcherRunError as error:
                 state_to_save = error.state
                 raise
+            finally:
+                status = "수집 정상" if any(
+                    batch.error is None and batch.posts for batch in batches
+                ) else "수집 실패"
+                print(f"실행 요약: {status} · 게시물 알림 {sent_count}건")
         finally:
             if state_to_save is not None:
                 save_state(state_path, state_to_save)
@@ -197,6 +206,17 @@ def _send_health(
         )
         raise
     print(f"Discord 감시 장애 알림 전송 성공: 연속 실패 {failure_count}회")
+
+
+def _send_recovery(
+    bot: DiscordBot, batches: tuple[SourceBatch, ...], actions_url: str | None,
+) -> None:
+    try:
+        bot.send(build_recovery_payload(batches, actions_url))
+    except Exception:
+        print("Discord 감시 복구 알림 전송 실패", file=sys.stderr)
+        raise
+    print("Discord 감시 복구 알림 전송 성공")
 
 
 if __name__ == "__main__":

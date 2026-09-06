@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from help_me_tibooo.classifier import classify
 from help_me_tibooo.models import (
@@ -32,20 +32,33 @@ def run_watcher(
     state: WatcherState | None,
     send_alert: Callable[[Post, tuple[AlertCategory, ...]], None],
     send_health: Callable[[int], None],
+    *,
+    send_recovery: Callable[[], None] | None = None,
+    now: datetime | None = None,
 ) -> WatcherState:
+    now = now or datetime.now(UTC)
     usable_batches = tuple(batch for batch in batches if batch.error is None and batch.posts)
     source_state = state or WatcherState()
     if usable_batches:
+        recovery_pending = source_state.recovery_pending or source_state.outage_notified
         source_state = _clear_failure_state(source_state)
+        if send_recovery is not None and recovery_pending:
+            source_state = replace(source_state, recovery_pending=True)
+            try:
+                send_recovery()
+            except Exception:
+                pass
+            else:
+                source_state = replace(source_state, recovery_pending=False)
     try:
         current_state = _resume_pending_alert(source_state, send_alert)
     except WatcherRunError as error:
         if usable_batches:
             raise
-        failed_state = _record_total_failure(error.state, send_health)
+        failed_state = _record_total_failure(error.state, send_health, now)
         raise WatcherRunError(failed_state) from None
     if not usable_batches:
-        return _record_total_failure(current_state, send_health)
+        return _record_total_failure(current_state, send_health, now)
 
     next_state = current_state
     was_initialized = current_state.initialized
@@ -220,16 +233,23 @@ def _tracking_sources(
 def _record_total_failure(
     state: WatcherState,
     send_health: Callable[[int], None],
+    now: datetime,
 ) -> WatcherState:
-    next_state = replace(state, consecutive_failures=state.consecutive_failures + 1)
-    if next_state.consecutive_failures < 3 or next_state.outage_notified:
+    next_state = replace(state, consecutive_failures=state.consecutive_failures + 1,
+                         recovery_pending=False)
+    if next_state.consecutive_failures < 3:
         return next_state
+    if next_state.outage_notified:
+        if next_state.last_outage_alert_at is None:
+            return replace(next_state, last_outage_alert_at=now)
+        if now - next_state.last_outage_alert_at < timedelta(hours=6):
+            return next_state
 
     try:
         send_health(next_state.consecutive_failures)
     except Exception:
         return next_state
-    return replace(next_state, outage_notified=True)
+    return replace(next_state, outage_notified=True, last_outage_alert_at=now)
 
 
 def _find_checkpoint(state: WatcherState, source: SourceName) -> SourceCheckpoint | None:
@@ -316,7 +336,8 @@ def _post_is_after_position(post: Post, position: CheckpointPosition) -> bool:
 
 
 def _clear_failure_state(state: WatcherState) -> WatcherState:
-    return replace(state, consecutive_failures=0, outage_notified=False)
+    return replace(state, consecutive_failures=0, outage_notified=False,
+                   last_outage_alert_at=None, recovery_pending=False)
 
 
 def _oldest_first(posts: tuple[Post, ...]) -> tuple[Post, ...]:
