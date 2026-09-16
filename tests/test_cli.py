@@ -239,6 +239,7 @@ def test_watch_persists_partial_state_after_delivery_failure(
     assert load_state(state_path) == WatcherState(
         latest_id="701",
         seen_ids=("700", "701"),
+        handled_reset_ids=("701",),
         initialized=True,
         source_checkpoints=(
             SourceCheckpoint(
@@ -362,7 +363,7 @@ def test_watch_logs_successful_health_delivery_safely(
         lambda _self, payload: sent_payloads.append(payload),
     )
 
-    assert main(["watch", "--state-path", str(state_path)]) == 0
+    assert main(["watch", "--state-path", str(state_path)]) == 1
     captured = capsys.readouterr()
     assert captured.out.splitlines() == [
         "reset: 실패 · 알 수 없는 오류",
@@ -432,7 +433,7 @@ def test_watch_omits_actions_link_for_missing_or_invalid_environment(
         lambda _self, payload: sent_payloads.append(payload),
     )
 
-    assert main(["watch", "--state-path", str(state_path)]) == 0
+    assert main(["watch", "--state-path", str(state_path)]) == 1
 
     description = sent_payloads[0]["embeds"][0]["description"]
     assert "reset: 실패 · HTTP 503" in description
@@ -465,7 +466,7 @@ def test_watch_logs_failed_health_delivery_without_error_details(
         fail_delivery,
     )
 
-    assert main(["watch", "--state-path", str(state_path)]) == 0
+    assert main(["watch", "--state-path", str(state_path)]) == 1
     captured = capsys.readouterr()
     assert captured.err.splitlines() == [
         "Discord 감시 장애 알림 전송 실패: 연속 실패 3회"
@@ -489,7 +490,7 @@ def test_watch_reports_recovery_and_distinguishes_no_alerts_from_failed_collecti
     assert main(["watch", "--state-path", str(path)]) == 0
     assert sent[0]["embeds"][0]["title"] == "티보햄 · 감시 복구"
     assert sent[0]["allowed_mentions"] == {"parse": []}
-    assert "일부 소스" in sent[0]["embeds"][0]["description"]
+    assert "전체 소식 감시 소스" in sent[0]["embeds"][0]["description"]
     assert "수집 정상 · 게시물 알림 0건" in capsys.readouterr().out
     assert "private failure details" not in str(sent)
     assert main(["watch", "--state-path", str(path)]) == 0
@@ -502,7 +503,7 @@ def test_watch_summary_marks_failed_collection(monkeypatch, capsys, tmp_path):
     monkeypatch.setattr("help_me_tibooo.__main__.fetch_all_sources", lambda _: (
         SourceBatch("reset"), SourceBatch("twiscan", error="HTTP status 403"),
     ))
-    assert main(["watch", "--state-path", str(tmp_path / "state.json")]) == 0
+    assert main(["watch", "--state-path", str(tmp_path / "state.json")]) == 1
     assert "수집 실패 · 게시물 알림 0건" in capsys.readouterr().out
 
 

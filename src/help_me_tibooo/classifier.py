@@ -1,6 +1,6 @@
 import re
 
-from help_me_tibooo.models import AlertCategory, Post, ResetSourceKind
+from help_me_tibooo.models import AlertCategory, Post, ResetSourceKind, SourceName
 
 
 PRODUCT_TERMS = ("openai", "codex", "chatgpt", "gpt-", "astra")
@@ -29,6 +29,8 @@ GENERIC_INCIDENT_TERMS = ("outage", "degraded", "investigating", "incident", "re
 def classify(post: Post) -> tuple[AlertCategory, ...]:
     if post.is_repost:
         return ()
+    if post.source == SourceName.RESETS:
+        return (AlertCategory.RESET,)
 
     text = post.text.lower()
     has_product_context = _contains_any(text, PRODUCT_TERMS)

@@ -7,7 +7,7 @@ from help_me_tibooo.state import load_state, save_state
 from help_me_tibooo.watcher import run_watcher
 
 
-def test_outage_reminder_uses_elapsed_time_and_retries_failed_delivery(tmp_path):
+def test_changed_outage_cause_retries_failed_delivery_without_repeating_same_cause(tmp_path):
     now = datetime(2026, 9, 7, tzinfo=UTC)
     sent = []
     failed = (SourceBatch("reset", error="request failed"),)
@@ -25,10 +25,11 @@ def test_outage_reminder_uses_elapsed_time_and_retries_failed_delivery(tmp_path)
     def unavailable(_):
         raise RuntimeError("secret")
 
-    state = run_watcher(failed, state, lambda *_: None, unavailable,
+    changed = (SourceBatch("reset", error="HTTP status 403"),)
+    state = run_watcher(changed, state, lambda *_: None, unavailable,
                         now=now + timedelta(hours=6))
     assert state.last_outage_alert_at == now
-    state = run_watcher(failed, state, lambda *_: None, sent.append,
+    state = run_watcher(changed, state, lambda *_: None, sent.append,
                         now=now + timedelta(hours=7))
     assert sent == [3, 6]
     assert state.last_outage_alert_at == now + timedelta(hours=7)
@@ -59,7 +60,7 @@ def test_recovery_retries_without_blocking_posts_and_sends_once(tmp_path):
     assert state.last_outage_alert_at is None
 
 
-def test_legacy_notified_outage_starts_six_hour_timer_without_immediate_duplicate(tmp_path):
+def test_legacy_notified_outage_migrates_without_duplicate_even_days_later(tmp_path):
     path = tmp_path / "state.json"
     path.write_text('{"version":3,"outage_notified":true,"consecutive_failures":8}')
     now = datetime(2026, 9, 7, tzinfo=UTC)
@@ -67,10 +68,10 @@ def test_legacy_notified_outage_starts_six_hour_timer_without_immediate_duplicat
     state = run_watcher((SourceBatch("reset"),), load_state(path), lambda *_: None,
                         sent.append, now=now)
     assert sent == []
-    assert state.last_outage_alert_at == now
+    assert state.outage_signature == "total|reset:empty response"
     state = run_watcher((SourceBatch("reset"),), state, lambda *_: None,
                         sent.append, now=now + timedelta(hours=6))
-    assert sent == [10]
+    assert sent == []
 
 
 @pytest.mark.parametrize("value", ['"bad"', '"2026-09-07T00:00:00"', '123'])

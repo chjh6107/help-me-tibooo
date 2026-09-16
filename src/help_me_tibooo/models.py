@@ -14,6 +14,7 @@ class AlertCategory(StrEnum):
 class SourceName(StrEnum):
     RESET = "reset"
     TWISCAN = "twiscan"
+    RESETS = "resets"
     LEGACY = "*"
 
 
@@ -89,3 +90,5 @@ class WatcherState:
     alert_delivery: AlertDeliveryCheckpoint | None = None
     last_outage_alert_at: datetime | None = None
     recovery_pending: bool = False
+    outage_signature: str | None = None
+    handled_reset_ids: tuple[str, ...] = ()

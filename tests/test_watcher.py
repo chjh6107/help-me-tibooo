@@ -332,6 +332,7 @@ def test_failed_alert_carries_state_after_earlier_success() -> None:
     assert error.value.state == WatcherState(
         latest_id="701",
         seen_ids=("700", "701"),
+        handled_reset_ids=("701",),
         initialized=True,
         source_checkpoints=(
             SourceCheckpoint(

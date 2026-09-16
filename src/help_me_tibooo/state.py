@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from .models import (
+from help_me_tibooo.models import (
     AlertDeliveryCheckpoint,
     AlertCategory,
     CheckpointPosition,
@@ -18,7 +18,7 @@ def load_state(path: Path) -> WatcherState | None:
         return None
 
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict) or payload.get("version") not in {1, 2, 3}:
+    if not isinstance(payload, dict) or payload.get("version") not in {1, 2, 3, 4}:
         raise ValueError("지원하지 않는 상태 버전입니다")
 
     latest_id = payload.get("latest_id")
@@ -27,6 +27,12 @@ def load_state(path: Path) -> WatcherState | None:
     outage_notified = payload.get("outage_notified", False)
     last_outage_alert_at = _load_checkpoint_datetime(payload.get("last_outage_alert_at"))
     recovery_pending = payload.get("recovery_pending", False)
+    outage_signature = payload.get("outage_signature")
+    handled_reset_ids = payload.get("handled_reset_ids", [])
+    if not isinstance(handled_reset_ids, list) or any(not isinstance(value, str) for value in handled_reset_ids):
+        raise ValueError("handled_reset_ids의 형식이 잘못되었습니다")
+    if outage_signature is not None and (not isinstance(outage_signature, str) or len(outage_signature) > 1000):
+        raise ValueError("outage_signature의 형식이 잘못되었습니다")
     if not isinstance(recovery_pending, bool):
         raise ValueError("recovery_pending의 형식이 잘못되었습니다")
     if latest_id is not None and not isinstance(latest_id, str):
@@ -62,7 +68,7 @@ def load_state(path: Path) -> WatcherState | None:
         source_checkpoints = _load_source_checkpoints(payload.get("source_checkpoints", []))
     alert_delivery = (
         _load_alert_delivery(payload.get("alert_delivery"))
-        if payload["version"] == 3
+        if payload["version"] in {3, 4}
         else None
     )
 
@@ -76,6 +82,8 @@ def load_state(path: Path) -> WatcherState | None:
         alert_delivery=alert_delivery,
         last_outage_alert_at=last_outage_alert_at,
         recovery_pending=recovery_pending,
+        outage_signature=outage_signature,
+        handled_reset_ids=tuple(handled_reset_ids),
     )
 
 
@@ -83,7 +91,9 @@ def save_state(path: Path, state: WatcherState) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
     payload = {
-        "version": 3,
+        "version": 4,
+        "outage_signature": state.outage_signature,
+        "handled_reset_ids": list(state.handled_reset_ids),
         "latest_id": state.latest_id,
         "seen_ids": list(state.seen_ids[-500:]),
         "consecutive_failures": state.consecutive_failures,
