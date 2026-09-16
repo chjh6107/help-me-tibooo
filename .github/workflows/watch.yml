@@ -65,9 +65,7 @@ jobs:
         run: python -m help_me_tibooo test-bot
       - name: 공개 소스 smoke
         if: steps.mode.outputs.value == 'smoke'
-        run: |
-          python scripts/diagnose-sources.py
-          python -m help_me_tibooo smoke
+        run: python -m help_me_tibooo smoke
       - name: 리셋 API smoke
         if: steps.mode.outputs.value == 'smoke-resets'
         run: python -m help_me_tibooo smoke --scope resets
