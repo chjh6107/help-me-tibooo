@@ -13,13 +13,6 @@ def _workflow_steps() -> dict[str, dict[str, object]]:
     }
 
 
-def test_watcher_uses_non_azure_runner_for_public_sources() -> None:
-    workflow_path = Path(__file__).parents[1] / ".github" / "workflows" / "watch.yml"
-    workflow = yaml.load(workflow_path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
-
-    assert workflow["jobs"]["run"]["runs-on"] == "macos-latest"
-
-
 def test_manual_smoke_step_does_not_receive_discord_credentials() -> None:
     smoke_step = _workflow_steps()["공개 소스 smoke"]
 

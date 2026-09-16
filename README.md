@@ -35,8 +35,6 @@ Developer Portal에서 같은 봇을 만들고, GitHub 저장소의
 
 예약 실행은 매시 7분·37분, 30분마다 요청됩니다. GitHub Actions의 작업량이나 서비스 상태에 따라
 실제 시작 시각은 늦어질 수 있습니다.
-감시 작업은 공개 저장소에서 무료로 제공되는 표준 macOS GitHub-hosted runner를 사용합니다.
-Ubuntu runner의 Azure 네트워크에서는 세 공개 소스 모두 HTTP 403이 재현되었습니다.
 
 Bot Token은 저장소 파일, 이슈, 로그에 붙여 넣지 마세요. 노출되었다면 Discord
 Developer Portal의 Bot 화면에서 즉시 토큰을 재발급하세요.
