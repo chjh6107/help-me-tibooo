@@ -202,6 +202,17 @@ def test_watch_partial_outage_saves_state_returns_failure_and_sends_one_notice(m
     assert len(sent) == 1
 
 
+def test_empty_public_history_is_not_reported_as_healthy(monkeypatch):
+    def handler(request):
+        return httpx.Response(200, json=response_data([])) if request.url.host == "codex-resets.com" else httpx.Response(403)
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        batches = fetch_all_sources(client)
+    public = batches[2]
+    assert public.error == "invalid response"
+    monkeypatch.setattr("help_me_tibooo.__main__.fetch_all_sources", lambda _: batches)
+    assert main(["smoke", "--scope", "resets"]) == 1
+
+
 @pytest.mark.parametrize("legacy_checkpoint", [True, False])
 def test_first_public_collection_baselines_legacy_state_without_historical_flood(legacy_checkpoint):
     from help_me_tibooo.models import CheckpointPosition, Post, SourceCheckpoint

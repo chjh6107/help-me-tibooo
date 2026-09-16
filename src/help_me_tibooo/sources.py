@@ -194,6 +194,8 @@ def _fetch_public_resets(client: httpx.Client) -> SourceBatch:
             return batch
         posts.update((post.id, post) for post in batch.posts)
         if next_cursor is None:
+            if not posts:
+                return SourceBatch(SourceName.RESETS, error="invalid response")
             return SourceBatch(SourceName.RESETS, tuple(posts.values()))
         if next_cursor in seen_cursors:
             return SourceBatch(SourceName.RESETS, error="invalid response")
