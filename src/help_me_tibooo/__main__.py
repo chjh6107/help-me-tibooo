@@ -17,6 +17,7 @@ from help_me_tibooo.discord import (
 )
 from help_me_tibooo.models import AlertCategory, Post, SourceBatch, SourceName, WatcherState
 from help_me_tibooo.sources import collection_status, fetch_all_sources
+from help_me_tibooo.source_transport import SourceTransport
 from help_me_tibooo.state import load_state, save_state
 from help_me_tibooo.watcher import (
     AlertDeliveryInterrupted,
@@ -85,7 +86,8 @@ def _watch(state_path: Path, credentials: DiscordBotCredentials) -> int:
             sent_count += 1
 
         try:
-            batches = fetch_all_sources(client)
+            with httpx.Client(transport=SourceTransport()) as source_client:
+                batches = fetch_all_sources(source_client)
             _log_source_statuses(batches)
             actions_url = _github_actions_run_url()
             try:
@@ -131,7 +133,7 @@ def _test_bot(credentials: DiscordBotCredentials) -> int:
 
 
 def _smoke(scope: str = "all") -> int:
-    with httpx.Client() as client:
+    with httpx.Client(transport=SourceTransport()) as client:
         batches = fetch_all_sources(client)
     _log_source_statuses(batches)
     if scope == "resets":
