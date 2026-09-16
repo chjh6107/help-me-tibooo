@@ -15,8 +15,8 @@ from help_me_tibooo.discord import (
     build_recovery_payload,
     format_source_diagnostic,
 )
-from help_me_tibooo.models import AlertCategory, Post, SourceBatch, WatcherState
-from help_me_tibooo.sources import fetch_all_sources
+from help_me_tibooo.models import AlertCategory, Post, SourceBatch, SourceName, WatcherState
+from help_me_tibooo.sources import collection_status, fetch_all_sources
 from help_me_tibooo.state import load_state, save_state
 from help_me_tibooo.watcher import (
     AlertDeliveryInterrupted,
@@ -52,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "test-bot":
             assert credentials is not None
             return _test_bot(credentials)
-        return _smoke()
+        return _smoke(args.scope)
     except WatcherRunError as error:
         print(f"감시 실행 실패: {error}", file=sys.stderr)
         return 1
@@ -67,7 +67,8 @@ def _build_parser() -> argparse.ArgumentParser:
     watch_parser = subparsers.add_parser("watch")
     watch_parser.add_argument("--state-path", default=".state/watcher.json")
     subparsers.add_parser("test-bot")
-    subparsers.add_parser("smoke")
+    smoke_parser = subparsers.add_parser("smoke")
+    smoke_parser.add_argument("--scope", choices=("all", "resets"), default="all")
     return parser
 
 
@@ -104,14 +105,12 @@ def _watch(state_path: Path, credentials: DiscordBotCredentials) -> int:
                 state_to_save = error.state
                 raise
             finally:
-                status = "수집 정상" if any(
-                    batch.error is None and batch.posts for batch in batches
-                ) else "수집 실패"
+                status = collection_status(batches)
                 print(f"실행 요약: {status} · 게시물 알림 {sent_count}건")
         finally:
             if state_to_save is not None:
                 save_state(state_path, state_to_save)
-    return 0
+    return 0 if collection_status(batches) == "수집 정상" else 1
 
 
 def _test_bot(credentials: DiscordBotCredentials) -> int:
@@ -131,11 +130,13 @@ def _test_bot(credentials: DiscordBotCredentials) -> int:
     return 0
 
 
-def _smoke() -> int:
+def _smoke(scope: str = "all") -> int:
     with httpx.Client() as client:
         batches = fetch_all_sources(client)
     _log_source_statuses(batches)
-    return 0 if any(batch.error is None for batch in batches) else 1
+    if scope == "resets":
+        return 0 if any(batch.source == SourceName.RESETS and batch.error is None for batch in batches) else 1
+    return 0 if collection_status(batches) == "수집 정상" else 1
 
 
 def _log_source_statuses(batches: tuple[SourceBatch, ...]) -> None:

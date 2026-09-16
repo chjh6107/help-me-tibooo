@@ -1,8 +1,9 @@
 from collections.abc import Callable
 from dataclasses import replace
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 
 from help_me_tibooo.classifier import classify
+from help_me_tibooo.sources import outage_signature
 from help_me_tibooo.models import (
     AlertDeliveryCheckpoint,
     AlertCategory,
@@ -39,7 +40,8 @@ def run_watcher(
     now = now or datetime.now(UTC)
     usable_batches = tuple(batch for batch in batches if batch.error is None and batch.posts)
     source_state = state or WatcherState()
-    if usable_batches:
+    signature = outage_signature(batches)
+    if signature is None:
         recovery_pending = source_state.recovery_pending or source_state.outage_notified
         source_state = _clear_failure_state(source_state)
         if send_recovery is not None and recovery_pending:
@@ -53,12 +55,14 @@ def run_watcher(
     try:
         current_state = _resume_pending_alert(source_state, send_alert)
     except WatcherRunError as error:
-        if usable_batches:
+        if signature is None:
             raise
-        failed_state = _record_total_failure(error.state, send_health, now)
+        failed_state = _record_total_failure(error.state, send_health, now, signature)
         raise WatcherRunError(failed_state) from None
+    if signature is not None:
+        current_state = _record_total_failure(current_state, send_health, now, signature)
     if not usable_batches:
-        return _record_total_failure(current_state, send_health, now)
+        return current_state
 
     next_state = current_state
     was_initialized = current_state.initialized
@@ -69,7 +73,7 @@ def run_watcher(
 
     for batch in usable_batches:
         checkpoint = _find_checkpoint(current_state, batch.source)
-        if checkpoint is None and current_state.initialized and not current_state.source_checkpoints:
+        if checkpoint is None and batch.source != SourceName.RESETS and current_state.initialized and not current_state.source_checkpoints:
             checkpoint = SourceCheckpoint(
                 source=batch.source,
                 position=CheckpointPosition(id=current_state.latest_id),
@@ -82,7 +86,10 @@ def run_watcher(
         source_checkpoint = replace(checkpoint, source=batch.source)
         next_state = _set_checkpoint(next_state, source_checkpoint)
         for post in batch.posts:
-            if not _post_is_eligible(post, source_checkpoint):
+            if batch.source == SourceName.RESETS:
+                if post.id in current_state.handled_reset_ids:
+                    continue
+            elif not _post_is_eligible(post, source_checkpoint):
                 continue
             candidate_posts.setdefault(post.id, post)
             candidate_sources.setdefault(post.id, []).append(batch.source)
@@ -93,6 +100,8 @@ def run_watcher(
         pending_ids: list[str] = []
         for post in _oldest_first(batch.posts):
             baseline_posts.append(post)
+            if batch.source == SourceName.RESETS and post.id not in candidate_posts:
+                next_state = _remember_reset(next_state, post.id)
             if post.id in candidate_posts:
                 overlap_found = True
                 pending_ids.append(post.id)
@@ -118,9 +127,15 @@ def run_watcher(
                 else _remember(next_state, post.id)
             )
 
-    for post in _oldest_first(tuple(candidate_posts.values())):
-        if post.id not in next_state.seen_ids:
+    for post in _order_candidates(tuple(candidate_posts.values()), batches):
+        confirmed_reset = SourceName.RESETS in candidate_sources[post.id] and post.id not in next_state.handled_reset_ids
+        if post.id not in next_state.seen_ids or confirmed_reset:
             categories = classify(post)
+            if confirmed_reset:
+                categories = tuple(category for category in AlertCategory
+                                   if category == AlertCategory.RESET or category in categories)
+            if post.id in next_state.seen_ids:
+                categories = (AlertCategory.RESET,)
             if categories:
                 tracking_sources = _tracking_sources(
                     next_state,
@@ -151,6 +166,8 @@ def run_watcher(
                         ),
                     )
                     raise WatcherRunError(next_state) from None
+                if AlertCategory.RESET in categories:
+                    next_state = _remember_reset(next_state, post.id)
         next_state = _remember(next_state, post.id)
         tracking_sources = _tracking_sources(
             next_state,
@@ -192,6 +209,8 @@ def _resume_pending_alert(
         raise WatcherRunError(state) from None
 
     next_state = _remember(replace(state, alert_delivery=None), checkpoint.post_id)
+    if AlertCategory.RESET in checkpoint.categories:
+        next_state = _remember_reset(next_state, checkpoint.post_id)
     for source in checkpoint.sources:
         source_checkpoint = _find_checkpoint(next_state, source)
         if source_checkpoint is not None:
@@ -234,22 +253,24 @@ def _record_total_failure(
     state: WatcherState,
     send_health: Callable[[int], None],
     now: datetime,
+    signature: str,
 ) -> WatcherState:
     next_state = replace(state, consecutive_failures=state.consecutive_failures + 1,
                          recovery_pending=False)
     if next_state.consecutive_failures < 3:
         return next_state
     if next_state.outage_notified:
-        if next_state.last_outage_alert_at is None:
-            return replace(next_state, last_outage_alert_at=now)
-        if now - next_state.last_outage_alert_at < timedelta(hours=6):
+        if next_state.outage_signature == signature:
             return next_state
+        if next_state.outage_signature is None and signature.startswith("total|"):
+            return replace(next_state, outage_signature=signature)
 
     try:
         send_health(next_state.consecutive_failures)
     except Exception:
         return next_state
-    return replace(next_state, outage_notified=True, last_outage_alert_at=now)
+    return replace(next_state, outage_notified=True, last_outage_alert_at=now,
+                   outage_signature=signature)
 
 
 def _find_checkpoint(state: WatcherState, source: SourceName) -> SourceCheckpoint | None:
@@ -259,7 +280,7 @@ def _find_checkpoint(state: WatcherState, source: SourceName) -> SourceCheckpoin
             return checkpoint
         if checkpoint.source == SourceName.LEGACY:
             legacy = checkpoint
-    return legacy
+    return legacy if source != SourceName.RESETS else None
 
 
 def _set_checkpoint(state: WatcherState, checkpoint: SourceCheckpoint) -> WatcherState:
@@ -337,12 +358,25 @@ def _post_is_after_position(post: Post, position: CheckpointPosition) -> bool:
 
 def _clear_failure_state(state: WatcherState) -> WatcherState:
     return replace(state, consecutive_failures=0, outage_notified=False,
-                   last_outage_alert_at=None, recovery_pending=False)
+                   last_outage_alert_at=None, recovery_pending=False, outage_signature=None)
 
 
 def _oldest_first(posts: tuple[Post, ...]) -> tuple[Post, ...]:
+    if posts and all(post.source == SourceName.RESETS for post in posts):
+        return tuple(sorted(posts, key=lambda post: (_created_at_timestamp(post.created_at), post.id)))
     ordered = sorted(enumerate(posts), key=lambda item: _post_sort_key(item[1], item[0]))
     return tuple(post for _, post in ordered)
+
+
+def _order_candidates(posts: tuple[Post, ...], batches: tuple[SourceBatch, ...]) -> tuple[Post, ...]:
+    ordered = list(_oldest_first(posts))
+    public_posts = {post.id: post for batch in batches if batch.source == SourceName.RESETS and batch.error is None for post in batch.posts}
+    positions = [index for index, post in enumerate(ordered) if post.id in public_posts]
+    resets = sorted((ordered[index] for index in positions),
+                    key=lambda post: (_created_at_timestamp(public_posts[post.id].created_at), post.id))
+    for index, post in zip(positions, resets, strict=True):
+        ordered[index] = post
+    return tuple(ordered)
 
 
 def _post_sort_key(post: Post, input_order: int) -> tuple[int, int, float, int]:
@@ -377,3 +411,9 @@ def _remember_seen_only(state: WatcherState, post_id: str) -> WatcherState:
     if post_id in state.seen_ids:
         return state
     return replace(state, seen_ids=(*state.seen_ids, post_id))
+
+
+def _remember_reset(state: WatcherState, post_id: str) -> WatcherState:
+    if post_id in state.handled_reset_ids:
+        return state
+    return replace(state, handled_reset_ids=(*state.handled_reset_ids, post_id))

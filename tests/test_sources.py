@@ -4,7 +4,7 @@ import httpx
 import pytest
 
 from help_me_tibooo.models import ResetSourceKind, SourceName
-from help_me_tibooo.sources import RESET_FEED_URL, fetch_all_sources, parse_reset_feed, parse_twiscan_html
+from help_me_tibooo.sources import RESET_FEED_URL, fetch_timeline_sources as fetch_all_sources, parse_reset_feed, parse_twiscan_html
 
 
 def test_reset_feed_keeps_replies(load_json_fixture) -> None:

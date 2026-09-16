@@ -130,7 +130,8 @@ def test_health_payload_names_consecutive_failure_count() -> None:
         {
             "title": "티보햄 · 감시 장애",
             "description": (
-                "Tibo 감시가 3회 연속 실패했습니다.\n\n"
+                "Tibo 감시 범위에 3회 연속 장애가 있습니다.\n"
+                "현재 게시물 수집을 사용할 수 없습니다.\n\n"
                 "reset: 실패 · HTTP 503\n"
                 "twiscan: 정상 응답 · 게시물 0개\n\n"
                 "실행 로그: [GitHub Actions에서 열기]"
@@ -152,7 +153,8 @@ def test_health_payload_redacts_unknown_source_error_and_omits_missing_run_url()
 
     description = payload["embeds"][0]["description"]
     assert description == (
-        "Tibo 감시가 3회 연속 실패했습니다.\n\n"
+        "Tibo 감시 범위에 3회 연속 장애가 있습니다.\n"
+        "현재 게시물 수집을 사용할 수 없습니다.\n\n"
         "reset: 실패 · 알 수 없는 오류\n"
         "twiscan: 실패 · request timed out"
     )
@@ -188,7 +190,7 @@ def test_health_payload_bounds_diagnostics_and_actions_url_to_embed_limit() -> N
 
     description = payload["embeds"][0]["description"]
     assert len(description.encode("utf-16-le")) // 2 <= 4_096
-    assert description.count("reset: 실패 · invalid response") == 2
+    assert description.count("reset: 실패 · invalid response") == 3
     assert "실행 로그" not in description
 
 

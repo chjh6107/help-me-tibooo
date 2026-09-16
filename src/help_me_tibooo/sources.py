@@ -1,4 +1,5 @@
 import re
+from urllib.parse import urlsplit
 from collections.abc import Callable, Mapping
 from datetime import datetime
 
@@ -10,6 +11,7 @@ from help_me_tibooo.models import Post, ResetSourceKind, SourceBatch, SourceName
 
 RESET_FEED_URL = "https://codex-reset.com/api/feed"
 TWISCAN_TIMELINE_URL = "https://twiscan.com/en/x/thsottiaux"
+PUBLIC_RESETS_URL = "https://codex-resets.com/api/v1/resets"
 POST_ID_PATTERN = re.compile(r"^clamp-(\d{1,20})-(\d{1,20})$")
 RESPONSE_LIMIT_BYTES = 2 * 1024 * 1024
 
@@ -98,10 +100,108 @@ def parse_twiscan_html(html: str) -> tuple[Post, ...]:
 
 
 def fetch_all_sources(client: httpx.Client) -> tuple[SourceBatch, ...]:
+    return (*fetch_timeline_sources(client), _fetch_public_resets(client))
+
+
+def fetch_timeline_sources(client: httpx.Client) -> tuple[SourceBatch, ...]:
     return (
         _fetch_source(client, SourceName.RESET, RESET_FEED_URL, _decode_reset_feed),
         _fetch_source(client, SourceName.TWISCAN, TWISCAN_TIMELINE_URL, _decode_twiscan_timeline),
     )
+
+
+def collection_status(batches: tuple[SourceBatch, ...]) -> str:
+    timeline_ok = any(batch.error is None and batch.posts and batch.source in {SourceName.RESET, SourceName.TWISCAN} for batch in batches)
+    resets_ok = any(batch.error is None and batch.source == SourceName.RESETS for batch in batches)
+    if timeline_ok:
+        return "수집 정상"
+    if resets_ok:
+        return "부분 장애 · 리셋 감시 정상 · 전체 소식 감시 불가"
+    return "수집 실패"
+
+
+def outage_signature(batches: tuple[SourceBatch, ...]) -> str | None:
+    status = collection_status(batches)
+    if status == "수집 정상":
+        return None
+    prefix = "partial" if status.startswith("부분 장애") else "total"
+    failures = []
+    for batch in sorted(batches, key=lambda batch: batch.source):
+        if batch.error is None and (batch.posts or batch.source == SourceName.RESETS):
+            continue
+        error = batch.error or "empty response"
+        if error not in {"request timed out", "request failed", "invalid response", "response exceeds 2 MiB", "empty response"} and re.fullmatch(r"HTTP status [0-9]{3}", error) is None:
+            error = "unknown error"
+        failures.append(f"{batch.source}:{error}")
+    return prefix + "|" + "|".join(failures)
+
+
+def _fetch_public_resets(client: httpx.Client) -> SourceBatch:
+    posts: dict[str, Post] = {}
+    cursor: str | None = None
+    seen_cursors: set[str] = set()
+    for _ in range(10):
+        next_cursor: str | None = None
+
+        def decode(content: bytes) -> tuple[Post, ...]:
+            nonlocal next_cursor
+            payload = httpx.Response(200, content=content).json()
+            if not isinstance(payload, Mapping) or not isinstance(payload.get("data"), list):
+                raise ValueError("invalid resets")
+            pagination = payload.get("pagination")
+            if not isinstance(pagination, Mapping) or not isinstance(pagination.get("has_more"), bool):
+                raise ValueError("invalid pagination")
+            if pagination["has_more"]:
+                value = pagination.get("next_cursor")
+                if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,1024}", value):
+                    raise ValueError("invalid cursor")
+                next_cursor = value
+            result = []
+            for item in payload["data"]:
+                if not isinstance(item, Mapping) or item.get("reset_type") not in ("regular", "banked"):
+                    raise ValueError("invalid reset")
+                source = item.get("source")
+                post_id, text, at = item.get("id"), item.get("text"), item.get("announced_at")
+                if not isinstance(source, Mapping) or source.get("type") not in ("x_post", "observed"):
+                    raise ValueError("invalid source")
+                if not isinstance(post_id, str) or not re.fullmatch(r"(?:[0-9]{1,20}|observed-[A-Za-z0-9_-]{1,55})", post_id) or not isinstance(text, str) or not text or not isinstance(at, str):
+                    raise ValueError("invalid reset")
+                created_at = datetime.fromisoformat(at.replace("Z", "+00:00"))
+                if created_at.tzinfo is None:
+                    raise ValueError("invalid date")
+                url = source.get("url")
+                if isinstance(url, str):
+                    parsed = urlsplit(url)
+                    match = re.fullmatch(r"/thsottiaux/status/([0-9]{1,20})", parsed.path)
+                    if parsed.scheme != "https" or parsed.hostname != "x.com" or not match or parsed.query or parsed.fragment:
+                        raise ValueError("invalid source URL")
+                    if source["type"] == "x_post" and (source.get("author") != "thsottiaux" or match[1] != post_id):
+                        raise ValueError("invalid author")
+                    post_id = match[1]
+                elif source["type"] == "observed":
+                    if not post_id.startswith("observed-"):
+                        raise ValueError("invalid observed ID")
+                    url = "https://codex-resets.com/"
+                else:
+                    raise ValueError("missing source URL")
+                result.append(Post(post_id, text, created_at, url, SourceName.RESETS,
+                                   source_kind=ResetSourceKind.BANKED if item["reset_type"] == "banked" else ResetSourceKind.ANNOUNCEMENT))
+            return tuple(result)
+
+        url = str(httpx.URL(PUBLIC_RESETS_URL, params={"limit": "100", **({"cursor": cursor} if cursor else {})}))
+        batch = _fetch_source(client, SourceName.RESETS, url, decode)
+        if batch.error:
+            return batch
+        posts.update((post.id, post) for post in batch.posts)
+        if next_cursor is None:
+            if not posts:
+                return SourceBatch(SourceName.RESETS, error="invalid response")
+            return SourceBatch(SourceName.RESETS, tuple(posts.values()))
+        if next_cursor in seen_cursors:
+            return SourceBatch(SourceName.RESETS, error="invalid response")
+        seen_cursors.add(next_cursor)
+        cursor = next_cursor
+    return SourceBatch(SourceName.RESETS, error="invalid response")
 
 
 def _fetch_source(

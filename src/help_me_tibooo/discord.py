@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 
 import httpx
 
-from help_me_tibooo.models import AlertCategory, Post, SourceBatch
+from help_me_tibooo.models import AlertCategory, Post, SourceBatch, SourceName
 
 
 ALERT_COLORS = {
@@ -69,7 +69,10 @@ def build_health_payload(
     bounded_failure_count = min(max(failure_count, 0), 999_999)
     return _build_monitor_payload(
         "티보햄 · 감시 장애",
-        f"Tibo 감시가 {bounded_failure_count}회 연속 실패했습니다.",
+        f"Tibo 감시 범위에 {bounded_failure_count}회 연속 장애가 있습니다.\n"
+        + ("리셋 알림은 수집 중이지만, 전체 Tibo 소식 감시는 사용할 수 없습니다."
+           if any(batch.source == SourceName.RESETS and batch.error is None for batch in batches)
+           else "현재 게시물 수집을 사용할 수 없습니다."),
         ALERT_COLORS[AlertCategory.INCIDENT], batches, actions_url,
     )
 
@@ -83,7 +86,7 @@ def _build_monitor_payload(
         description_parts.append(
             "\n".join(
                 f"{batch.source}: {format_source_diagnostic(batch)}"
-                for batch in batches[:2]
+                for batch in batches[:3]
             )
         )
     if actions_url and len(actions_url) <= 300:
@@ -129,7 +132,7 @@ def build_recovery_payload(
 ) -> dict[str, object]:
     return _build_monitor_payload(
         "티보햄 · 감시 복구",
-        "일부 소스에서 게시물 수집이 재개되어 Tibo 감시가 복구되었습니다.",
+        "전체 소식 감시 소스에서 게시물 수집이 재개되어 Tibo 감시가 복구되었습니다.",
         0x22C55E, batches, actions_url,
     )
 
@@ -154,6 +157,8 @@ def _canonical_post_url(post: Post) -> str:
             return f"https://x.com/thsottiaux/status/{url_id}"
     except (ValueError, IndexError):
         pass
+    if post.source == SourceName.RESETS:
+        return "https://codex-resets.com/"
     return "https://x.com/thsottiaux"
 
 
