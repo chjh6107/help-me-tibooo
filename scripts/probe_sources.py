@@ -38,3 +38,16 @@ with httpx.Client(timeout=20, follow_redirects=True) as client:
         for url in (urls[0], urls[2]):
             response = client.get(url, headers={"User-Agent": user_agent, "Accept": "application/json"})
             print(json.dumps({"variant": user_agent, "url": url, "status": response.status_code, "challenge": response.headers.get("cf-mitigated")}))
+
+from curl_cffi import requests
+for url in urls:
+    try:
+        response = requests.get(url, impersonate="chrome", timeout=20)
+        details = {"transport": "curl_cffi", "url": url, "status": response.status_code, "challenge": response.headers.get("cf-mitigated")}
+        if response.status_code == 200 and "application/json" in response.headers.get("content-type", ""):
+            data = response.json()
+            details["items"] = len(data.get("data", data.get("tweets", [])))
+            details["newest_post_at"] = data.get("newest_post_at")
+        print(json.dumps(details), flush=True)
+    except Exception as error:
+        print(json.dumps({"transport": "curl_cffi", "url": url, "error_type": type(error).__name__}), flush=True)
