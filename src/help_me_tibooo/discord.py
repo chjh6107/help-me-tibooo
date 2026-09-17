@@ -16,6 +16,7 @@ ALERT_COLORS = {
     AlertCategory.LAUNCH: 0x3B82F6,
     AlertCategory.PLANS: 0x22C55E,
     AlertCategory.INCIDENT: 0xEF4444,
+    AlertCategory.NEWS: 0x3B82F6,
 }
 
 
@@ -132,7 +133,8 @@ def build_recovery_payload(
 ) -> dict[str, object]:
     return _build_monitor_payload(
         "티보햄 · 감시 복구",
-        "전체 소식 감시 소스에서 게시물 수집이 재개되어 Tibo 감시가 복구되었습니다.",
+        "전체 소식 감시 소스에서 게시물 수집이 재개되었습니다. "
+        "알림 조건에 맞는 새 글이 확인되면 별도로 알려드립니다.",
         0x22C55E, batches, actions_url,
     )
 

@@ -9,6 +9,7 @@ class AlertCategory(StrEnum):
     LAUNCH = "출시"
     PLANS = "요금제"
     INCIDENT = "장애"
+    NEWS = "OpenAI 소식"
 
 
 class SourceName(StrEnum):

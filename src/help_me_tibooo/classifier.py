@@ -3,7 +3,6 @@ import re
 from help_me_tibooo.models import AlertCategory, Post, ResetSourceKind, SourceName
 
 
-PRODUCT_TERMS = ("openai", "codex", "chatgpt", "gpt-", "astra")
 RESET_TERMS = (
     "usage reset",
     "limits reset",
@@ -33,7 +32,9 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
         return (AlertCategory.RESET,)
 
     text = post.text.lower()
-    has_product_context = _contains_any(text, PRODUCT_TERMS)
+    has_product_context = _contains_any_term(text, ("openai", "codex", "chatgpt", "astra")) or bool(
+        re.search(r"(?<![a-z0-9])gpt(?:-[a-z0-9]+)?(?![a-z0-9])", text)
+    )
     has_reset_context = _contains_any(text, RESET_TERMS)
     categories: set[AlertCategory] = set()
 
@@ -72,6 +73,9 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
         has_product_context and _contains_any(text, GENERIC_INCIDENT_TERMS)
     ):
         categories.add(AlertCategory.INCIDENT)
+
+    if has_product_context and not categories:
+        categories.add(AlertCategory.NEWS)
 
     return tuple(category for category in AlertCategory if category in categories)
 
