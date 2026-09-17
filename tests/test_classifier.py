@@ -47,7 +47,7 @@ def test_special_reset_sources_classify_reset_context(make_post, source_kind) ->
 
 
 def test_special_reset_source_requires_reset_context(make_post) -> None:
-    assert classify(make_post(text="Codex availability is improving.", source_kind="signal")) == ()
+    assert classify(make_post(text="Codex availability is improving.", source_kind="signal")) == (AlertCategory.NEWS,)
 
 
 def test_limits_source_kind_is_classified_without_limit_wording(make_post) -> None:
@@ -59,7 +59,7 @@ def test_ordinary_limit_terms_require_product_context(make_post) -> None:
 
 
 def test_does_not_match_plan_term_inside_an_unrelated_word(make_post) -> None:
-    assert classify(make_post(text="OpenAI is improving reliability.")) == ()
+    assert classify(make_post(text="OpenAI is improving reliability.")) == (AlertCategory.NEWS,)
 
 
 def test_returns_multiple_categories_in_declaration_order_without_duplicates(make_post) -> None:

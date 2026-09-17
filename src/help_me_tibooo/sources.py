@@ -1,7 +1,7 @@
 import re
 from urllib.parse import urlsplit
 from collections.abc import Callable, Mapping
-from datetime import datetime
+from datetime import UTC, datetime
 
 import httpx
 from bs4 import BeautifulSoup
@@ -100,7 +100,46 @@ def parse_twiscan_html(html: str) -> tuple[Post, ...]:
 
 
 def fetch_all_sources(client: httpx.Client) -> tuple[SourceBatch, ...]:
-    return (*fetch_timeline_sources(client), _fetch_public_resets(client))
+    reset, twiscan = fetch_timeline_sources(client)
+    latest = _fetch_source(
+        client, SourceName.RESET, "https://codex-reset.com/tibo",
+        lambda content: parse_tibo_html(content.decode()),
+    )
+    if latest.error is None:
+        posts = {post.id: post for post in reset.posts}
+        for post in latest.posts:
+            posts.setdefault(post.id, post)
+        reset = SourceBatch(SourceName.RESET, posts=tuple(posts.values()))
+    else:
+        reset = latest
+    return (reset, twiscan, _fetch_public_resets(client))
+
+
+def parse_tibo_html(html: str) -> tuple[Post, ...]:
+    soup = BeautifulSoup(html, "html.parser")
+    posts: dict[str, Post] = {}
+    items = soup.select("#feed-list .feed-item")
+    if not items:
+        raise ValueError("missing Tibo timeline")
+    for item in items:
+        link = item.select_one("a.feed-time[href]")
+        body = item.select_one(".feed-text")
+        match = re.fullmatch(r"https://x\.com/thsottiaux/status/([0-9]{1,20})", link.get("href", "")) if link else None
+        if match is None or body is None or not body.get_text(strip=True):
+            raise ValueError("invalid Tibo post")
+        post_id = match[1]
+        text = body.get_text("\n", strip=True)
+        try:
+            kind = ResetSourceKind(item.get("data-kind"))
+        except ValueError:
+            kind = None
+        posts[post_id] = Post(
+            id=post_id, text=text,
+            created_at=datetime.fromtimestamp(((int(post_id) >> 22) + 1288834974657) / 1000, UTC),
+            url=link["href"], source=SourceName.RESET,
+            is_reply=text.startswith("@"), source_kind=kind,
+        )
+    return tuple(posts.values())
 
 
 def fetch_timeline_sources(client: httpx.Client) -> tuple[SourceBatch, ...]:
