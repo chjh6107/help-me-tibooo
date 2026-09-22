@@ -147,3 +147,39 @@ PYTHONPATH=src .../.venv/bin/python -m pytest \
 각 고정 스키마 객체에서 허용 키 집합과 정확히 일치하는지 확인한다. map 역할인 `events`,
 `endpoints`, `versions`, `endpoint_memberships`의 동적 식별 키는 유지했다. 회귀 테스트는
 거부 전에 metrics가 추가되지 않고 malformed index byte가 변경되지 않는 것도 검증한다.
+
+## 최종 리뷰 수정: 빈 membership과 뒤늦은 origin 보강
+
+### RED
+
+```text
+PYTHONPATH=src .../.venv/bin/python -m pytest tests/test_diagnostics.py -q \
+  -k 'empty_snapshot or empty_final or later_known'
+2 failed, 1 passed, 14 deselected
+```
+
+- 정상 membership 뒤의 빈 complete snapshot이 마지막 성공 membership을 빈 목록으로
+  덮어써, 다음 정상 snapshot과의 overlap이 `none`이 됐다.
+- `created_at=None`으로 처음 관측한 canonical event가 뒤의 다른 provider에서 실제
+  origin을 제공해도 `origin_at=None`으로 남았다.
+- 앞 pagination 페이지의 nonempty membership 뒤 마지막 빈 페이지가 complete인 경우의
+  누적 membership 테스트는 기존 구현에서도 통과했으며 수정 중 회귀 방지 조건으로
+  유지했다.
+
+### GREEN
+
+```text
+PYTHONPATH=src .../.venv/bin/python -m pytest tests/test_diagnostics.py -q \
+  -k 'empty_snapshot or empty_final or later_known'
+3 passed, 14 deselected in 0.11s
+
+PYTHONPATH=src .../.venv/bin/python -m pytest \
+  tests/test_diagnostics.py tests/test_observe.py -q
+24 passed in 0.24s
+```
+
+빈 complete snapshot은 `outcome=empty`로 계속 기록하지만 마지막 성공 membership과 시각을
+갱신하지 않는다. pagination에서 앞 페이지까지 누적한 membership이 nonempty면 마지막
+페이지 자체가 비어 있어도 완전 membership으로 저장한다. canonical event의 origin은 기존
+값이 `None`이고 새 관측에 실제 시각이 있을 때만 채우며, 이후 unknown 관측은 이를 지우지
+않는다. event/version의 최초 관측 시각은 변경하지 않는다.

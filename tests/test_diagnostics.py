@@ -225,6 +225,76 @@ def test_overlap_uses_full_previous_successful_membership_and_failure_does_not_r
     ).isoformat()
 
 
+def test_empty_snapshot_preserves_previous_membership_for_recovery_overlap(
+    tmp_path: Path,
+) -> None:
+    metrics_path = tmp_path / "metrics.jsonl"
+    index_path = tmp_path / "observations.json"
+    endpoint = "https://codex-reset.com/api/feed"
+    a = make_post("2100000000000000050")
+    b = make_post("2100000000000000051")
+    c = make_post("2100000000000000052")
+
+    with DiagnosticRun(metrics_path, index_path, now=lambda: START) as run:
+        run.record_snapshot(make_snapshot(endpoint, START, (a, b)))
+        run.record_snapshot(
+            make_snapshot(endpoint, START + timedelta(seconds=10), ())
+        )
+        run.record_snapshot(
+            make_snapshot(endpoint, START + timedelta(seconds=20), (b, c))
+        )
+        run.finish("수집 정상")
+
+    fetched = [
+        event
+        for event in read_json_lines(metrics_path)
+        if event["event"] == "source_fetched"
+    ]
+    assert [event["outcome"] for event in fetched] == ["success", "empty", "success"]
+    assert [event["membership_overlap"] for event in fetched] == [
+        "unknown",
+        "unknown",
+        "overlap",
+    ]
+    assert fetched[2]["membership_overlap_count"] == 1
+    membership = json.loads(index_path.read_text(encoding="utf-8"))[
+        "endpoint_memberships"
+    ][endpoint]
+    assert membership == {
+        "canonical_ids": [f"x:{b.id}", f"x:{c.id}"],
+        "last_successful_at": (START + timedelta(seconds=20)).isoformat(),
+    }
+
+
+def test_empty_final_page_commits_nonempty_accumulated_membership(
+    tmp_path: Path,
+) -> None:
+    metrics_path = tmp_path / "metrics.jsonl"
+    index_path = tmp_path / "observations.json"
+    endpoint = "https://codex-resets.com/api/v1/resets"
+    post = make_post(
+        "2100000000000000053",
+        source=SourceName.RESETS,
+    )
+
+    with DiagnosticRun(metrics_path, index_path, now=lambda: START) as run:
+        run.record_snapshot(
+            make_snapshot(endpoint, START, (post,), complete=False)
+        )
+        run.record_snapshot(
+            make_snapshot(endpoint, START + timedelta(seconds=10), (), complete=True)
+        )
+        run.finish("수집 정상")
+
+    membership = json.loads(index_path.read_text(encoding="utf-8"))[
+        "endpoint_memberships"
+    ][endpoint]
+    assert membership == {
+        "canonical_ids": [f"x:{post.id}"],
+        "last_successful_at": (START + timedelta(seconds=10)).isoformat(),
+    }
+
+
 def test_metrics_include_run_snapshot_observation_classification_and_finish_events(
     tmp_path: Path,
 ) -> None:
@@ -297,6 +367,69 @@ def test_negative_latency_is_marked_invalid_instead_of_clamped(tmp_path: Path) -
     )
     assert observed["origin_latency_seconds"] == -60.0
     assert observed["origin_latency_valid"] is False
+
+
+def test_later_known_origin_fills_unknown_without_changing_first_observation(
+    tmp_path: Path,
+) -> None:
+    post_id = "2100000000000000060"
+    unknown = Post(
+        id=post_id,
+        text="Codex update",
+        created_at=None,
+        url=f"https://x.com/thsottiaux/status/{post_id}",
+        source=SourceName.TWISCAN,
+    )
+    known_origin = START - timedelta(minutes=15)
+    known = Post(
+        id=post_id,
+        text="Codex update",
+        created_at=known_origin,
+        url=unknown.url,
+        source=SourceName.RESET,
+    )
+    metrics_path = tmp_path / "metrics.jsonl"
+    index_path = tmp_path / "observations.json"
+
+    with DiagnosticRun(metrics_path, index_path, now=lambda: START) as run:
+        run.record_snapshot(
+            make_snapshot(
+                "https://twiscan.com/en/x/thsottiaux",
+                START,
+                (unknown,),
+                provider="twiscan.com",
+                origin_time_bases=((post_id, "unknown"),),
+            )
+        )
+        run.record_snapshot(
+            make_snapshot(
+                "https://codex-reset.com/api/feed",
+                START + timedelta(seconds=10),
+                (known,),
+                origin_time_bases=((post_id, "x_source_field"),),
+            )
+        )
+        run.record_snapshot(
+            make_snapshot(
+                "https://twiscan.com/en/x/thsottiaux",
+                START + timedelta(seconds=20),
+                (unknown,),
+                provider="twiscan.com",
+                origin_time_bases=((post_id, "unknown"),),
+            )
+        )
+        run.finish("수집 정상")
+
+    event = json.loads(index_path.read_text(encoding="utf-8"))["events"][f"x:{post_id}"]
+    assert event["origin_at"] == known_origin.isoformat()
+    assert event["first_observed_at"] == START.isoformat()
+    assert event["last_observed_at"] == (START + timedelta(seconds=20)).isoformat()
+    assert event["versions"][evidence_hash(unknown)]["first_observed_at"] == (
+        START.isoformat()
+    )
+    assert event["versions"][evidence_hash(known)]["first_observed_at"] == (
+        START + timedelta(seconds=10)
+    ).isoformat()
 
 
 def test_malformed_index_fails_without_replacing_measurement_history(

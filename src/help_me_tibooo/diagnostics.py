@@ -141,7 +141,7 @@ class DiagnosticRun:
             self._partial_memberships.setdefault(snapshot.endpoint, set()).update(membership)
         else:
             membership.update(self._partial_memberships.pop(snapshot.endpoint, set()))
-            if previous is not None:
+            if membership and previous is not None:
                 intersection = membership.intersection(previous["canonical_ids"])
                 overlap = "overlap" if intersection else "none"
                 overlap_count = len(intersection)
@@ -195,7 +195,12 @@ class DiagnosticRun:
                 }
             )
 
-        if snapshot.error is None and snapshot.complete and snapshot.observed_at is not None:
+        if (
+            snapshot.error is None
+            and snapshot.complete
+            and snapshot.observed_at is not None
+            and membership
+        ):
             index["endpoint_memberships"][snapshot.endpoint] = {
                 "canonical_ids": sorted(membership),
                 "last_successful_at": _iso(snapshot.observed_at),
@@ -279,6 +284,8 @@ class DiagnosticRun:
             },
         )
         event["last_observed_at"] = observed
+        if event["origin_at"] is None and post.created_at is not None:
+            event["origin_at"] = _iso(post.created_at)
         if origin_basis not in event["origin_time_bases"]:
             event["origin_time_bases"].append(origin_basis)
             event["origin_time_bases"].sort()
