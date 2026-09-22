@@ -122,14 +122,19 @@ def _paths_with_companions(paths: tuple[Path, ...]) -> tuple[Path, ...]:
     expanded_paths: list[Path] = []
     for path in paths:
         canonical_path = _resolve_path(path)
-        expanded_paths.extend(
-            (
-                canonical_path,
-                _resolve_path(canonical_path.with_suffix(".tmp")),
-                _resolve_path(canonical_path.with_name(f"{canonical_path.name}.lock")),
-            )
-        )
+        for companion_path in (*_companion_paths(path), *_companion_paths(canonical_path)):
+            resolved_path = _resolve_path(companion_path)
+            if resolved_path not in expanded_paths:
+                expanded_paths.append(resolved_path)
     return tuple(expanded_paths)
+
+
+def _companion_paths(path: Path) -> tuple[Path, Path, Path]:
+    return (
+        path,
+        path.with_suffix(".tmp"),
+        path.with_name(f"{path.name}.lock"),
+    )
 
 
 def _is_within(path: Path, directory: Path) -> bool:

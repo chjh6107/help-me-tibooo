@@ -96,6 +96,22 @@ def test_validate_shadow_paths_rejects_output_hardlink_to_production_state(
         validate_shadow_paths(production_state_path, shadow_dir)
 
 
+def test_validate_shadow_paths_rejects_lexical_temp_alias_of_symlinked_output(
+    tmp_path: Path,
+) -> None:
+    production_state_path = tmp_path / "state.json"
+    production_state_path.write_text("production", encoding="utf-8")
+    shadow_dir = tmp_path / "shadow"
+    shadow_dir.mkdir()
+    target_path = shadow_dir / "target.json"
+    target_path.write_text("observation", encoding="utf-8")
+    (shadow_dir / "observations.json").symlink_to(target_path)
+    os.link(production_state_path, shadow_dir / "observations.tmp")
+
+    with pytest.raises(ValueError):
+        validate_shadow_paths(production_state_path, shadow_dir)
+
+
 def test_validate_shadow_paths_rejects_output_alias_to_production_state_lock(
     tmp_path: Path,
 ) -> None:
