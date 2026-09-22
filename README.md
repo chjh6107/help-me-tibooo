@@ -64,11 +64,44 @@ python -m help_me_tibooo watch --state-path .state/watcher.json
 `watch`와 `test-bot`에는 실행 환경의 `DISCORD_BOT_TOKEN`과 `DISCORD_CHANNEL_ID`가
 필요합니다. 로컬 상태 파일과 Bot Token은 커밋하지 마세요.
 
+발송 없이 endpoint별 수집 결과와 최초 관측 시각을 확인하려면 운영 상태와 분리된
+디렉터리를 지정해 `observe`를 실행합니다.
+
+```bash
+python -m help_me_tibooo observe \
+  --shadow-dir .observability/shadow \
+  --production-state-path .state/watcher.json
+```
+
+`observe`는 Discord 자격 증명이 필요 없고 Discord나 watcher를 호출하지 않습니다.
+`--production-state-path`는 운영 상태 파일을 읽기 위한 옵션이 아니라, 출력 경로가 운영
+상태·임시 파일·잠금 파일과 심볼릭 링크나 하드 링크로 겹치지 않는지 검사하기 위한
+옵션입니다. 지정한 shadow 디렉터리의 `metrics.jsonl`과 `observations.json`에 진단 데이터를
+기록하고, 안정적인 잠금용 `.lock`과 원자 저장 중의 `.tmp` companion을 사용합니다.
+출력 symlink는 검증된 shadow 내부 target으로 한 번 해석해 같은 잠금 identity를 유지합니다.
+인덱스가 손상되어 있으면 과거 최초 관측 시각을 새로 만들지 않고 실패합니다.
+
+기존 감시에 같은 진단을 선택적으로 기록하려면 다음처럼 실행합니다.
+
+```bash
+python -m help_me_tibooo watch \
+  --state-path .state/watcher.json \
+  --require-existing-state \
+  --metrics-path .observability/watch.jsonl
+```
+
+이 경우 진단 인덱스는 `.observability/watch.observations.json`에 생성됩니다.
+`--require-existing-state`는 상태 파일이 없거나 일반 파일이 아니면 수집·발송 전에
+실패시킵니다. 상태 잠금은 읽기 전부터 수집·발송과 저장이 끝날 때까지 유지됩니다.
+진단 기록 장애는 실제 전송 결과나 watcher 상태 저장을 실패로 바꾸지 않습니다.
+
 ## 동작 방식
 
 `codex-reset.com/tibo`의 최신 글 목록을 기존 JSON 피드와 합쳐 수집합니다.
 JSON 피드에 없는 최근 글도 기존 `reset` 소스의 기준점을 이어서 처리합니다.
-최신 목록이 비거나 형식이 달라지면 해당 소스는 수집 실패로 처리합니다.
+JSON·HTML endpoint의 실패는 각각 진단에 남기되, 둘 중 정상인 endpoint의 게시물은
+`reset` 수집 결과에 유지합니다. 두 endpoint 모두 실패하거나 정상 게시물이 없으면 해당
+소스는 수집 실패로 처리합니다.
 
 OpenAI·Codex·ChatGPT·GPT·Astra가 본문에 명시된 글은 세부 분류 키워드가 없어도
 `OpenAI 소식`으로 알립니다. 기존 리셋·한도·출시·요금제·장애 분류는 유지하며,
@@ -123,6 +156,12 @@ Actions도 실패로 표시합니다. 게시물·알림 전송과 소스 상태�
 GitHub Actions의 `watch` 실행만 `.state/watcher.json` 캐시를 복원하고 저장합니다.
 `test-bot`과 `smoke`는 감시 상태를 읽거나 변경하지 않습니다.
 
+진단 인덱스의 `measurement_epoch`는 해당 파일에서 측정을 시작한 시점입니다.
+`first_observed_at`은 공개 소스나 X의 절대 최초 노출 시각이 아니라 이 도구가 처음 파싱한
+시각입니다. 원문 시각 근거가 없으면 `origin_at`을 우리의 관측 시각으로 채우지 않으며,
+음수 지연은 0으로 보정하지 않고 시각 불일치로 표시합니다. JSONL과 인덱스에는 원문
+본문, 원시 응답, 자격 증명을 저장하지 않습니다.
+
 ## 알려진 제약
 
 - 비공식 공개 피드가 중단되거나 응답 형식이 바뀌면 일부 또는 모든 확인이 실패할 수
@@ -139,6 +178,11 @@ GitHub Actions의 `watch` 실행만 `.state/watcher.json` 캐시를 복원하고
   소스의 접근 정책이 바뀌면 다시 실패할 수 있으며 실제 Actions `smoke`로 확인해야 합니다.
 - 첫 마일스톤은 야간 알림 억제를 지원하지 않습니다.
 - 첫 마일스톤은 채널 하나만 지원하며 `/status` 같은 명령어를 제공하지 않습니다.
+- 이번 관측 단계에서도 기존 watcher의 high-water 기준점과 알림 자격 정책을 그대로
+  사용합니다. 후발 게시물 자격 처리와 SQLite 저장은 아직 구현하지 않았습니다.
+- HTTP 304 재검증 캐시, VM 배포·120초 timer 전환도 후속 단계입니다. 현재 진단의
+  membership overlap은 연속 정상 snapshot 사이에 공통 ID가 있는지만 보여 주며 전체
+  타임라인 수집 완전성을 보장하지 않습니다.
 
 ## 문제 해결
 

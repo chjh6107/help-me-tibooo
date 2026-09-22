@@ -1,8 +1,11 @@
+import json
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 from help_me_tibooo.__main__ import main
+from help_me_tibooo.diagnostics import DiagnosticRun
 from help_me_tibooo.models import (
     AlertDeliveryCheckpoint,
     AlertCategory,
@@ -11,6 +14,7 @@ from help_me_tibooo.models import (
     SourceBatch,
     SourceCheckpoint,
     SourceName,
+    SourceSnapshot,
     WatcherState,
 )
 from help_me_tibooo.state import load_state, save_state
@@ -531,3 +535,282 @@ def test_watch_retains_last_valid_state_after_unexpected_failure(
     assert main(["watch", "--state-path", str(state_path)]) == 1
     assert load_state(state_path) == expected
     assert "secret.bot.token" not in capsys.readouterr().err
+
+
+def test_watch_without_metrics_preserves_fetch_all_sources_seam(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    save_state(state_path, WatcherState(initialized=True))
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        lambda _client: (SourceBatch("reset", posts=(make_post("100"),)),),
+    )
+
+    def reject_snapshots(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("metrics 없는 watch가 snapshot 경로를 사용했습니다")
+
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_source_snapshots",
+        reject_snapshots,
+    )
+    monkeypatch.setattr("help_me_tibooo.__main__.DiscordBot.send", lambda *_: None)
+
+    assert main(["watch", "--state-path", str(state_path)]) == 0
+
+
+def test_watch_require_existing_state_fails_before_collection(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "missing.json"
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    collections = 0
+
+    def count_collection(_client: object) -> tuple[SourceBatch, ...]:
+        nonlocal collections
+        collections += 1
+        return ()
+
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        count_collection,
+    )
+
+    assert main(
+        [
+            "watch",
+            "--state-path",
+            str(state_path),
+            "--require-existing-state",
+        ]
+    ) == 1
+    assert collections == 0
+    assert not state_path.exists()
+
+
+def test_watch_metrics_uses_snapshots_and_records_actual_delivery(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    metrics_path = tmp_path / "watch-metrics.jsonl"
+    save_state(
+        state_path,
+        WatcherState(latest_id="900", seen_ids=("900",), initialized=True),
+    )
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    post = make_post("901")
+    observed_at = datetime(2026, 9, 22, 3, 0, tzinfo=UTC)
+    snapshot = SourceSnapshot(
+        source=SourceName.RESET,
+        provider="codex-reset.com",
+        endpoint="https://codex-reset.com/api/feed",
+        request_started_at=observed_at - timedelta(seconds=2),
+        response_received_at=observed_at - timedelta(seconds=1),
+        observed_at=observed_at,
+        posts=(post,),
+        http_status=200,
+        representation_hash="b" * 64,
+        origin_time_bases=((post.id, "unknown"),),
+    )
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_source_snapshots",
+        lambda _client: iter((snapshot,)),
+    )
+
+    def reject_legacy_fetch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("metrics watch가 legacy 수집 경로를 사용했습니다")
+
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_all_sources",
+        reject_legacy_fetch,
+    )
+    sent: list[str] = []
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.DiscordBot.send",
+        lambda _self, _payload: sent.append(post.id),
+    )
+
+    assert main(
+        [
+            "watch",
+            "--state-path",
+            str(state_path),
+            "--metrics-path",
+            str(metrics_path),
+        ]
+    ) == 0
+
+    assert sent == [post.id]
+    assert metrics_path.is_file()
+    assert metrics_path.with_suffix(".observations.json").is_file()
+    events = [
+        json.loads(line)
+        for line in metrics_path.read_text(encoding="utf-8").splitlines()
+    ]
+    deliveries = [event for event in events if event["event"] == "alert_delivery"]
+    assert [event["outcome"] for event in deliveries] == ["attempted", "succeeded"]
+    assert load_state(state_path).latest_id == post.id
+
+
+def test_watch_saves_successful_delivery_when_post_send_metrics_logging_fails(
+    monkeypatch,
+    capsys,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    metrics_path = tmp_path / "watch-metrics.jsonl"
+    save_state(
+        state_path,
+        WatcherState(latest_id="900", seen_ids=("900",), initialized=True),
+    )
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    post = make_post("901")
+    observed_at = datetime(2026, 9, 22, 3, 0, tzinfo=UTC)
+    snapshot = SourceSnapshot(
+        source=SourceName.RESET,
+        provider="codex-reset.com",
+        endpoint="https://codex-reset.com/api/feed",
+        request_started_at=observed_at,
+        response_received_at=observed_at,
+        observed_at=observed_at,
+        posts=(post,),
+        origin_time_bases=((post.id, "unknown"),),
+    )
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_source_snapshots",
+        lambda _client: iter((snapshot,)),
+    )
+    sent = 0
+
+    def send_once(_self: object, _payload: object) -> None:
+        nonlocal sent
+        sent += 1
+
+    monkeypatch.setattr("help_me_tibooo.__main__.DiscordBot.send", send_once)
+    original_record_alert = DiagnosticRun.record_alert
+
+    def fail_after_send(self, recorded_post, outcome, categories):
+        if outcome == "succeeded":
+            raise OSError("private telemetry path")
+        return original_record_alert(self, recorded_post, outcome, categories)
+
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.DiagnosticRun.record_alert",
+        fail_after_send,
+    )
+
+    assert main(
+        [
+            "watch",
+            "--state-path",
+            str(state_path),
+            "--metrics-path",
+            str(metrics_path),
+        ]
+    ) == 0
+    assert sent == 1
+    state = load_state(state_path)
+    assert state is not None
+    assert state.latest_id == post.id
+    assert state.alert_delivery is None
+    captured = capsys.readouterr()
+    assert "진단 기록 실패 · 감시 결과는 계속 저장합니다" in captured.err
+    assert "private telemetry path" not in captured.out + captured.err
+
+
+def test_watch_metrics_records_actual_delivery_failure(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    metrics_path = tmp_path / "watch-metrics.jsonl"
+    save_state(
+        state_path,
+        WatcherState(latest_id="900", seen_ids=("900",), initialized=True),
+    )
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    post = make_post("901")
+    observed_at = datetime(2026, 9, 22, 3, 0, tzinfo=UTC)
+    snapshot = SourceSnapshot(
+        source=SourceName.RESET,
+        provider="codex-reset.com",
+        endpoint="https://codex-reset.com/api/feed",
+        request_started_at=observed_at,
+        response_received_at=observed_at,
+        observed_at=observed_at,
+        posts=(post,),
+        origin_time_bases=((post.id, "unknown"),),
+    )
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_source_snapshots",
+        lambda _client: iter((snapshot,)),
+    )
+
+    def fail_send(_self: object, _payload: object) -> None:
+        raise RuntimeError("private Discord response")
+
+    monkeypatch.setattr("help_me_tibooo.__main__.DiscordBot.send", fail_send)
+
+    assert main(
+        [
+            "watch",
+            "--state-path",
+            str(state_path),
+            "--metrics-path",
+            str(metrics_path),
+        ]
+    ) == 1
+
+    events = [
+        json.loads(line)
+        for line in metrics_path.read_text(encoding="utf-8").splitlines()
+    ]
+    deliveries = [event for event in events if event["event"] == "alert_delivery"]
+    assert [event["outcome"] for event in deliveries] == ["attempted", "failed"]
+    state = load_state(state_path)
+    assert state is not None
+    assert state.alert_delivery is not None
+    assert state.alert_delivery.post_id == post.id
+    assert "private Discord response" not in metrics_path.read_text(encoding="utf-8")
+
+
+def test_watch_rejects_metrics_alias_before_collection_or_output(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    state_path = tmp_path / "watcher.json"
+    save_state(state_path, WatcherState(initialized=True))
+    monkeypatch.setenv("DISCORD_BOT_TOKEN", "secret.bot.token")
+    monkeypatch.setenv("DISCORD_CHANNEL_ID", "123")
+    collections = 0
+
+    def count_collection(_client: object) -> tuple[SourceBatch, ...]:
+        nonlocal collections
+        collections += 1
+        return ()
+
+    monkeypatch.setattr(
+        "help_me_tibooo.__main__.fetch_source_snapshots",
+        count_collection,
+    )
+
+    assert main(
+        [
+            "watch",
+            "--state-path",
+            str(state_path),
+            "--metrics-path",
+            str(state_path.with_suffix(".tmp")),
+        ]
+    ) == 1
+    assert collections == 0
+    assert not state_path.with_suffix(".tmp").exists()
