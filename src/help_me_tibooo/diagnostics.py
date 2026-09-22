@@ -16,7 +16,13 @@ from help_me_tibooo.models import AlertCategory, Post, SourceSnapshot
 from help_me_tibooo.runtime import exclusive_state
 
 
-INDEX_VERSION = 1
+INDEX_VERSION = 2
+ORIGIN_TIME_PRIORITY = {
+    "unknown": 0,
+    "provider_observed": 1,
+    "x_snowflake": 2,
+    "x_source_field": 3,
+}
 X_POST_PATH = re.compile(r"/[A-Za-z0-9_]{1,15}/status/([0-9]{1,20})")
 SAFE_COMPONENT = re.compile(r"[A-Za-z0-9._-]{1,200}")
 SAFE_CACHE_HEADERS = {
@@ -276,7 +282,8 @@ class DiagnosticRun:
             {
                 "first_observed_at": observed,
                 "last_observed_at": observed,
-                "origin_at": _iso(post.created_at),
+                "origin_at": None,
+                "origin_time_basis": "unknown",
                 "origin_time_bases": [],
                 "provider_visible_at": None,
                 "endpoints": {},
@@ -284,8 +291,13 @@ class DiagnosticRun:
             },
         )
         event["last_observed_at"] = observed
-        if event["origin_at"] is None and post.created_at is not None:
+        if post.created_at is not None and (
+            event["origin_at"] is None
+            or ORIGIN_TIME_PRIORITY[origin_basis]
+            > ORIGIN_TIME_PRIORITY[event["origin_time_basis"]]
+        ):
             event["origin_at"] = _iso(post.created_at)
+            event["origin_time_basis"] = origin_basis
         if origin_basis not in event["origin_time_bases"]:
             event["origin_time_bases"].append(origin_basis)
             event["origin_time_bases"].sort()
@@ -349,6 +361,11 @@ class DiagnosticRun:
             raise DiagnosticIndexError("진단 인덱스의 형식이 잘못되었습니다") from error
         if not _valid_index(index):
             raise DiagnosticIndexError("진단 인덱스의 형식이 잘못되었습니다")
+        if index["version"] == 1:
+            index["version"] = INDEX_VERSION
+            for event in index["events"].values():
+                # v1 lists all observed bases, not the basis of its selected time.
+                event["origin_time_basis"] = "unknown"
         return index
 
     def _save_index(self) -> None:
@@ -408,7 +425,8 @@ def _valid_index(index: object) -> bool:
         "endpoint_memberships",
     }:
         return False
-    if index.get("version") != INDEX_VERSION:
+    version = index.get("version")
+    if version not in (1, INDEX_VERSION):
         return False
     if not _valid_timestamp(index.get("measurement_epoch")):
         return False
@@ -416,7 +434,7 @@ def _valid_index(index: object) -> bool:
     if not isinstance(events, dict):
         return False
     if not all(
-        isinstance(canonical_id, str) and _valid_event(event)
+        isinstance(canonical_id, str) and _valid_event(event, legacy=version == 1)
         for canonical_id, event in events.items()
     ):
         return False
@@ -431,10 +449,10 @@ def _valid_index(index: object) -> bool:
     return True
 
 
-def _valid_event(event: object) -> bool:
+def _valid_event(event: object, *, legacy: bool = False) -> bool:
     if not isinstance(event, dict):
         return False
-    if set(event) != {
+    fields = {
         "first_observed_at",
         "last_observed_at",
         "origin_at",
@@ -442,7 +460,10 @@ def _valid_event(event: object) -> bool:
         "provider_visible_at",
         "endpoints",
         "versions",
-    }:
+    }
+    if not legacy:
+        fields.add("origin_time_basis")
+    if set(event) != fields:
         return False
     if not _valid_timestamp(event.get("first_observed_at")) or not _valid_timestamp(
         event.get("last_observed_at")
@@ -451,6 +472,12 @@ def _valid_event(event: object) -> bool:
     origin_at = event.get("origin_at")
     if origin_at is not None and not _valid_timestamp(origin_at):
         return False
+    if not legacy:
+        basis = event.get("origin_time_basis")
+        if not isinstance(basis, str) or basis not in ORIGIN_TIME_PRIORITY:
+            return False
+        if origin_at is None and basis != "unknown":
+            return False
     if event.get("provider_visible_at") is not None:
         return False
     origin_time_bases = event.get("origin_time_bases")

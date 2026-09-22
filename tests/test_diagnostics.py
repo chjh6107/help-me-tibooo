@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -97,7 +98,7 @@ def test_records_distinct_endpoint_membership_and_deduplicates_canonical_x_id(
         run.finish("수집 정상")
 
     index = json.loads(index_path.read_text(encoding="utf-8"))
-    assert index["version"] == 1
+    assert index["version"] == 2
     assert index["measurement_epoch"] == START.isoformat()
     assert list(index["events"]) == [f"x:{post.id}"]
     event = index["events"][f"x:{post.id}"]
@@ -504,10 +505,12 @@ def test_semantically_malformed_index_fails_before_appending_metrics(
     ),
     ids=("top", "event", "endpoint", "version", "membership"),
 )
+@pytest.mark.parametrize("index_version", (1, 2))
 def test_index_rejects_unknown_fields_before_metrics_append_or_reserialization(
     tmp_path: Path,
     object_path: tuple[str, ...],
     unsafe_key: str,
+    index_version: int,
 ) -> None:
     metrics_path = tmp_path / "metrics.jsonl"
     index_path = tmp_path / "observations.json"
@@ -524,6 +527,10 @@ def test_index_rejects_unknown_fields_before_metrics_append_or_reserialization(
         run.finish("수집 정상")
 
     payload = json.loads(index_path.read_text(encoding="utf-8"))
+    payload["version"] = index_version
+    if index_version == 1:
+        for event in payload["events"].values():
+            del event["origin_time_basis"]
     target = payload
     for key in object_path:
         target = target[key]
@@ -564,3 +571,123 @@ def test_canonical_key_uses_provider_for_non_x_and_rejects_mismatched_x_url() ->
     )
     with pytest.raises(ValueError, match="X 게시물 URL"):
         canonical_post_key(mismatched, "codex-reset.com")
+
+
+@pytest.mark.parametrize(
+    ("first_basis", "next_basis", "upgrade"),
+    (
+        ("provider_observed", "x_source_field", True),
+        ("provider_observed", "x_snowflake", True),
+        ("x_snowflake", "x_source_field", True),
+        ("unknown", "provider_observed", True),
+        ("x_source_field", "provider_observed", False),
+        ("x_source_field", "x_snowflake", False),
+        ("x_source_field", "x_source_field", False),
+    ),
+)
+def test_origin_selection_persists_quality_across_runs(
+    tmp_path: Path,
+    first_basis: str,
+    next_basis: str,
+    upgrade: bool,
+) -> None:
+    metrics = tmp_path / "metrics.jsonl"
+    index_path = tmp_path / "observations.json"
+    initial = replace(
+        make_post("2100000000000000070", source=SourceName.RESETS),
+        created_at=START - timedelta(minutes=1),
+    )
+    newer = replace(
+        initial,
+        source=SourceName.RESET,
+        created_at=START - timedelta(minutes=10),
+    )
+    endpoint = "https://codex-resets.com/api/v1/resets"
+    with DiagnosticRun(metrics, index_path, now=lambda: START) as run:
+        run.record_snapshot(make_snapshot(
+            endpoint, START, (initial,), provider="codex-resets.com",
+            origin_time_bases=((initial.id, first_basis),),
+        ))
+        run.finish("수집 정상")
+    before = json.loads(index_path.read_text())
+    with DiagnosticRun(metrics, index_path, now=lambda: START + timedelta(seconds=10)) as run:
+        run.record_snapshot(make_snapshot(
+            "https://codex-reset.com/api/feed", START + timedelta(seconds=10), (newer,),
+            origin_time_bases=((newer.id, next_basis),),
+        ))
+        run.finish("수집 정상")
+    after = json.loads(index_path.read_text())
+    event = after["events"][f"x:{initial.id}"]
+    assert event["origin_at"] == (newer if upgrade else initial).created_at.isoformat()
+    assert event["origin_time_basis"] == (next_basis if upgrade else first_basis)
+    assert event["first_observed_at"] == START.isoformat()
+    original_version = before["events"][f"x:{initial.id}"]["versions"][
+        evidence_hash(initial)
+    ]
+    assert event["versions"][evidence_hash(initial)] == original_version
+    assert after["measurement_epoch"] == before["measurement_epoch"]
+    observed = [row for row in read_json_lines(metrics) if row["event"] == "post_observed"]
+    assert observed[0]["origin_at"] == initial.created_at.isoformat()
+    assert observed[0]["origin_time_basis"] == first_basis
+    assert observed[1]["origin_at"] == newer.created_at.isoformat()
+    assert observed[1]["origin_time_basis"] == next_basis
+
+
+def test_legacy_index_retains_history_without_guessing_selected_origin_basis(
+    tmp_path: Path,
+) -> None:
+    metrics = tmp_path / "metrics.jsonl"
+    index_path = tmp_path / "observations.json"
+    post = make_post("2100000000000000071")
+    endpoint = "https://codex-reset.com/api/feed"
+    with DiagnosticRun(metrics, index_path, now=lambda: START) as run:
+        run.record_snapshot(make_snapshot(endpoint, START, (post,)))
+        run.finish("수집 정상")
+    legacy = json.loads(index_path.read_text())
+    legacy["version"] = 1
+    old_event = legacy["events"][f"x:{post.id}"]
+    old_event.pop("origin_time_basis", None)
+    old_event["origin_time_bases"] = ["provider_observed", "x_source_field"]
+    index_path.write_text(json.dumps(legacy))
+    with DiagnosticRun(metrics, index_path, now=lambda: START + timedelta(seconds=10)) as run:
+        run.record_snapshot(make_snapshot(endpoint, START + timedelta(seconds=10), ()))
+        run.finish("부분 장애")
+    migrated = json.loads(index_path.read_text())
+    assert migrated["version"] == 2
+    assert migrated["measurement_epoch"] == legacy["measurement_epoch"]
+    assert migrated["endpoint_memberships"] == legacy["endpoint_memberships"]
+    event = migrated["events"][f"x:{post.id}"]
+    assert event == {**old_event, "origin_time_basis": "unknown"}
+    corrected = replace(post, created_at=START - timedelta(minutes=20))
+    with DiagnosticRun(metrics, index_path, now=lambda: START + timedelta(seconds=20)) as run:
+        run.record_snapshot(make_snapshot(
+            endpoint, START + timedelta(seconds=20), (corrected,),
+            origin_time_bases=((post.id, "x_source_field"),),
+        ))
+        run.finish("수집 정상")
+    event = json.loads(index_path.read_text())["events"][f"x:{post.id}"]
+    assert event["origin_at"] == corrected.created_at.isoformat()
+    assert event["origin_time_basis"] == "x_source_field"
+    assert event["first_observed_at"] == old_event["first_observed_at"]
+
+
+@pytest.mark.parametrize("basis", [None, [], "unrecognized"])
+def test_index_rejects_invalid_selected_origin_basis_before_writing(
+    tmp_path: Path, basis: object,
+) -> None:
+    metrics = tmp_path / "metrics.jsonl"
+    index_path = tmp_path / "observations.json"
+    post = make_post("2100000000000000072")
+    with DiagnosticRun(metrics, index_path, now=lambda: START) as run:
+        run.record_snapshot(make_snapshot("https://codex-reset.com/api/feed", START, (post,)))
+        run.finish("수집 정상")
+    payload = json.loads(index_path.read_text())
+    payload["version"] = 2
+    payload["events"][f"x:{post.id}"]["origin_time_basis"] = basis
+    index_path.write_text(json.dumps(payload))
+    before_index, before_metrics = index_path.read_bytes(), metrics.read_bytes()
+    with pytest.raises(ValueError, match="진단 인덱스"):
+        with DiagnosticRun(metrics, index_path, now=lambda: START):
+            pass
+    assert index_path.read_bytes() == before_index
+    assert metrics.read_bytes() == before_metrics
