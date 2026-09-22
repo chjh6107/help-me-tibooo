@@ -338,6 +338,83 @@ def test_semantically_malformed_index_fails_before_appending_metrics(
     assert not metrics_path.exists()
 
 
+@pytest.mark.parametrize(
+    ("object_path", "unsafe_key"),
+    (
+        ((), "body"),
+        (("events", "x:2100000000000000042"), "credentials"),
+        (
+            (
+                "events",
+                "x:2100000000000000042",
+                "endpoints",
+                "https://codex-reset.com/api/feed",
+            ),
+            "raw_response",
+        ),
+        (
+            (
+                "events",
+                "x:2100000000000000042",
+                "versions",
+                evidence_hash(make_post("2100000000000000042")),
+            ),
+            "text",
+        ),
+        (
+            (
+                "endpoint_memberships",
+                "https://codex-reset.com/api/feed",
+            ),
+            "token",
+        ),
+    ),
+    ids=("top", "event", "endpoint", "version", "membership"),
+)
+def test_index_rejects_unknown_fields_before_metrics_append_or_reserialization(
+    tmp_path: Path,
+    object_path: tuple[str, ...],
+    unsafe_key: str,
+) -> None:
+    metrics_path = tmp_path / "metrics.jsonl"
+    index_path = tmp_path / "observations.json"
+    post = make_post("2100000000000000042")
+    with DiagnosticRun(metrics_path, index_path, now=lambda: START) as run:
+        run.record_snapshot(
+            make_snapshot(
+                "https://codex-reset.com/api/feed",
+                START,
+                (post,),
+                origin_time_bases=((post.id, "x_source_field"),),
+            )
+        )
+        run.finish("수집 정상")
+
+    payload = json.loads(index_path.read_text(encoding="utf-8"))
+    target = payload
+    for key in object_path:
+        target = target[key]
+    assert isinstance(target, dict)
+    target[unsafe_key] = "private-body-or-credential"
+    index_path.write_text(
+        json.dumps(payload, ensure_ascii=False, sort_keys=True),
+        encoding="utf-8",
+    )
+    malformed_index = index_path.read_bytes()
+    existing_metrics = metrics_path.read_bytes()
+
+    with pytest.raises(ValueError, match="진단 인덱스"):
+        with DiagnosticRun(
+            metrics_path,
+            index_path,
+            now=lambda: START + timedelta(minutes=1),
+        ):
+            pass
+
+    assert metrics_path.read_bytes() == existing_metrics
+    assert index_path.read_bytes() == malformed_index
+
+
 def test_canonical_key_uses_provider_for_non_x_and_rejects_mismatched_x_url() -> None:
     opaque = make_post(
         "observed-safe_1",

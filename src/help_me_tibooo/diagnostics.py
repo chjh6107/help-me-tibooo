@@ -394,6 +394,13 @@ class DiagnosticRun:
 def _valid_index(index: object) -> bool:
     if not isinstance(index, dict):
         return False
+    if set(index) != {
+        "version",
+        "measurement_epoch",
+        "events",
+        "endpoint_memberships",
+    }:
+        return False
     if index.get("version") != INDEX_VERSION:
         return False
     if not _valid_timestamp(index.get("measurement_epoch")):
@@ -420,6 +427,16 @@ def _valid_index(index: object) -> bool:
 def _valid_event(event: object) -> bool:
     if not isinstance(event, dict):
         return False
+    if set(event) != {
+        "first_observed_at",
+        "last_observed_at",
+        "origin_at",
+        "origin_time_bases",
+        "provider_visible_at",
+        "endpoints",
+        "versions",
+    }:
+        return False
     if not _valid_timestamp(event.get("first_observed_at")) or not _valid_timestamp(
         event.get("last_observed_at")
     ):
@@ -438,6 +455,7 @@ def _valid_event(event: object) -> bool:
     if not isinstance(endpoints, dict) or not all(
         isinstance(endpoint, str)
         and isinstance(observation, dict)
+        and set(observation) == {"provider", "first_observed_at", "last_observed_at"}
         and isinstance(observation.get("provider"), str)
         and _valid_timestamp(observation.get("first_observed_at"))
         and _valid_timestamp(observation.get("last_observed_at"))
@@ -449,6 +467,7 @@ def _valid_event(event: object) -> bool:
         isinstance(post_hash, str)
         and re.fullmatch(r"[0-9a-f]{64}", post_hash) is not None
         and isinstance(version, dict)
+        and set(version) == {"first_observed_at", "last_observed_at"}
         and _valid_timestamp(version.get("first_observed_at"))
         and _valid_timestamp(version.get("last_observed_at"))
         for post_hash, version in versions.items()
@@ -457,6 +476,8 @@ def _valid_event(event: object) -> bool:
 
 def _valid_membership(membership: object) -> bool:
     if not isinstance(membership, dict):
+        return False
+    if set(membership) != {"canonical_ids", "last_successful_at"}:
         return False
     canonical_ids = membership.get("canonical_ids")
     return (

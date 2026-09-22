@@ -114,3 +114,36 @@ PYTHONPATH=src .../.venv/bin/python -m pytest -q
 - membership overlap은 연속 완전 snapshot의 공통 ID 여부이며 rolling timeline 완전성을
   증명하지 않는다.
 - 진단 sidecar는 audit 자료이며 watcher 발송 이력이나 운영 상태로 승격할 수 없다.
+
+## 리뷰 수정 1: v1 인덱스 추가 필드 거부
+
+리뷰에서 v1 인덱스의 필수 필드 타입은 검증하지만 알 수 없는 필드를 허용하는 문제가
+확인됐다. 이 상태에서는 top/event/endpoint/version/membership 객체에 들어온 원문이나
+자격 증명 필드가 다음 atomic save에서 그대로 재직렬화될 수 있었다.
+
+### RED
+
+```text
+PYTHONPATH=src .../.venv/bin/python -m pytest tests/test_diagnostics.py -q \
+  -k unknown_fields
+5 failed, 9 deselected
+```
+
+top의 `body`, event의 `credentials`, endpoint의 `raw_response`, version의 `text`,
+membership의 `token`을 각각 실제 인덱스 파일에 넣었을 때 모두 예외 없이 열렸다.
+
+### GREEN
+
+```text
+PYTHONPATH=src .../.venv/bin/python -m pytest tests/test_diagnostics.py -q \
+  -k unknown_fields
+5 passed, 9 deselected in 0.09s
+
+PYTHONPATH=src .../.venv/bin/python -m pytest \
+  tests/test_diagnostics.py tests/test_observe.py -q
+21 passed in 0.17s
+```
+
+각 고정 스키마 객체에서 허용 키 집합과 정확히 일치하는지 확인한다. map 역할인 `events`,
+`endpoints`, `versions`, `endpoint_memberships`의 동적 식별 키는 유지했다. 회귀 테스트는
+거부 전에 metrics가 추가되지 않고 malformed index byte가 변경되지 않는 것도 검증한다.
