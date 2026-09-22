@@ -1,0 +1,585 @@
+{
+  "repository": "chjh6107/help-me-tibooo",
+  "revision": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+  "description": "28 scheduled runs of the latest deployed revision; excerpts limited to source counts, alert IDs/categories/results and state cache keys. Run createdAt/updatedAt span includes setup/teardown.",
+  "runs": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-21T11:01:42Z",
+      "databaseId": 35591850529,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-21T11:01:42Z",
+      "status": "completed",
+      "updatedAt": "2026-09-21T11:02:02Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35591850529",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-21T11:01:56.0920374Z Cache restored from key: help-me-tibooo-state-35564231678-1",
+        "run\tUNKNOWN STEP\t2026-09-21T11:01:58.0865965Z reset: 정상 응답 · 게시물 26개",
+        "run\tUNKNOWN STEP\t2026-09-21T11:01:58.0866704Z twiscan: 정상 응답 · 게시물 5개",
+        "run\tUNKNOWN STEP\t2026-09-21T11:01:58.0867717Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-21T11:01:58.0868453Z 게시물 2101921202436702657 분류: OpenAI 소식",
+        "run\tUNKNOWN STEP\t2026-09-21T11:01:58.0869271Z 게시물 2101921202436702657 Discord 알림 전송 성공",
+        "run\tUNKNOWN STEP\t2026-09-21T11:01:58.0870092Z 실행 요약: 수집 정상 · 게시물 알림 1건",
+        "run\tUNKNOWN STEP\t2026-09-21T11:01:59.0968994Z Cache saved with key: help-me-tibooo-state-35591850529-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-21T05:20:29Z",
+      "databaseId": 35564231678,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-21T05:20:29Z",
+      "status": "completed",
+      "updatedAt": "2026-09-21T05:21:23Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35564231678",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-21T05:21:17.5803755Z Cache restored from key: help-me-tibooo-state-35547719947-1",
+        "run\tUNKNOWN STEP\t2026-09-21T05:21:19.8023016Z reset: 정상 응답 · 게시물 26개",
+        "run\tUNKNOWN STEP\t2026-09-21T05:21:19.8023599Z twiscan: 정상 응답 · 게시물 5개",
+        "run\tUNKNOWN STEP\t2026-09-21T05:21:19.8023918Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-21T05:21:19.8024204Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-21T05:21:20.6128458Z Cache saved with key: help-me-tibooo-state-35564231678-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-21T00:26:43Z",
+      "databaseId": 35547719947,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-21T00:26:43Z",
+      "status": "completed",
+      "updatedAt": "2026-09-21T00:26:58Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35547719947",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-21T00:26:53.5225502Z Cache restored from key: help-me-tibooo-state-35541436247-1",
+        "run\tUNKNOWN STEP\t2026-09-21T00:26:55.5902266Z reset: 정상 응답 · 게시물 26개",
+        "run\tUNKNOWN STEP\t2026-09-21T00:26:55.5903219Z twiscan: 정상 응답 · 게시물 5개",
+        "run\tUNKNOWN STEP\t2026-09-21T00:26:55.5903850Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-21T00:26:55.5904462Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-21T00:26:56.2348958Z Cache saved with key: help-me-tibooo-state-35547719947-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-20T22:21:41Z",
+      "databaseId": 35541436247,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-20T22:21:41Z",
+      "status": "completed",
+      "updatedAt": "2026-09-20T22:22:11Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35541436247",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-20T22:22:04.1938303Z Cache restored from key: help-me-tibooo-state-35533096123-1",
+        "run\tUNKNOWN STEP\t2026-09-20T22:22:06.5379103Z reset: 정상 응답 · 게시물 27개",
+        "run\tUNKNOWN STEP\t2026-09-20T22:22:06.5379437Z twiscan: 정상 응답 · 게시물 5개",
+        "run\tUNKNOWN STEP\t2026-09-20T22:22:06.5379666Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-20T22:22:06.5379910Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-20T22:22:07.5680373Z Cache saved with key: help-me-tibooo-state-35541436247-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-20T19:40:55Z",
+      "databaseId": 35533096123,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-20T19:40:55Z",
+      "status": "completed",
+      "updatedAt": "2026-09-20T19:41:17Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35533096123",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-20T19:41:10.8858156Z Cache restored from key: help-me-tibooo-state-35525776557-1",
+        "run\tUNKNOWN STEP\t2026-09-20T19:41:12.9671345Z reset: 정상 응답 · 게시물 31개",
+        "run\tUNKNOWN STEP\t2026-09-20T19:41:12.9671786Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-20T19:41:12.9672139Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-20T19:41:12.9672484Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-20T19:41:13.7886449Z Cache saved with key: help-me-tibooo-state-35533096123-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-20T17:24:42Z",
+      "databaseId": 35525776557,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-20T17:24:42Z",
+      "status": "completed",
+      "updatedAt": "2026-09-20T17:25:02Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35525776557",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-20T17:24:56.0705567Z Cache restored from key: help-me-tibooo-state-35515408334-1",
+        "run\tUNKNOWN STEP\t2026-09-20T17:24:58.5566478Z reset: 정상 응답 · 게시물 30개",
+        "run\tUNKNOWN STEP\t2026-09-20T17:24:58.5567157Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-20T17:24:58.5567551Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-20T17:24:58.5567968Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-20T17:24:59.3695665Z Cache saved with key: help-me-tibooo-state-35525776557-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-20T14:05:13Z",
+      "databaseId": 35515408334,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-20T14:05:13Z",
+      "status": "completed",
+      "updatedAt": "2026-09-20T14:05:34Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35515408334",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-20T14:05:27.8554839Z Cache restored from key: help-me-tibooo-state-35503056215-1",
+        "run\tUNKNOWN STEP\t2026-09-20T14:05:31.9951491Z reset: 정상 응답 · 게시물 30개",
+        "run\tUNKNOWN STEP\t2026-09-20T14:05:31.9952265Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-20T14:05:31.9952681Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-20T14:05:31.9953030Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-20T14:05:32.7142478Z Cache saved with key: help-me-tibooo-state-35515408334-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-20T09:42:31Z",
+      "databaseId": 35503056215,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-20T09:42:31Z",
+      "status": "completed",
+      "updatedAt": "2026-09-20T09:42:52Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35503056215",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-20T09:42:46.1208802Z Cache restored from key: help-me-tibooo-state-35489869951-1",
+        "run\tUNKNOWN STEP\t2026-09-20T09:42:47.9242506Z reset: 정상 응답 · 게시물 30개",
+        "run\tUNKNOWN STEP\t2026-09-20T09:42:47.9242924Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-20T09:42:47.9243251Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-20T09:42:47.9243590Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-20T09:42:48.8792649Z Cache saved with key: help-me-tibooo-state-35503056215-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-20T04:43:47Z",
+      "databaseId": 35489869951,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-20T04:43:47Z",
+      "status": "completed",
+      "updatedAt": "2026-09-20T04:44:00Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35489869951",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-20T04:43:56.3908489Z Cache restored from key: help-me-tibooo-state-35477731083-1",
+        "run\tUNKNOWN STEP\t2026-09-20T04:43:57.8253499Z reset: 정상 응답 · 게시물 30개",
+        "run\tUNKNOWN STEP\t2026-09-20T04:43:57.8253928Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-20T04:43:57.8254285Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-20T04:43:57.8274337Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-20T04:43:58.2480944Z Cache saved with key: help-me-tibooo-state-35489869951-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-20T00:03:00Z",
+      "databaseId": 35477731083,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-20T00:03:00Z",
+      "status": "completed",
+      "updatedAt": "2026-09-20T00:03:51Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35477731083",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-20T00:03:47.0208818Z Cache restored from key: help-me-tibooo-state-35471114230-1",
+        "run\tUNKNOWN STEP\t2026-09-20T00:03:48.6546069Z reset: 정상 응답 · 게시물 30개",
+        "run\tUNKNOWN STEP\t2026-09-20T00:03:48.6546597Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-20T00:03:48.6547035Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-20T00:03:48.6547459Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-20T00:03:49.1580196Z Cache saved with key: help-me-tibooo-state-35477731083-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-19T21:40:30Z",
+      "databaseId": 35471114230,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-19T21:40:30Z",
+      "status": "completed",
+      "updatedAt": "2026-09-19T21:40:50Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35471114230",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-19T21:40:44.3094774Z Cache restored from key: help-me-tibooo-state-35463823691-1",
+        "run\tUNKNOWN STEP\t2026-09-19T21:40:46.1814522Z reset: 정상 응답 · 게시물 29개",
+        "run\tUNKNOWN STEP\t2026-09-19T21:40:46.1815101Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-19T21:40:46.1815609Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-19T21:40:46.1816094Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-19T21:40:47.1285579Z Cache saved with key: help-me-tibooo-state-35471114230-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-19T19:16:17Z",
+      "databaseId": 35463823691,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-19T19:16:17Z",
+      "status": "completed",
+      "updatedAt": "2026-09-19T19:16:32Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35463823691",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:28.0791306Z Cache restored from key: help-me-tibooo-state-35455897550-1",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.0553129Z reset: 정상 응답 · 게시물 29개",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.0553738Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.0554240Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.0554783Z 게시물 2101353058110480808 분류: OpenAI 소식",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.0555804Z 게시물 2101353058110480808 Discord 알림 전송 성공",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.0556523Z 게시물 2101354419829010896 분류: OpenAI 소식",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.0557242Z 게시물 2101354419829010896 Discord 알림 전송 성공",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.0557916Z 실행 요약: 수집 정상 · 게시물 알림 2건",
+        "run\tUNKNOWN STEP\t2026-09-19T19:16:30.5225855Z Cache saved with key: help-me-tibooo-state-35463823691-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-19T16:44:06Z",
+      "databaseId": 35455897550,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-19T16:44:06Z",
+      "status": "completed",
+      "updatedAt": "2026-09-19T16:44:25Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35455897550",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-19T16:44:19.4845509Z Cache restored from key: help-me-tibooo-state-35445436537-1",
+        "run\tUNKNOWN STEP\t2026-09-19T16:44:21.6858020Z reset: 정상 응답 · 게시물 29개",
+        "run\tUNKNOWN STEP\t2026-09-19T16:44:21.6858754Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-19T16:44:21.6859115Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-19T16:44:21.6859465Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-19T16:44:22.5310404Z Cache saved with key: help-me-tibooo-state-35455897550-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-19T13:19:53Z",
+      "databaseId": 35445436537,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-19T13:19:53Z",
+      "status": "completed",
+      "updatedAt": "2026-09-19T13:20:13Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35445436537",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-19T13:20:06.9150710Z Cache restored from key: help-me-tibooo-state-35434502324-1",
+        "run\tUNKNOWN STEP\t2026-09-19T13:20:08.3871801Z reset: 정상 응답 · 게시물 29개",
+        "run\tUNKNOWN STEP\t2026-09-19T13:20:08.3872335Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-19T13:20:08.3872741Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-19T13:20:08.3873131Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-19T13:20:09.3880937Z Cache saved with key: help-me-tibooo-state-35445436537-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-19T09:22:08Z",
+      "databaseId": 35434502324,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-19T09:22:08Z",
+      "status": "completed",
+      "updatedAt": "2026-09-19T09:22:25Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35434502324",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-19T09:22:20.2397470Z Cache restored from key: help-me-tibooo-state-35422595748-1",
+        "run\tUNKNOWN STEP\t2026-09-19T09:22:21.8718409Z reset: 정상 응답 · 게시물 29개",
+        "run\tUNKNOWN STEP\t2026-09-19T09:22:21.8718809Z twiscan: 정상 응답 · 게시물 7개",
+        "run\tUNKNOWN STEP\t2026-09-19T09:22:21.8719469Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-19T09:22:21.8719802Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-19T09:22:22.5182256Z Cache saved with key: help-me-tibooo-state-35434502324-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-19T04:55:57Z",
+      "databaseId": 35422595748,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-19T04:55:57Z",
+      "status": "completed",
+      "updatedAt": "2026-09-19T04:56:49Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35422595748",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-19T04:56:44.8344864Z Cache restored from key: help-me-tibooo-state-35408266186-1",
+        "run\tUNKNOWN STEP\t2026-09-19T04:56:46.5937767Z reset: 정상 응답 · 게시물 31개",
+        "run\tUNKNOWN STEP\t2026-09-19T04:56:46.5958266Z twiscan: 정상 응답 · 게시물 7개",
+        "run\tUNKNOWN STEP\t2026-09-19T04:56:46.5958916Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-19T04:56:46.5959425Z 게시물 2101158161994699036 분류: 한도",
+        "run\tUNKNOWN STEP\t2026-09-19T04:56:46.5960003Z 게시물 2101158161994699036 Discord 알림 전송 성공",
+        "run\tUNKNOWN STEP\t2026-09-19T04:56:46.5960617Z 실행 요약: 수집 정상 · 게시물 알림 1건",
+        "run\tUNKNOWN STEP\t2026-09-19T04:56:47.2301914Z Cache saved with key: help-me-tibooo-state-35422595748-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-19T00:07:44Z",
+      "databaseId": 35408266186,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-19T00:07:44Z",
+      "status": "completed",
+      "updatedAt": "2026-09-19T00:08:08Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35408266186",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-19T00:08:01.6337861Z Cache restored from key: help-me-tibooo-state-35398503035-1",
+        "run\tUNKNOWN STEP\t2026-09-19T00:08:03.4705058Z reset: 정상 응답 · 게시물 33개",
+        "run\tUNKNOWN STEP\t2026-09-19T00:08:03.4706191Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-19T00:08:03.4706613Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-19T00:08:03.4706982Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-19T00:08:04.3626931Z Cache saved with key: help-me-tibooo-state-35408266186-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-18T21:47:24Z",
+      "databaseId": 35398503035,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-18T21:47:24Z",
+      "status": "completed",
+      "updatedAt": "2026-09-18T21:47:43Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35398503035",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-18T21:47:37.8692350Z Cache restored from key: help-me-tibooo-state-35384214878-1",
+        "run\tUNKNOWN STEP\t2026-09-18T21:47:39.5737315Z reset: 정상 응답 · 게시물 33개",
+        "run\tUNKNOWN STEP\t2026-09-18T21:47:39.5737909Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-18T21:47:39.5738358Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-18T21:47:39.5738788Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-18T21:47:40.5852598Z Cache saved with key: help-me-tibooo-state-35398503035-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-18T19:08:05Z",
+      "databaseId": 35384214878,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-18T19:08:05Z",
+      "status": "completed",
+      "updatedAt": "2026-09-18T19:08:29Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35384214878",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-18T19:08:23.3466018Z Cache restored from key: help-me-tibooo-state-35367615930-1",
+        "run\tUNKNOWN STEP\t2026-09-18T19:08:25.0607838Z reset: 정상 응답 · 게시물 34개",
+        "run\tUNKNOWN STEP\t2026-09-18T19:08:25.0608365Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-18T19:08:25.0608820Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-18T19:08:25.0609255Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-18T19:08:26.0339800Z Cache saved with key: help-me-tibooo-state-35384214878-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-18T16:17:45Z",
+      "databaseId": 35367615930,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-18T16:17:45Z",
+      "status": "completed",
+      "updatedAt": "2026-09-18T16:18:07Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35367615930",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-18T16:18:02.3724667Z Cache restored from key: help-me-tibooo-state-35340856118-1",
+        "run\tUNKNOWN STEP\t2026-09-18T16:18:04.6883757Z reset: 정상 응답 · 게시물 34개",
+        "run\tUNKNOWN STEP\t2026-09-18T16:18:04.6884149Z twiscan: 정상 응답 · 게시물 6개",
+        "run\tUNKNOWN STEP\t2026-09-18T16:18:04.6884477Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-18T16:18:04.6885022Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-18T16:18:05.2914644Z Cache saved with key: help-me-tibooo-state-35367615930-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-18T11:41:12Z",
+      "databaseId": 35340856118,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-18T11:41:12Z",
+      "status": "completed",
+      "updatedAt": "2026-09-18T11:41:29Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35340856118",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-18T11:41:23.8919698Z Cache restored from key: help-me-tibooo-state-35315246588-1",
+        "run\tUNKNOWN STEP\t2026-09-18T11:41:25.6073619Z reset: 정상 응답 · 게시물 35개",
+        "run\tUNKNOWN STEP\t2026-09-18T11:41:25.6094646Z twiscan: 정상 응답 · 게시물 7개",
+        "run\tUNKNOWN STEP\t2026-09-18T11:41:25.6095014Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-18T11:41:25.6095464Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-18T11:41:26.2524693Z Cache saved with key: help-me-tibooo-state-35340856118-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-18T06:31:26Z",
+      "databaseId": 35315246588,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-18T06:31:26Z",
+      "status": "completed",
+      "updatedAt": "2026-09-18T06:31:48Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35315246588",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-18T06:31:41.2817621Z Cache restored from key: help-me-tibooo-state-35294375244-1",
+        "run\tUNKNOWN STEP\t2026-09-18T06:31:42.8454026Z reset: 정상 응답 · 게시물 35개",
+        "run\tUNKNOWN STEP\t2026-09-18T06:31:42.8454532Z twiscan: 정상 응답 · 게시물 7개",
+        "run\tUNKNOWN STEP\t2026-09-18T06:31:42.8454880Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-18T06:31:42.8455218Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-18T06:31:43.8670521Z Cache saved with key: help-me-tibooo-state-35315246588-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-18T01:12:31Z",
+      "databaseId": 35294375244,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-18T01:12:31Z",
+      "status": "completed",
+      "updatedAt": "2026-09-18T01:12:50Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35294375244",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-18T01:12:43.6570792Z Cache restored from key: help-me-tibooo-state-35284857221-1",
+        "run\tUNKNOWN STEP\t2026-09-18T01:12:44.8217313Z reset: 정상 응답 · 게시물 35개",
+        "run\tUNKNOWN STEP\t2026-09-18T01:12:44.8217611Z twiscan: 정상 응답 · 게시물 7개",
+        "run\tUNKNOWN STEP\t2026-09-18T01:12:44.8217853Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-18T01:12:44.8218095Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-18T01:12:45.7620633Z Cache saved with key: help-me-tibooo-state-35294375244-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-17T23:01:09Z",
+      "databaseId": 35284857221,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-17T23:01:09Z",
+      "status": "completed",
+      "updatedAt": "2026-09-17T23:01:28Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35284857221",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-17T23:01:22.9899758Z Cache restored from key: help-me-tibooo-state-35271306637-1",
+        "run\tUNKNOWN STEP\t2026-09-17T23:01:24.5228468Z reset: 정상 응답 · 게시물 36개",
+        "run\tUNKNOWN STEP\t2026-09-17T23:01:24.5228880Z twiscan: 정상 응답 · 게시물 8개",
+        "run\tUNKNOWN STEP\t2026-09-17T23:01:24.5229211Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-17T23:01:24.5229533Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-17T23:01:25.3293462Z Cache saved with key: help-me-tibooo-state-35284857221-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-17T20:31:22Z",
+      "databaseId": 35271306637,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-17T20:31:22Z",
+      "status": "completed",
+      "updatedAt": "2026-09-17T20:31:41Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35271306637",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-17T20:31:36.1994010Z Cache restored from key: help-me-tibooo-state-35253629045-1",
+        "run\tUNKNOWN STEP\t2026-09-17T20:31:38.4970266Z reset: 정상 응답 · 게시물 36개",
+        "run\tUNKNOWN STEP\t2026-09-17T20:31:38.4970770Z twiscan: 정상 응답 · 게시물 8개",
+        "run\tUNKNOWN STEP\t2026-09-17T20:31:38.4971196Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-17T20:31:38.4971651Z 게시물 2100645454245720513 분류: OpenAI 소식",
+        "run\tUNKNOWN STEP\t2026-09-17T20:31:38.4990159Z 게시물 2100645454245720513 Discord 알림 전송 성공",
+        "run\tUNKNOWN STEP\t2026-09-17T20:31:38.4990830Z 실행 요약: 수집 정상 · 게시물 알림 1건",
+        "run\tUNKNOWN STEP\t2026-09-17T20:31:38.9784485Z Cache saved with key: help-me-tibooo-state-35271306637-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-17T17:35:06Z",
+      "databaseId": 35253629045,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-17T17:35:06Z",
+      "status": "completed",
+      "updatedAt": "2026-09-17T17:35:28Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35253629045",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-17T17:35:21.7672192Z Cache restored from key: help-me-tibooo-state-35222862271-1",
+        "run\tUNKNOWN STEP\t2026-09-17T17:35:24.0587985Z reset: 정상 응답 · 게시물 37개",
+        "run\tUNKNOWN STEP\t2026-09-17T17:35:24.0588366Z twiscan: 정상 응답 · 게시물 8개",
+        "run\tUNKNOWN STEP\t2026-09-17T17:35:24.0588664Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-17T17:35:24.0588960Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-17T17:35:24.8864872Z Cache saved with key: help-me-tibooo-state-35253629045-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-17T12:44:36Z",
+      "databaseId": 35222862271,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-17T12:44:36Z",
+      "status": "completed",
+      "updatedAt": "2026-09-17T12:44:54Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35222862271",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-17T12:44:48.8842280Z Cache restored from key: help-me-tibooo-state-35195023993-1",
+        "run\tUNKNOWN STEP\t2026-09-17T12:44:50.3421365Z reset: 정상 응답 · 게시물 37개",
+        "run\tUNKNOWN STEP\t2026-09-17T12:44:50.3421711Z twiscan: 정상 응답 · 게시물 8개",
+        "run\tUNKNOWN STEP\t2026-09-17T12:44:50.3421946Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-17T12:44:50.3422171Z 실행 요약: 수집 정상 · 게시물 알림 0건",
+        "run\tUNKNOWN STEP\t2026-09-17T12:44:51.1585970Z Cache saved with key: help-me-tibooo-state-35222862271-1"
+      ]
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-09-17T07:32:18Z",
+      "databaseId": 35195023993,
+      "event": "schedule",
+      "headSha": "0e9dfcaf7b073ee88a8dfe787dbef9514c6516e0",
+      "startedAt": "2026-09-17T07:32:18Z",
+      "status": "completed",
+      "updatedAt": "2026-09-17T07:32:35Z",
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/35195023993",
+      "log_exit_code": 0,
+      "evidence": [
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:29.3201047Z Cache restored from key: help-me-tibooo-state-35171351921-1",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8434648Z reset: 정상 응답 · 게시물 37개",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8435162Z twiscan: 정상 응답 · 게시물 8개",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8435600Z resets: 정상 응답 · 게시물 53개",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8436047Z 게시물 2100122479947817059 분류: OpenAI 소식",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8436574Z 게시물 2100122479947817059 Discord 알림 전송 성공",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8437069Z 게시물 2100295443620007993 분류: OpenAI 소식",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8437560Z 게시물 2100295443620007993 Discord 알림 전송 성공",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8437923Z 게시물 2100297380968997327 분류: OpenAI 소식",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8438229Z 게시물 2100297380968997327 Discord 알림 전송 성공",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:32.8438549Z 실행 요약: 수집 정상 · 게시물 알림 3건",
+        "run\tUNKNOWN STEP\t2026-09-17T07:32:33.3638203Z Cache saved with key: help-me-tibooo-state-35195023993-1"
+      ]
+    }
+  ],
+  "artifact_written_at_utc": "2026-09-21T15:17:23.678147+00:00",
+  "capture_window_utc": "2026-09-21T15:07Z–15:15Z"
+}

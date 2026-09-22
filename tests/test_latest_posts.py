@@ -36,6 +36,26 @@ def test_live_timeline_fills_posts_missing_from_json_and_delivers_once(latest_ht
     assert delivered == [("2100297380968997327", (AlertCategory.NEWS,))]
 
 
+def test_json_timeline_survives_latest_html_failure():
+    def handler(request):
+        if request.url.path == "/api/feed":
+            return httpx.Response(200, json={"tweets": [{
+                "id": "2100363668051603608",
+                "text": "Codex availability changed.",
+                "at": "2026-09-22T00:00:00Z",
+                "url": "https://x.com/thsottiaux/status/2100363668051603608",
+            }]})
+        if request.url.path == "/tibo":
+            return httpx.Response(503)
+        return httpx.Response(503)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        reset = fetch_all_sources(client)[0]
+
+    assert reset.error is None
+    assert [post.id for post in reset.posts] == ["2100363668051603608"]
+
+
 @pytest.mark.parametrize("text", ["Astra ✅ Fast ✅ Frontier ✅ Efficient ✅ For everyone", "What is ChatGPT", "OpenAI is improving reliability.", "Codex availability is improving."])
 def test_related_posts_do_not_need_release_keywords(make_post, text):
     assert classify(make_post(text=text)) == (AlertCategory.NEWS,)

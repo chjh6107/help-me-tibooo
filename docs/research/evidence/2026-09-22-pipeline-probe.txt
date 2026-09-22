@@ -1,0 +1,9 @@
+CLASSIFY keyword_only ['OpenAI 소식']
+CLASSIFY context_only_teaser []
+CLASSIFY limits_chat ['한도']
+CLASSIFY limits_plan ['한도']
+CLASSIFY substring_ship ['출시']
+REENRICH [] [] 101
+WINDOW_GAP ['103', '104', '105', '106', '107'] [] 107
+MERGE_COLLISION None []
+BOOTSTRAP [] True 101

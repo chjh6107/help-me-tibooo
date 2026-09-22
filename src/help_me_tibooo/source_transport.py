@@ -30,10 +30,16 @@ class SourceTransport(httpx.BaseTransport):
     def handle_request(self, request: httpx.Request) -> httpx.Response:
         if request.method != "GET":
             raise httpx.UnsupportedProtocol("source transport only supports GET")
+        headers = {
+            key: value
+            for key, value in request.headers.items()
+            if key.lower() in {"user-agent", "accept", "if-none-match", "if-modified-since"}
+        }
         try:
             response = self.session.request(
                 "GET",
                 str(request.url),
+                headers=headers,
                 timeout=request.extensions.get("timeout", {}).get("read", 15.0),
                 allow_redirects=False,
                 stream=True,
