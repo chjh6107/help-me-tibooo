@@ -48,6 +48,7 @@ class SourceSnapshot:
     representation_hash: str | None = None
     page: int = 1
     complete: bool = True
+    origin_time_bases: tuple[tuple[str, str], ...] = ()
 
 def fetch_source_snapshots(client: httpx.Client, *, now: Callable[[], datetime] | None = None) -> Iterator[SourceSnapshot]: ...
 def batches_from_snapshots(snapshots: tuple[SourceSnapshot, ...]) -> tuple[SourceBatch, ...]: ...
@@ -71,6 +72,7 @@ assert requested_urls == [RESET_FEED_URL]
 - [ ] Share request/read/parse logic for both iterator and legacy adapters. Keep existing 2 MiB, timeout, redirect, error sanitization, parser and 10-page limits. An iterator reset failure must retain earlier snapshots; legacy adapter still returns failed reset batch with no partial posts because old watcher cannot safely initialize from partial history.
 - [ ] For JSON/HTML merge retain current same-ID precedence in the operational adapter, but preserve both snapshots for diagnostics. Only change the proven fallback defect: healthy JSON must survive failed HTML. Conflicting/better content selection belongs to the later pipeline, not this task.
 - [ ] Response timestamps: before request, after complete bounded body read, after successful parse. Transport/HTTP/parse failures retain only actually reached timestamps. `representation_hash` is SHA-256 of received bytes when complete. Headers allow only Date/Age/Cache-Control/ETag/Last-Modified/Retry-After; never arbitrary response headers.
+- [ ] Preserve per-post time semantics in `origin_time_bases`: JSON at/x_post announced_at → x_source_field; /tibo ID-derived → x_snowflake; observed reset announced_at → provider_observed even with an X URL; no parsed time → unknown. Do not change Post/v4 state serialization to carry diagnostic-only metadata.
 - [ ] Forward only User-Agent/Accept/If-None-Match/If-Modified-Since through SourceTransport, retain response metadata. Do not turn conditional GET on before persistent cached representations exist. Test rejected Authorization/Cookie/Host forwarding and permitted headers.
 - [ ] Run focused tests, then full suite once, self-review and commit only owned files: `feat: 소스별 수집 관측과 응답 메타데이터 추가`.
 
@@ -87,7 +89,7 @@ def validate_output_paths(protected_paths: tuple[Path, ...], output_paths: tuple
 def require_existing_state(path: Path) -> None: ...
 ```
 
-The caller holds the lock from before loading until after saving. Lock identity must remain stable across state file atomic replacement; use a sibling lock file, resolving symlink path aliases. Nonblocking contention raises a safe exception. No destructive unlink of an active lock. `require_existing_state` rejects missing/non-regular/symlink-corrupt state before fetch/send; JSON validity remains `load_state` responsibility. `validate_output_paths` rejects output/protected aliases and output/output aliases before any write, including symlinks/hardlinks; both shadow and arbitrary watch metrics use it.
+The caller holds the lock from before loading until after saving and uses the canonical state path for both operations. Lock identity must remain stable across state file atomic replacement; use a sibling lock file, resolving symlink path aliases. Reject hardlinked operational state files because distinct sibling names cannot reliably coordinate them across atomic replacements. Nonblocking contention raises a safe exception. No destructive unlink of an active lock. `require_existing_state` rejects missing/non-regular/symlink-corrupt state before fetch/send; JSON validity remains `load_state` responsibility. `validate_output_paths` rejects output/protected aliases and output/output aliases before any write, including symlinks/hardlinks; both shadow and arbitrary watch metrics use it.
 
 - [ ] Write tests using two actual processes holding the same canonical state lock, release after exception, and symlink aliases. Verify one process cannot enter until the first releases. Do not use sleeps to decide success; use subprocess handshakes/pipes.
 - [ ] Write tests rejecting shadow dir equal to/containing the production state, output symlink/hardlink aliases to production, and output files that already alias each other. Expected output paths are `metrics.jsonl` and `observations.json`; shadow never stores watcher state. Validate before mkdir/write/network.
