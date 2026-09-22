@@ -55,6 +55,27 @@ class SourceBatch:
 
 
 @dataclass(frozen=True, slots=True)
+class SourceSnapshot:
+    source: SourceName
+    provider: str
+    endpoint: str
+    request_started_at: datetime
+    response_received_at: datetime | None
+    observed_at: datetime | None
+    posts: tuple[Post, ...] = ()
+    error: str | None = None
+    http_status: int | None = None
+    cache_headers: tuple[tuple[str, str], ...] = ()
+    representation_hash: str | None = None
+    page: int = 1
+    complete: bool = True
+    origin_time_bases: tuple[tuple[str, str], ...] = ()
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "source", SourceName(self.source))
+
+
+@dataclass(frozen=True, slots=True)
 class CheckpointPosition:
     id: str | None = None
     created_at: datetime | None = None
