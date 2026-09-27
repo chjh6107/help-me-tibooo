@@ -17,6 +17,17 @@ module.exports = async ({ github, context, core, cacheKey }) => {
   if (!caches.data.actions_caches.some((cache) => cache.key === cacheKey && cache.ref === context.ref)) {
     throw new Error('이번 실행의 상태 캐시 저장을 확인하지 못했습니다.');
   }
+  const runs = await github.rest.actions.listWorkflowRuns({
+    ...context.repo, workflow_id: 'watch.yml', branch: defaultBranch, per_page: 100,
+  });
+  if (runs.data.workflow_runs.some((run) =>
+    run.id !== context.runId && run.head_branch === defaultBranch &&
+    run.display_title === 'Tibo watcher (watch-loop)' &&
+    ['queued', 'pending', 'waiting', 'requested'].includes(run.status)
+  )) {
+    core.info('이미 대기 중인 반복 감시가 다음 세션을 이어갑니다.');
+    return;
+  }
   await github.rest.actions.createWorkflowDispatch({
     ...context.repo, workflow_id: 'watch.yml', ref: defaultBranch,
     inputs: { mode: 'watch-loop' },

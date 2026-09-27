@@ -22,7 +22,7 @@ GitHub 내부에서 각각의 예약이 지연·누락된 이유와 외부 제�
 저장소·workflow 비활성화에서는 연결하지 않는다. 예약은 연결이 끊겼을 때의 보조 수단이다.
 
 초기 baseline은 pytest 258개 통과. polling/CLI 회귀 11개는 수정 전에 실패했고 구현 후
-통과했다. 전체 pytest 269개와 Node 후속 연결 8개가 통과했다. 실제 비발송 smoke는
+통과했다. 전체 pytest 269개와 Node 후속 연결 13개가 통과했다. 실제 비발송 smoke는
 reset 16개, twiscan 9개, resets 55개를 수집했다.
 
 이 변경은 runner 사용을 상시 사용으로 늘린다. 현재 공개 저장소의 표준 runner를 쓰며
@@ -30,3 +30,10 @@ reset 16개, twiscan 9개, resets 55개를 수집했다.
 원문→알림 2분이나 전송 exactly-once는 보장하지 않는다. 강제 runner 종료는 마지막
 원격 cache 이후 한 세션의 기록을 잃을 수 있다. 상류 인덱싱과 후발 글 기준점 정책도
 별도 문제로 남는다. 운영 적용 후 실제 tick 간격과 다음 실행 연결을 검증한다.
+
+독립 리뷰의 feature-branch 중복 발송 경로를 운영 job 시작 조건으로 차단했다.
+수동 watch가 pending successor를 대체하지 않도록 concurrency queue:max를 사용하고,
+이미 대기 중인 loop가 있으면 새 successor를 추가하지 않는다. queue:max는
+[GitHub 공식 concurrency 문서](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency#example-queueing-multiple-pending-runs)에 있는 설정이다. 현재 actionlint 배포판은 이 필드를 아직 인식하지 못해
+그 한 개의 schema 진단만 제외하고 나머지 검사를 수행한다. GitHub에서 실제 feature
+watch-loop가 skipped 되는지와 smoke/CI가 성공하는지 추가로 검증한다.

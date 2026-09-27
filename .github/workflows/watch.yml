@@ -1,4 +1,5 @@
 name: Tibo watcher
+run-name: Tibo watcher (${{ inputs.mode || 'watch-loop' }})
 
 on:
   schedule:
@@ -23,10 +24,11 @@ permissions:
 concurrency:
   group: help-me-tibooo-${{ (github.event_name == 'schedule' || inputs.mode == 'watch' || inputs.mode == 'watch-loop') && 'watcher' || github.run_id }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   run:
-    if: ${{ (github.event_name != 'schedule' && inputs.mode != 'watch-loop') || (vars.WATCHER_PAUSED != 'true' && github.event.repository.private == false) }}
+    if: ${{ (github.event_name != 'schedule' && inputs.mode != 'watch' && inputs.mode != 'watch-loop') || (github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && vars.WATCHER_PAUSED != 'true' && github.event.repository.private == false) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:

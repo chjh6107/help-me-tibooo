@@ -11,6 +11,7 @@ const invoke = async (options = {}) => {
     payload: { repository: { default_branch: 'main', private: options.private || false } },
   };
   const github = { rest: { actions: {
+    listWorkflowRuns: async () => ({ data: { total_count: 1, workflow_runs: options.runs || [] } }),
     getWorkflow: async () => ({ data: { state: options.disabled ? 'disabled_manually' : 'active' } }),
     getActionsCacheList: async (args) => {
       calls.push(['cache', args]);
@@ -55,3 +56,20 @@ for (const [label, options] of [
     assert.equal(calls.filter(([kind]) => kind === 'dispatch').length, 0);
   });
 }
+
+for (const status of ['queued', 'pending', 'waiting', 'requested']) {
+  test(`keeps the existing ${status} default-branch loop instead of adding a chain`, async () => {
+    const { calls } = await invoke({ runs: [{ id: 43, display_title: 'Tibo watcher (watch-loop)', head_branch: 'main', status }] });
+    assert.equal(calls.filter(([kind]) => kind === 'dispatch').length, 0);
+  });
+}
+
+test('completed loops, feature loops, and diagnostics do not prevent the next production loop', async () => {
+  const { calls } = await invoke({ runs: [
+    { id: 39, display_title: 'Tibo watcher (watch-loop)', head_branch: 'main', status: 'completed' },
+    { id: 40, display_title: 'Tibo watcher (watch-loop)', head_branch: 'feature', status: 'queued' },
+    { id: 41, display_title: 'Tibo watcher (smoke)', head_branch: 'main', status: 'queued' },
+    { id: 42, display_title: 'Tibo watcher (watch-loop)', head_branch: 'main', status: 'in_progress' },
+  ] });
+  assert.equal(calls.filter(([kind]) => kind === 'dispatch').length, 1);
+});
