@@ -18,6 +18,7 @@ from help_me_tibooo.discord import (
 )
 from help_me_tibooo.diagnostics import DiagnosticIndexError, DiagnosticRun
 from help_me_tibooo.models import AlertCategory, Post, SourceBatch, SourceName, WatcherState
+from help_me_tibooo.polling import run_polling_session
 from help_me_tibooo.runtime import (
     exclusive_state,
     require_existing_state,
@@ -43,7 +44,7 @@ def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
     try:
         credentials: DiscordBotCredentials | None = None
-        if args.command in {"watch", "test-bot"}:
+        if args.command in {"watch", "watch-loop", "test-bot"}:
             bot_token = os.environ.get("DISCORD_BOT_TOKEN")
             channel_id = os.environ.get("DISCORD_CHANNEL_ID")
             missing = tuple(
@@ -70,6 +71,18 @@ def main(argv: list[str] | None = None) -> int:
                     Path(args.metrics_path) if args.metrics_path is not None else None
                 ),
             )
+        if args.command == "watch-loop":
+            assert credentials is not None
+            return run_polling_session(
+                lambda: _watch(
+                    Path(args.state_path),
+                    credentials,
+                    require_state=True,
+                    metrics_path=Path(args.metrics_path) if args.metrics_path else None,
+                ),
+                interval_seconds=args.interval_seconds,
+                duration_seconds=args.duration_seconds,
+            )
         if args.command == "test-bot":
             assert credentials is not None
             return _test_bot(credentials)
@@ -86,10 +99,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     except DiagnosticIndexError as error:
         print(f"관측 실행 실패: {error}", file=sys.stderr)
-        return 1
+        return 2 if args.command == "watch-loop" else 1
     except Exception:
         print("실행 중 오류가 발생했습니다.", file=sys.stderr)
-        return 1
+        return 2 if args.command == "watch-loop" else 1
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -99,6 +112,11 @@ def _build_parser() -> argparse.ArgumentParser:
     watch_parser.add_argument("--state-path", default=".state/watcher.json")
     watch_parser.add_argument("--require-existing-state", action="store_true")
     watch_parser.add_argument("--metrics-path")
+    loop_parser = subparsers.add_parser("watch-loop")
+    loop_parser.add_argument("--state-path", default=".state/watcher.json")
+    loop_parser.add_argument("--metrics-path")
+    loop_parser.add_argument("--interval-seconds", type=float, default=120)
+    loop_parser.add_argument("--duration-seconds", type=float, default=600)
     subparsers.add_parser("test-bot")
     smoke_parser = subparsers.add_parser("smoke")
     smoke_parser.add_argument("--scope", choices=("all", "resets"), default="all")
