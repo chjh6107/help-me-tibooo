@@ -33,8 +33,21 @@ Discord 서버에 실제 비공개 봇 `티보햄`을 초대해 사용합니다.
 Developer Portal에서 같은 봇을 만들고, GitHub 저장소의
 `Settings → Secrets and variables → Actions`에 위 Secret과 Variable을 등록하면 됩니다.
 
-예약 실행은 매시 7분·37분, 30분마다 요청됩니다. GitHub Actions의 작업량이나 서비스 상태에 따라
-실제 시작 시각은 늦어질 수 있습니다.
+운영 감시는 `watch-loop`로 실행합니다. 한 세션은 최대 10분 동안 2분 간격으로 수집하고,
+마지막 상태 캐시 저장을 확인한 뒤 다음 세션을 직접 요청합니다. 별도 서버나 추가 토큰은
+필요하지 않습니다. 매시 7분·37분 예약은 연결이 끊겼을 때 다시 시작하는 보조 수단입니다.
+Actions의 작업량에 따라 세션 교체가 지연될 수 있고, 공개 피드가 원문을 늦게 제공하면
+원문 업로드부터 Discord 도착까지 2분을 보장하지는 못합니다.
+
+이 방식은 공개 저장소의 표준 runner를 하루 동안 계속 사용합니다. 비공개 저장소에서는
+연결 감시를 실행하지 않습니다. 멈추려면 Actions에서 `Tibo watcher`를 비활성화하거나
+저장소 Variable `WATCHER_PAUSED`를 `true`로 설정합니다. 현재 세션은 끝까지 상태를
+저장합니다. 재개할 때 workflow를 활성화하고 Variable을 제거한 뒤 `watch-loop`를 수동
+실행합니다. `watch`는 이전처럼 한 번만 실행하며 다음 세션을 요청하지 않습니다.
+
+`watch-loop`는 운영 상태 파일이 없으면 수집 전에 실패합니다. 신규 설치에서만 `watch`를
+먼저 한 번 실행해 최초 기준점을 생성하세요. 운영 중 cache가 유실되면 조용히 새 기준점으로
+넘어가지 않고 중단하므로, 마지막 운영 상태를 복구한 뒤 재개해야 합니다.
 
 Bot Token은 저장소 파일, 이슈, 로그에 붙여 넣지 마세요. 노출되었다면 Discord
 Developer Portal의 Bot 화면에서 즉시 토큰을 재발급하세요.
@@ -60,6 +73,21 @@ Actions 수동 실행의 `smoke-resets`도 같은 진단이며 Discord 자격 �
 ```bash
 python -m help_me_tibooo watch --state-path .state/watcher.json
 ```
+
+기존 상태를 사용해 반복 수집을 확인하려면 다음 명령을 사용합니다. 각 수집이 끝날 때
+상태를 저장하고, 전송 실패는 다음 수집에서 이어서 재시도합니다. 로컬 명령 자체는
+새 Actions 실행을 요청하지 않습니다.
+
+```bash
+python -m help_me_tibooo watch-loop \
+  --state-path .state/watcher.json \
+  --interval-seconds 120 --duration-seconds 600 \
+  --metrics-path .observability/watch.jsonl
+```
+
+Actions의 반복 감시는 endpoint 관측과 전송 결과를 7일 보관하는
+`watcher-diagnostics-<run_id>-<attempt>` artifact로 남깁니다. 진단의 measurement epoch는
+세션마다 시작하며, 세션 간 최초 관측 시각을 뜻하지 않습니다.
 
 `watch`와 `test-bot`에는 실행 환경의 `DISCORD_BOT_TOKEN`과 `DISCORD_CHANNEL_ID`가
 필요합니다. 로컬 상태 파일과 Bot Token은 커밋하지 마세요.
@@ -153,7 +181,7 @@ Actions도 실패로 표시합니다. 게시물·알림 전송과 소스 상태�
 등록하고 과거 알림 폭주를 방지합니다. 리셋 API 전체 목록은 최대 10페이지(1,000건)이며
 한도를 넘거나 중간 페이지가 실패하면 미수집 기록을 건너뛰지 않도록 소스 실패로 처리합니다.
 
-GitHub Actions의 `watch` 실행만 `.state/watcher.json` 캐시를 복원하고 저장합니다.
+GitHub Actions의 `watch`·`watch-loop` 실행만 `.state/watcher.json` 캐시를 복원하고 저장합니다.
 `test-bot`과 `smoke`는 감시 상태를 읽거나 변경하지 않습니다.
 
 진단 인덱스의 `measurement_epoch`는 해당 파일에서 측정을 시작한 시점입니다.
@@ -176,10 +204,10 @@ v1에는 선택 근거가 없으므로 기존 시각의 근거를 `unknown`으�
   있습니다.
 - 규칙 기반 분류이므로 중요하지 않은 글을 알리거나 특이하게 표현된 소식을 놓칠 수
   있습니다.
-- GitHub Actions 캐시가 유실되면 다음 정상 실행에서 현재 게시물로 기준점을 다시
-  설정합니다. 이때 과거 게시물은 다시 보내지 않습니다.
-- 예약 작업은 30분보다 늦게 시작될 수 있으며, 실행되지 않는 동안에는 장애·복구
-  알림도 보낼 수 없습니다.
+- GitHub Actions 캐시가 유실되면 반복 감시는 중단됩니다. runner가 강제 종료되면
+  마지막 원격 캐시 이후 최대 한 세션의 상태가 유실되어 재전송될 수 있습니다.
+- 다음 세션 요청이나 Actions 시작이 지연될 수 있습니다. 연결이 끊기면 예약 실행이
+  재시작을 요청하며, 그동안에는 장애·복구 알림도 보낼 수 없습니다.
 - 공개 소스는 `curl_cffi`의 Chrome 호환 연결로 수집합니다. 2026-09-16 Actions
   비교에서 HTTPX는 세 소스 모두 Cloudflare 챌린지(403)를 받았고, Chrome 호환
   연결은 같은 실행에서 정상 응답을 받았습니다. Discord 전송은 HTTPX를 사용합니다.
