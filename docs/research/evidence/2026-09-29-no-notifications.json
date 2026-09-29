@@ -1,0 +1,5923 @@
+{
+  "runs": 291,
+  "ticks": 1455,
+  "start": "2026-09-27T08:36:23.473598+00:00",
+  "end": "2026-09-29T01:26:22.092986+00:00",
+  "max_gap_seconds": 120.00137,
+  "median_gap_seconds": 119.999958,
+  "gaps_over_150_seconds": 0,
+  "fetches": 5820,
+  "fetch_failures": [
+    {
+      "cache_headers": {
+        "Cache-Control": "no-store",
+        "Date": "Sun, 27 Sep 2026 14:39:26 GMT",
+        "Retry-After": "30"
+      },
+      "complete": false,
+      "count": 0,
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "source_fetched",
+      "head": null,
+      "http_status": 503,
+      "membership_overlap": "unknown",
+      "membership_overlap_count": null,
+      "observed_at": null,
+      "outcome": "failed",
+      "page": 1,
+      "provider": "codex-reset.com",
+      "representation_hash": null,
+      "request_started_at": "2026-09-27T14:39:25.985144+00:00",
+      "response_received_at": null,
+      "run_id": "a3b245826d2e43379a5cf6e337a89b24",
+      "source": "reset",
+      "tail": null
+    },
+    {
+      "cache_headers": {
+        "Cache-Control": "no-store",
+        "Date": "Sun, 27 Sep 2026 14:41:26 GMT",
+        "Retry-After": "30"
+      },
+      "complete": false,
+      "count": 0,
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "source_fetched",
+      "head": null,
+      "http_status": 503,
+      "membership_overlap": "unknown",
+      "membership_overlap_count": null,
+      "observed_at": null,
+      "outcome": "failed",
+      "page": 1,
+      "provider": "codex-reset.com",
+      "representation_hash": null,
+      "request_started_at": "2026-09-27T14:41:26.013489+00:00",
+      "response_received_at": null,
+      "run_id": "b080a359db394d45ad6ce6aa93ec7c26",
+      "source": "reset",
+      "tail": null
+    },
+    {
+      "cache_headers": {
+        "Cache-Control": "no-store",
+        "Date": "Sun, 27 Sep 2026 14:43:26 GMT",
+        "Retry-After": "30"
+      },
+      "complete": false,
+      "count": 0,
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "source_fetched",
+      "head": null,
+      "http_status": 503,
+      "membership_overlap": "unknown",
+      "membership_overlap_count": null,
+      "observed_at": null,
+      "outcome": "failed",
+      "page": 1,
+      "provider": "codex-reset.com",
+      "representation_hash": null,
+      "request_started_at": "2026-09-27T14:43:26.051198+00:00",
+      "response_received_at": null,
+      "run_id": "83ff1de4f54f4bbc8646f83346395bda",
+      "source": "reset",
+      "tail": null
+    },
+    {
+      "cache_headers": {
+        "Cache-Control": "no-store",
+        "Date": "Sun, 27 Sep 2026 14:45:26 GMT",
+        "Retry-After": "30"
+      },
+      "complete": false,
+      "count": 0,
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "source_fetched",
+      "head": null,
+      "http_status": 503,
+      "membership_overlap": "unknown",
+      "membership_overlap_count": null,
+      "observed_at": null,
+      "outcome": "failed",
+      "page": 1,
+      "provider": "codex-reset.com",
+      "representation_hash": null,
+      "request_started_at": "2026-09-27T14:45:25.996303+00:00",
+      "response_received_at": null,
+      "run_id": "f7c645efccf042fcab66932b01a95a72",
+      "source": "reset",
+      "tail": null
+    },
+    {
+      "cache_headers": {
+        "Cache-Control": "no-store",
+        "Date": "Sun, 27 Sep 2026 14:46:27 GMT",
+        "Retry-After": "30"
+      },
+      "complete": false,
+      "count": 0,
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "source_fetched",
+      "head": null,
+      "http_status": 503,
+      "membership_overlap": "unknown",
+      "membership_overlap_count": null,
+      "observed_at": null,
+      "outcome": "failed",
+      "page": 1,
+      "provider": "codex-reset.com",
+      "representation_hash": null,
+      "request_started_at": "2026-09-27T14:46:27.284140+00:00",
+      "response_received_at": null,
+      "run_id": "802fc65d4ed14e71bef76e8d746b181d",
+      "source": "reset",
+      "tail": null
+    },
+    {
+      "cache_headers": {
+        "Cache-Control": "no-store",
+        "Date": "Sun, 27 Sep 2026 14:48:27 GMT",
+        "Retry-After": "30"
+      },
+      "complete": false,
+      "count": 0,
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "source_fetched",
+      "head": null,
+      "http_status": 503,
+      "membership_overlap": "unknown",
+      "membership_overlap_count": null,
+      "observed_at": null,
+      "outcome": "failed",
+      "page": 1,
+      "provider": "codex-reset.com",
+      "representation_hash": null,
+      "request_started_at": "2026-09-27T14:48:27.199951+00:00",
+      "response_received_at": null,
+      "run_id": "3f20c1adb51b40a2846d4e7702162b2f",
+      "source": "reset",
+      "tail": null
+    },
+    {
+      "cache_headers": {
+        "Cache-Control": "no-store",
+        "Date": "Sun, 27 Sep 2026 14:50:27 GMT",
+        "Retry-After": "30"
+      },
+      "complete": false,
+      "count": 0,
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "source_fetched",
+      "head": null,
+      "http_status": 503,
+      "membership_overlap": "unknown",
+      "membership_overlap_count": null,
+      "observed_at": null,
+      "outcome": "failed",
+      "page": 1,
+      "provider": "codex-reset.com",
+      "representation_hash": null,
+      "request_started_at": "2026-09-27T14:50:27.197933+00:00",
+      "response_received_at": null,
+      "run_id": "16b9b81178274d7fba565c07ad9fbe01",
+      "source": "reset",
+      "tail": null
+    }
+  ],
+  "delivery_events": 0,
+  "unique_posts": 89,
+  "new_posts_after_baseline": [
+    {
+      "canonical_id": "x:2104313777013526880",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "21f626580b6fcd1c83ab5d78437957c8f7497f85db6308e7f8c7d3865cec2c0e",
+      "observed_at": "2026-09-27T20:55:27.663523+00:00",
+      "origin_at": "2026-09-27T20:54:35.356000+00:00",
+      "origin_latency_seconds": 52.307523,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "35f6a8b987b446dca4c8f20083e98057",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104313502697660428",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "9462d9a7ec5a6b139c743d96d476384978b7d908d7145505653fa47e02cdc3db",
+      "observed_at": "2026-09-27T20:55:27.663523+00:00",
+      "origin_at": "2026-09-27T20:53:29.954000+00:00",
+      "origin_latency_seconds": 117.709523,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "35f6a8b987b446dca4c8f20083e98057",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104313314901958706",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "4cfa2073a968cea8ded13fed95ceef42831a61380bc2204f0167cf8f46c3a037",
+      "observed_at": "2026-09-27T20:55:27.663523+00:00",
+      "origin_at": "2026-09-27T20:52:45.180000+00:00",
+      "origin_latency_seconds": 162.483523,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "35f6a8b987b446dca4c8f20083e98057",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104383749723128052",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "5d64566836f457804341c2856d5cad7d12056160634694756583b9c893af738e",
+      "observed_at": "2026-09-28T01:33:15.962945+00:00",
+      "origin_at": "2026-09-28T01:32:38.150000+00:00",
+      "origin_latency_seconds": 37.812945,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "7c3bf2f0ea064410a45f8d788f60a377",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104388401218932888",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "11ca94f99b5a6d2fd56eb0d27d542e95814788d25af78a8f4d4c084aee719f4b",
+      "observed_at": "2026-09-28T01:52:21.610950+00:00",
+      "origin_at": "2026-09-28T01:51:07.153000+00:00",
+      "origin_latency_seconds": 74.45795,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "7b82ac886e4b4acbbc27963cebe1e240",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104451970983768270",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "57e162a1e0f09625e5113019cdc8cc7d0ca275fa76555695ca7ce815f961b949",
+      "observed_at": "2026-09-28T06:06:16.319712+00:00",
+      "origin_at": "2026-09-28T06:03:43.366000+00:00",
+      "origin_latency_seconds": 152.953712,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "a0b552a0dda944e3a40ab1873667072e",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104462713296683467",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "68303e7b4e01c56b8eda41a137ef749761f45874f934994020233795c766f20c",
+      "observed_at": "2026-09-28T06:48:17.111122+00:00",
+      "origin_at": "2026-09-28T06:46:24.533000+00:00",
+      "origin_latency_seconds": 112.578122,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "e3862c2e3a6f4f65bf25768abdf9c0f2",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104462572644888780",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "e53e048f05627116c167c7e6dd3866b44219a9d7285413f703932f23be013d30",
+      "observed_at": "2026-09-28T06:48:17.111122+00:00",
+      "origin_at": "2026-09-28T06:45:50.999000+00:00",
+      "origin_latency_seconds": 146.112122,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "e3862c2e3a6f4f65bf25768abdf9c0f2",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104462923661988233",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "d38e9ef32594d2bf8351fe444d780d2f67c463ce3739cbb1fad7c8e3d505e11a",
+      "observed_at": "2026-09-28T06:50:17.125334+00:00",
+      "origin_at": "2026-09-28T06:47:14.688000+00:00",
+      "origin_latency_seconds": 182.437334,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "94796729f7a64e099737d8ca055cc890",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104465709384491519",
+      "endpoint": "https://codex-reset.com/tibo",
+      "event": "post_observed",
+      "evidence_hash": "133e81012517e8c26f6299c85031ab497bda5bba9ec5db0120bac1abc0a2bce6",
+      "observed_at": "2026-09-28T07:00:42.335066+00:00",
+      "origin_at": "2026-09-28T06:58:18.856000+00:00",
+      "origin_latency_seconds": 143.479066,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_snowflake",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "658fb901ce354023848ec1bd03ccfc70",
+      "source": "reset",
+      "categories": []
+    },
+    {
+      "canonical_id": "x:2104467346945675347",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "event": "post_observed",
+      "evidence_hash": "6458bc20f1d8b72a8834dc08efce2325919b08cbb42d0dd1e9e7eaf674eab410",
+      "observed_at": "2026-09-28T07:07:05.210028+00:00",
+      "origin_at": "2026-09-28T07:04:49+00:00",
+      "origin_latency_seconds": 136.210028,
+      "origin_latency_valid": true,
+      "origin_time_basis": "x_source_field",
+      "provider": "codex-reset.com",
+      "provider_visible_at": null,
+      "run_id": "db5d893f7f2747d78b72580dcabfaf81",
+      "source": "reset",
+      "categories": []
+    }
+  ],
+  "endpoint_heads": {
+    "https://codex-reset.com/tibo": [
+      null,
+      "x:2104108167806550046",
+      "x:2104313777013526880",
+      "x:2104383749723128052",
+      "x:2104388401218932888",
+      "x:2104451970983768270",
+      "x:2104462713296683467",
+      "x:2104462923661988233",
+      "x:2104465709384491519",
+      "x:2104467346945675347"
+    ],
+    "https://codex-reset.com/api/feed": [
+      "x:2103963215885701493",
+      "x:2104467346945675347"
+    ],
+    "https://twiscan.com/en/x/thsottiaux": [
+      "x:2103637477760311522"
+    ],
+    "https://codex-resets.com/api/v1/resets": [
+      "x:2103911959544610829"
+    ]
+  },
+  "production_commit": "52d6105113eef495517fc0d048feb57e36663852",
+  "runs_detail": [
+    {
+      "run_id": 36507242361,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36507242361",
+      "created_at": "2026-09-29T01:18:03Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T01:18:22.092424+00:00",
+        "2026-09-29T01:20:22.093390+00:00",
+        "2026-09-29T01:22:22.092936+00:00",
+        "2026-09-29T01:24:22.092885+00:00",
+        "2026-09-29T01:26:22.092986+00:00"
+      ]
+    },
+    {
+      "run_id": 36506562225,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36506562225",
+      "created_at": "2026-09-29T01:09:37Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T01:09:56.890355+00:00",
+        "2026-09-29T01:11:56.891100+00:00",
+        "2026-09-29T01:13:56.890610+00:00",
+        "2026-09-29T01:15:56.890644+00:00",
+        "2026-09-29T01:17:56.890630+00:00"
+      ]
+    },
+    {
+      "run_id": 36505869876,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36505869876",
+      "created_at": "2026-09-29T01:01:04Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T01:01:30.970897+00:00",
+        "2026-09-29T01:03:30.971665+00:00",
+        "2026-09-29T01:05:30.971359+00:00",
+        "2026-09-29T01:07:30.971357+00:00",
+        "2026-09-29T01:09:30.971472+00:00"
+      ]
+    },
+    {
+      "run_id": 36505209994,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36505209994",
+      "created_at": "2026-09-29T00:52:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T00:52:57.516915+00:00",
+        "2026-09-29T00:54:57.517306+00:00",
+        "2026-09-29T00:56:57.516955+00:00",
+        "2026-09-29T00:58:57.516984+00:00",
+        "2026-09-29T01:00:57.516983+00:00"
+      ]
+    },
+    {
+      "run_id": 36504547991,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36504547991",
+      "created_at": "2026-09-29T00:44:21Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T00:44:35.125723+00:00",
+        "2026-09-29T00:46:35.126653+00:00",
+        "2026-09-29T00:48:35.126244+00:00",
+        "2026-09-29T00:50:35.126261+00:00",
+        "2026-09-29T00:52:35.126363+00:00"
+      ]
+    },
+    {
+      "run_id": 36503839545,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36503839545",
+      "created_at": "2026-09-29T00:35:25Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T00:36:15.320635+00:00",
+        "2026-09-29T00:38:15.321354+00:00",
+        "2026-09-29T00:40:15.320840+00:00",
+        "2026-09-29T00:42:15.320856+00:00",
+        "2026-09-29T00:44:15.320941+00:00"
+      ]
+    },
+    {
+      "run_id": 36503149115,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36503149115",
+      "created_at": "2026-09-29T00:27:02Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T00:27:19.357661+00:00",
+        "2026-09-29T00:29:19.358160+00:00",
+        "2026-09-29T00:31:19.357789+00:00",
+        "2026-09-29T00:33:19.357673+00:00",
+        "2026-09-29T00:35:19.357933+00:00"
+      ]
+    },
+    {
+      "run_id": 36502450901,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36502450901",
+      "created_at": "2026-09-29T00:18:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T00:18:54.882272+00:00",
+        "2026-09-29T00:20:54.883106+00:00",
+        "2026-09-29T00:22:54.882675+00:00",
+        "2026-09-29T00:24:54.882844+00:00",
+        "2026-09-29T00:26:54.882692+00:00"
+      ]
+    },
+    {
+      "run_id": 36501751711,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36501751711",
+      "created_at": "2026-09-29T00:10:19Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T00:10:34.309836+00:00",
+        "2026-09-29T00:12:34.310536+00:00",
+        "2026-09-29T00:14:34.310236+00:00",
+        "2026-09-29T00:16:34.310169+00:00",
+        "2026-09-29T00:18:34.310175+00:00"
+      ]
+    },
+    {
+      "run_id": 36500361595,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36500361595",
+      "created_at": "2026-09-28T23:53:47Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-29T00:02:12.674281+00:00",
+        "2026-09-29T00:04:12.675062+00:00",
+        "2026-09-29T00:06:12.674752+00:00",
+        "2026-09-29T00:08:12.674606+00:00",
+        "2026-09-29T00:10:12.674785+00:00"
+      ]
+    },
+    {
+      "run_id": 36500336224,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36500336224",
+      "created_at": "2026-09-28T23:53:28Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T23:53:49.580377+00:00",
+        "2026-09-28T23:55:49.581038+00:00",
+        "2026-09-28T23:57:49.580798+00:00",
+        "2026-09-28T23:59:49.580785+00:00",
+        "2026-09-29T00:01:49.580804+00:00"
+      ]
+    },
+    {
+      "run_id": 36499621026,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36499621026",
+      "created_at": "2026-09-28T23:45:02Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T23:45:22.395159+00:00",
+        "2026-09-28T23:47:22.395775+00:00",
+        "2026-09-28T23:49:22.395747+00:00",
+        "2026-09-28T23:51:22.395694+00:00",
+        "2026-09-28T23:53:22.395502+00:00"
+      ]
+    },
+    {
+      "run_id": 36498909070,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36498909070",
+      "created_at": "2026-09-28T23:36:37Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T23:36:56.440627+00:00",
+        "2026-09-28T23:38:56.441200+00:00",
+        "2026-09-28T23:40:56.441000+00:00",
+        "2026-09-28T23:42:56.441026+00:00",
+        "2026-09-28T23:44:56.441077+00:00"
+      ]
+    },
+    {
+      "run_id": 36498116381,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36498116381",
+      "created_at": "2026-09-28T23:27:37Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T23:28:31.702335+00:00",
+        "2026-09-28T23:30:31.702747+00:00",
+        "2026-09-28T23:32:31.702437+00:00",
+        "2026-09-28T23:34:31.702565+00:00",
+        "2026-09-28T23:36:31.702911+00:00"
+      ]
+    },
+    {
+      "run_id": 36497362612,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36497362612",
+      "created_at": "2026-09-28T23:19:16Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T23:19:32.141683+00:00",
+        "2026-09-28T23:21:32.142334+00:00",
+        "2026-09-28T23:23:32.141963+00:00",
+        "2026-09-28T23:25:32.141957+00:00",
+        "2026-09-28T23:27:32.142125+00:00"
+      ]
+    },
+    {
+      "run_id": 36496601979,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36496601979",
+      "created_at": "2026-09-28T23:10:50Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T23:11:09.095930+00:00",
+        "2026-09-28T23:13:09.096449+00:00",
+        "2026-09-28T23:15:09.096270+00:00",
+        "2026-09-28T23:17:09.096299+00:00",
+        "2026-09-28T23:19:09.096174+00:00"
+      ]
+    },
+    {
+      "run_id": 36495822425,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36495822425",
+      "created_at": "2026-09-28T23:02:23Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T23:02:42.592155+00:00",
+        "2026-09-28T23:04:42.592934+00:00",
+        "2026-09-28T23:06:42.592922+00:00",
+        "2026-09-28T23:08:42.592671+00:00",
+        "2026-09-28T23:10:42.592905+00:00"
+      ]
+    },
+    {
+      "run_id": 36495044709,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36495044709",
+      "created_at": "2026-09-28T22:53:59Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T22:54:16.877464+00:00",
+        "2026-09-28T22:56:16.878118+00:00",
+        "2026-09-28T22:58:16.877866+00:00",
+        "2026-09-28T23:00:16.877830+00:00",
+        "2026-09-28T23:02:16.877867+00:00"
+      ]
+    },
+    {
+      "run_id": 36494258809,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36494258809",
+      "created_at": "2026-09-28T22:45:35Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T22:45:54.283220+00:00",
+        "2026-09-28T22:47:54.283878+00:00",
+        "2026-09-28T22:49:54.283537+00:00",
+        "2026-09-28T22:51:54.283609+00:00",
+        "2026-09-28T22:53:54.283761+00:00"
+      ]
+    },
+    {
+      "run_id": 36493461267,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36493461267",
+      "created_at": "2026-09-28T22:37:12Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T22:37:28.918540+00:00",
+        "2026-09-28T22:39:28.919151+00:00",
+        "2026-09-28T22:41:28.918929+00:00",
+        "2026-09-28T22:43:28.918898+00:00",
+        "2026-09-28T22:45:28.918878+00:00"
+      ]
+    },
+    {
+      "run_id": 36492634515,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36492634515",
+      "created_at": "2026-09-28T22:28:51Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T22:29:06.584298+00:00",
+        "2026-09-28T22:31:06.584963+00:00",
+        "2026-09-28T22:33:06.584658+00:00",
+        "2026-09-28T22:35:06.584615+00:00",
+        "2026-09-28T22:37:06.584609+00:00"
+      ]
+    },
+    {
+      "run_id": 36491798138,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36491798138",
+      "created_at": "2026-09-28T22:20:31Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T22:20:45.109720+00:00",
+        "2026-09-28T22:22:45.110386+00:00",
+        "2026-09-28T22:24:45.109981+00:00",
+        "2026-09-28T22:26:45.110209+00:00",
+        "2026-09-28T22:28:45.110156+00:00"
+      ]
+    },
+    {
+      "run_id": 36490950645,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36490950645",
+      "created_at": "2026-09-28T22:12:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T22:12:25.642306+00:00",
+        "2026-09-28T22:14:25.643676+00:00",
+        "2026-09-28T22:16:25.642552+00:00",
+        "2026-09-28T22:18:25.642593+00:00",
+        "2026-09-28T22:20:25.642612+00:00"
+      ]
+    },
+    {
+      "run_id": 36490096998,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36490096998",
+      "created_at": "2026-09-28T22:03:46Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T22:04:02.946194+00:00",
+        "2026-09-28T22:06:02.946815+00:00",
+        "2026-09-28T22:08:02.946543+00:00",
+        "2026-09-28T22:10:02.946597+00:00",
+        "2026-09-28T22:12:02.946561+00:00"
+      ]
+    },
+    {
+      "run_id": 36489240201,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36489240201",
+      "created_at": "2026-09-28T21:55:21Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T21:55:40.015311+00:00",
+        "2026-09-28T21:57:40.016119+00:00",
+        "2026-09-28T21:59:40.015909+00:00",
+        "2026-09-28T22:01:40.015681+00:00",
+        "2026-09-28T22:03:40.015747+00:00"
+      ]
+    },
+    {
+      "run_id": 36488350490,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36488350490",
+      "created_at": "2026-09-28T21:46:52Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T21:47:13.188341+00:00",
+        "2026-09-28T21:49:13.189252+00:00",
+        "2026-09-28T21:51:13.188931+00:00",
+        "2026-09-28T21:53:13.188796+00:00",
+        "2026-09-28T21:55:13.188901+00:00"
+      ]
+    },
+    {
+      "run_id": 36487450037,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36487450037",
+      "created_at": "2026-09-28T21:38:28Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T21:38:46.702760+00:00",
+        "2026-09-28T21:40:46.703467+00:00",
+        "2026-09-28T21:42:46.703191+00:00",
+        "2026-09-28T21:44:46.703179+00:00",
+        "2026-09-28T21:46:46.703239+00:00"
+      ]
+    },
+    {
+      "run_id": 36486494297,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36486494297",
+      "created_at": "2026-09-28T21:30:02Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T21:30:22.635727+00:00",
+        "2026-09-28T21:32:22.636435+00:00",
+        "2026-09-28T21:34:22.636148+00:00",
+        "2026-09-28T21:36:22.636306+00:00",
+        "2026-09-28T21:38:22.636283+00:00"
+      ]
+    },
+    {
+      "run_id": 36485557782,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36485557782",
+      "created_at": "2026-09-28T21:21:34Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T21:21:54.069821+00:00",
+        "2026-09-28T21:23:54.070787+00:00",
+        "2026-09-28T21:25:54.070176+00:00",
+        "2026-09-28T21:27:54.070172+00:00",
+        "2026-09-28T21:29:54.070192+00:00"
+      ]
+    },
+    {
+      "run_id": 36484606765,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36484606765",
+      "created_at": "2026-09-28T21:13:11Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T21:13:29.000250+00:00",
+        "2026-09-28T21:15:29.001041+00:00",
+        "2026-09-28T21:17:29.000605+00:00",
+        "2026-09-28T21:19:29.000626+00:00",
+        "2026-09-28T21:21:29.000675+00:00"
+      ]
+    },
+    {
+      "run_id": 36483650768,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36483650768",
+      "created_at": "2026-09-28T21:04:45Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T21:05:04.726965+00:00",
+        "2026-09-28T21:07:04.727669+00:00",
+        "2026-09-28T21:09:04.727426+00:00",
+        "2026-09-28T21:11:04.727463+00:00",
+        "2026-09-28T21:13:04.727503+00:00"
+      ]
+    },
+    {
+      "run_id": 36482702879,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36482702879",
+      "created_at": "2026-09-28T20:56:21Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T20:56:39.134559+00:00",
+        "2026-09-28T20:58:39.135327+00:00",
+        "2026-09-28T21:00:39.134847+00:00",
+        "2026-09-28T21:02:39.134965+00:00",
+        "2026-09-28T21:04:39.135079+00:00"
+      ]
+    },
+    {
+      "run_id": 36481731396,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36481731396",
+      "created_at": "2026-09-28T20:47:57Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T20:48:14.276390+00:00",
+        "2026-09-28T20:50:14.277034+00:00",
+        "2026-09-28T20:52:14.276760+00:00",
+        "2026-09-28T20:54:14.276787+00:00",
+        "2026-09-28T20:56:14.276795+00:00"
+      ]
+    },
+    {
+      "run_id": 36480760166,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36480760166",
+      "created_at": "2026-09-28T20:39:34Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T20:39:50.268861+00:00",
+        "2026-09-28T20:41:50.269653+00:00",
+        "2026-09-28T20:43:50.269332+00:00",
+        "2026-09-28T20:45:50.269323+00:00",
+        "2026-09-28T20:47:50.269305+00:00"
+      ]
+    },
+    {
+      "run_id": 36479748524,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36479748524",
+      "created_at": "2026-09-28T20:30:59Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T20:31:24.965300+00:00",
+        "2026-09-28T20:33:24.966004+00:00",
+        "2026-09-28T20:35:24.965676+00:00",
+        "2026-09-28T20:37:24.965763+00:00",
+        "2026-09-28T20:39:24.965712+00:00"
+      ]
+    },
+    {
+      "run_id": 36478731651,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36478731651",
+      "created_at": "2026-09-28T20:22:31Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T20:22:52.194751+00:00",
+        "2026-09-28T20:24:52.195521+00:00",
+        "2026-09-28T20:26:52.195162+00:00",
+        "2026-09-28T20:28:52.195218+00:00",
+        "2026-09-28T20:30:52.195255+00:00"
+      ]
+    },
+    {
+      "run_id": 36477736717,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36477736717",
+      "created_at": "2026-09-28T20:14:03Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T20:14:24.362574+00:00",
+        "2026-09-28T20:16:24.363217+00:00",
+        "2026-09-28T20:18:24.362947+00:00",
+        "2026-09-28T20:20:24.363036+00:00",
+        "2026-09-28T20:22:24.362914+00:00"
+      ]
+    },
+    {
+      "run_id": 36476706706,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36476706706",
+      "created_at": "2026-09-28T20:05:16Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T20:05:56.409395+00:00",
+        "2026-09-28T20:07:56.409987+00:00",
+        "2026-09-28T20:09:56.409643+00:00",
+        "2026-09-28T20:11:56.409652+00:00",
+        "2026-09-28T20:13:56.409712+00:00"
+      ]
+    },
+    {
+      "run_id": 36475704732,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36475704732",
+      "created_at": "2026-09-28T19:56:34Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T19:57:09.955660+00:00",
+        "2026-09-28T19:59:09.956270+00:00",
+        "2026-09-28T20:01:09.956053+00:00",
+        "2026-09-28T20:03:09.955979+00:00",
+        "2026-09-28T20:05:09.956008+00:00"
+      ]
+    },
+    {
+      "run_id": 36474743635,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36474743635",
+      "created_at": "2026-09-28T19:48:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T19:48:27.259244+00:00",
+        "2026-09-28T19:50:27.259829+00:00",
+        "2026-09-28T19:52:27.259371+00:00",
+        "2026-09-28T19:54:27.259406+00:00",
+        "2026-09-28T19:56:27.259521+00:00"
+      ]
+    },
+    {
+      "run_id": 36473203477,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36473203477",
+      "created_at": "2026-09-28T19:34:44Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T19:40:03.659536+00:00",
+        "2026-09-28T19:42:03.660189+00:00",
+        "2026-09-28T19:44:03.660104+00:00",
+        "2026-09-28T19:46:03.660071+00:00",
+        "2026-09-28T19:48:03.660940+00:00"
+      ]
+    },
+    {
+      "run_id": 36472824667,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36472824667",
+      "created_at": "2026-09-28T19:31:27Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T19:31:42.340831+00:00",
+        "2026-09-28T19:33:42.341661+00:00",
+        "2026-09-28T19:35:42.341248+00:00",
+        "2026-09-28T19:37:42.341215+00:00",
+        "2026-09-28T19:39:42.341607+00:00"
+      ]
+    },
+    {
+      "run_id": 36471834257,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36471834257",
+      "created_at": "2026-09-28T19:22:55Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T19:23:13.005901+00:00",
+        "2026-09-28T19:25:13.006537+00:00",
+        "2026-09-28T19:27:13.006562+00:00",
+        "2026-09-28T19:29:13.006213+00:00",
+        "2026-09-28T19:31:13.006457+00:00"
+      ]
+    },
+    {
+      "run_id": 36470835429,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36470835429",
+      "created_at": "2026-09-28T19:14:24Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T19:14:47.646446+00:00",
+        "2026-09-28T19:16:47.647209+00:00",
+        "2026-09-28T19:18:47.646876+00:00",
+        "2026-09-28T19:20:47.647082+00:00",
+        "2026-09-28T19:22:47.647016+00:00"
+      ]
+    },
+    {
+      "run_id": 36469862206,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36469862206",
+      "created_at": "2026-09-28T19:06:02Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T19:06:18.421821+00:00",
+        "2026-09-28T19:08:18.422504+00:00",
+        "2026-09-28T19:10:18.422138+00:00",
+        "2026-09-28T19:12:18.422198+00:00",
+        "2026-09-28T19:14:18.422199+00:00"
+      ]
+    },
+    {
+      "run_id": 36468871831,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36468871831",
+      "created_at": "2026-09-28T18:57:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T18:57:55.746587+00:00",
+        "2026-09-28T18:59:55.747170+00:00",
+        "2026-09-28T19:01:55.746780+00:00",
+        "2026-09-28T19:03:55.746734+00:00",
+        "2026-09-28T19:05:55.746758+00:00"
+      ]
+    },
+    {
+      "run_id": 36467881220,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36467881220",
+      "created_at": "2026-09-28T18:49:14Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T18:49:34.470129+00:00",
+        "2026-09-28T18:51:34.470865+00:00",
+        "2026-09-28T18:53:34.470534+00:00",
+        "2026-09-28T18:55:34.470517+00:00",
+        "2026-09-28T18:57:34.470520+00:00"
+      ]
+    },
+    {
+      "run_id": 36466889524,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36466889524",
+      "created_at": "2026-09-28T18:40:45Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T18:41:06.824059+00:00",
+        "2026-09-28T18:43:06.824770+00:00",
+        "2026-09-28T18:45:06.824428+00:00",
+        "2026-09-28T18:47:06.824451+00:00",
+        "2026-09-28T18:49:06.824464+00:00"
+      ]
+    },
+    {
+      "run_id": 36465888329,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36465888329",
+      "created_at": "2026-09-28T18:32:21Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T18:32:39.448952+00:00",
+        "2026-09-28T18:34:39.449658+00:00",
+        "2026-09-28T18:36:39.449270+00:00",
+        "2026-09-28T18:38:39.449282+00:00",
+        "2026-09-28T18:40:39.449325+00:00"
+      ]
+    },
+    {
+      "run_id": 36464899767,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36464899767",
+      "created_at": "2026-09-28T18:23:56Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T18:24:14.799759+00:00",
+        "2026-09-28T18:26:14.800417+00:00",
+        "2026-09-28T18:28:14.800100+00:00",
+        "2026-09-28T18:30:14.800120+00:00",
+        "2026-09-28T18:32:14.800140+00:00"
+      ]
+    },
+    {
+      "run_id": 36463909753,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36463909753",
+      "created_at": "2026-09-28T18:15:26Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T18:15:48.649116+00:00",
+        "2026-09-28T18:17:48.649826+00:00",
+        "2026-09-28T18:19:48.649622+00:00",
+        "2026-09-28T18:21:48.649609+00:00",
+        "2026-09-28T18:23:48.649613+00:00"
+      ]
+    },
+    {
+      "run_id": 36462919374,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36462919374",
+      "created_at": "2026-09-28T18:07:00Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T18:07:18.596417+00:00",
+        "2026-09-28T18:09:18.596981+00:00",
+        "2026-09-28T18:11:18.596686+00:00",
+        "2026-09-28T18:13:18.596747+00:00",
+        "2026-09-28T18:15:18.596715+00:00"
+      ]
+    },
+    {
+      "run_id": 36461937341,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36461937341",
+      "created_at": "2026-09-28T17:58:38Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T17:58:52.345531+00:00",
+        "2026-09-28T18:00:52.346139+00:00",
+        "2026-09-28T18:02:52.345845+00:00",
+        "2026-09-28T18:04:52.345859+00:00",
+        "2026-09-28T18:06:52.345875+00:00"
+      ]
+    },
+    {
+      "run_id": 36460938972,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36460938972",
+      "created_at": "2026-09-28T17:50:06Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T17:50:31.255588+00:00",
+        "2026-09-28T17:52:31.256307+00:00",
+        "2026-09-28T17:54:31.256135+00:00",
+        "2026-09-28T17:56:31.256178+00:00",
+        "2026-09-28T17:58:31.256158+00:00"
+      ]
+    },
+    {
+      "run_id": 36459930765,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36459930765",
+      "created_at": "2026-09-28T17:41:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T17:41:58.684465+00:00",
+        "2026-09-28T17:43:58.685151+00:00",
+        "2026-09-28T17:45:58.684821+00:00",
+        "2026-09-28T17:47:58.684871+00:00",
+        "2026-09-28T17:49:58.684883+00:00"
+      ]
+    },
+    {
+      "run_id": 36458911951,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36458911951",
+      "created_at": "2026-09-28T17:33:03Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 424,
+        "classified": 424,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T17:33:34.138756+00:00",
+        "2026-09-28T17:35:34.139358+00:00",
+        "2026-09-28T17:37:34.139286+00:00",
+        "2026-09-28T17:39:34.139041+00:00",
+        "2026-09-28T17:41:34.139178+00:00"
+      ]
+    },
+    {
+      "run_id": 36457910933,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36457910933",
+      "created_at": "2026-09-28T17:24:36Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T17:24:56.156657+00:00",
+        "2026-09-28T17:26:56.157474+00:00",
+        "2026-09-28T17:28:56.157000+00:00",
+        "2026-09-28T17:30:56.156921+00:00",
+        "2026-09-28T17:32:56.156937+00:00"
+      ]
+    },
+    {
+      "run_id": 36456925639,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36456925639",
+      "created_at": "2026-09-28T17:16:08Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T17:16:28.357115+00:00",
+        "2026-09-28T17:18:28.357873+00:00",
+        "2026-09-28T17:20:28.357514+00:00",
+        "2026-09-28T17:22:28.357479+00:00",
+        "2026-09-28T17:24:28.357635+00:00"
+      ]
+    },
+    {
+      "run_id": 36455923778,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36455923778",
+      "created_at": "2026-09-28T17:07:38Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T17:08:00.260260+00:00",
+        "2026-09-28T17:10:00.260877+00:00",
+        "2026-09-28T17:12:00.260661+00:00",
+        "2026-09-28T17:14:00.260606+00:00",
+        "2026-09-28T17:16:00.260629+00:00"
+      ]
+    },
+    {
+      "run_id": 36454940879,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36454940879",
+      "created_at": "2026-09-28T16:59:15Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T16:59:31.383832+00:00",
+        "2026-09-28T17:01:31.384543+00:00",
+        "2026-09-28T17:03:31.384230+00:00",
+        "2026-09-28T17:05:31.384233+00:00",
+        "2026-09-28T17:07:31.384297+00:00"
+      ]
+    },
+    {
+      "run_id": 36453966892,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36453966892",
+      "created_at": "2026-09-28T16:50:51Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T16:51:09.830408+00:00",
+        "2026-09-28T16:53:09.831092+00:00",
+        "2026-09-28T16:55:09.830811+00:00",
+        "2026-09-28T16:57:09.830769+00:00",
+        "2026-09-28T16:59:09.830778+00:00"
+      ]
+    },
+    {
+      "run_id": 36452953663,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36452953663",
+      "created_at": "2026-09-28T16:42:19Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T16:42:43.396378+00:00",
+        "2026-09-28T16:44:43.397156+00:00",
+        "2026-09-28T16:46:43.396793+00:00",
+        "2026-09-28T16:48:43.396869+00:00",
+        "2026-09-28T16:50:43.396941+00:00"
+      ]
+    },
+    {
+      "run_id": 36451939369,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36451939369",
+      "created_at": "2026-09-28T16:33:50Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T16:34:10.820371+00:00",
+        "2026-09-28T16:36:10.821048+00:00",
+        "2026-09-28T16:38:10.820789+00:00",
+        "2026-09-28T16:40:10.820876+00:00",
+        "2026-09-28T16:42:10.820767+00:00"
+      ]
+    },
+    {
+      "run_id": 36450911159,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36450911159",
+      "created_at": "2026-09-28T16:25:24Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T16:25:43.397099+00:00",
+        "2026-09-28T16:27:43.397715+00:00",
+        "2026-09-28T16:29:43.397396+00:00",
+        "2026-09-28T16:31:43.397460+00:00",
+        "2026-09-28T16:33:43.397458+00:00"
+      ]
+    },
+    {
+      "run_id": 36449893560,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36449893560",
+      "created_at": "2026-09-28T16:16:57Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T16:17:17.954197+00:00",
+        "2026-09-28T16:19:17.954631+00:00",
+        "2026-09-28T16:21:17.954313+00:00",
+        "2026-09-28T16:23:17.954257+00:00",
+        "2026-09-28T16:25:17.954195+00:00"
+      ]
+    },
+    {
+      "run_id": 36448869415,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36448869415",
+      "created_at": "2026-09-28T16:08:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T16:08:50.146708+00:00",
+        "2026-09-28T16:10:50.147192+00:00",
+        "2026-09-28T16:12:50.146964+00:00",
+        "2026-09-28T16:14:50.147022+00:00",
+        "2026-09-28T16:16:50.147131+00:00"
+      ]
+    },
+    {
+      "run_id": 36447799048,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36447799048",
+      "created_at": "2026-09-28T15:59:57Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T16:00:25.753693+00:00",
+        "2026-09-28T16:02:25.754557+00:00",
+        "2026-09-28T16:04:25.754231+00:00",
+        "2026-09-28T16:06:25.754104+00:00",
+        "2026-09-28T16:08:25.754262+00:00"
+      ]
+    },
+    {
+      "run_id": 36446763956,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36446763956",
+      "created_at": "2026-09-28T15:51:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T15:51:51.213622+00:00",
+        "2026-09-28T15:53:51.214237+00:00",
+        "2026-09-28T15:55:51.214119+00:00",
+        "2026-09-28T15:57:51.214005+00:00",
+        "2026-09-28T15:59:51.213972+00:00"
+      ]
+    },
+    {
+      "run_id": 36445703193,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36445703193",
+      "created_at": "2026-09-28T15:43:08Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T15:43:26.561771+00:00",
+        "2026-09-28T15:45:26.562552+00:00",
+        "2026-09-28T15:47:26.562207+00:00",
+        "2026-09-28T15:49:26.562191+00:00",
+        "2026-09-28T15:51:26.562411+00:00"
+      ]
+    },
+    {
+      "run_id": 36444634159,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36444634159",
+      "created_at": "2026-09-28T15:34:39Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T15:35:00.900242+00:00",
+        "2026-09-28T15:37:00.900923+00:00",
+        "2026-09-28T15:39:00.900571+00:00",
+        "2026-09-28T15:41:00.900654+00:00",
+        "2026-09-28T15:43:00.900643+00:00"
+      ]
+    },
+    {
+      "run_id": 36443558414,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36443558414",
+      "created_at": "2026-09-28T15:26:11Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T15:26:31.621939+00:00",
+        "2026-09-28T15:28:31.622671+00:00",
+        "2026-09-28T15:30:31.622238+00:00",
+        "2026-09-28T15:32:31.622233+00:00",
+        "2026-09-28T15:34:31.622271+00:00"
+      ]
+    },
+    {
+      "run_id": 36442473572,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36442473572",
+      "created_at": "2026-09-28T15:17:42Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T15:18:02.651892+00:00",
+        "2026-09-28T15:20:02.652601+00:00",
+        "2026-09-28T15:22:02.652194+00:00",
+        "2026-09-28T15:24:02.652262+00:00",
+        "2026-09-28T15:26:02.652310+00:00"
+      ]
+    },
+    {
+      "run_id": 36441408427,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36441408427",
+      "created_at": "2026-09-28T15:09:14Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T15:09:35.053040+00:00",
+        "2026-09-28T15:11:35.053711+00:00",
+        "2026-09-28T15:13:35.053241+00:00",
+        "2026-09-28T15:15:35.053517+00:00",
+        "2026-09-28T15:17:35.053248+00:00"
+      ]
+    },
+    {
+      "run_id": 36440315039,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36440315039",
+      "created_at": "2026-09-28T15:00:43Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T15:01:06.456953+00:00",
+        "2026-09-28T15:03:06.457663+00:00",
+        "2026-09-28T15:05:06.457659+00:00",
+        "2026-09-28T15:07:06.457215+00:00",
+        "2026-09-28T15:09:06.457419+00:00"
+      ]
+    },
+    {
+      "run_id": 36439237791,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36439237791",
+      "created_at": "2026-09-28T14:52:20Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T14:52:35.046641+00:00",
+        "2026-09-28T14:54:35.047068+00:00",
+        "2026-09-28T14:56:35.046844+00:00",
+        "2026-09-28T14:58:35.047047+00:00",
+        "2026-09-28T15:00:35.047046+00:00"
+      ]
+    },
+    {
+      "run_id": 36438176678,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36438176678",
+      "created_at": "2026-09-28T14:43:54Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T14:44:11.906361+00:00",
+        "2026-09-28T14:46:11.907266+00:00",
+        "2026-09-28T14:48:11.906865+00:00",
+        "2026-09-28T14:50:11.906660+00:00",
+        "2026-09-28T14:52:11.906646+00:00"
+      ]
+    },
+    {
+      "run_id": 36437115964,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36437115964",
+      "created_at": "2026-09-28T14:35:23Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T14:35:45.953529+00:00",
+        "2026-09-28T14:37:45.954216+00:00",
+        "2026-09-28T14:39:45.953870+00:00",
+        "2026-09-28T14:41:45.953815+00:00",
+        "2026-09-28T14:43:45.953942+00:00"
+      ]
+    },
+    {
+      "run_id": 36436030450,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36436030450",
+      "created_at": "2026-09-28T14:26:51Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T14:27:13.207382+00:00",
+        "2026-09-28T14:29:13.207751+00:00",
+        "2026-09-28T14:31:13.207538+00:00",
+        "2026-09-28T14:33:13.207611+00:00",
+        "2026-09-28T14:35:13.207608+00:00"
+      ]
+    },
+    {
+      "run_id": 36434984042,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36434984042",
+      "created_at": "2026-09-28T14:18:27Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T14:18:44.525701+00:00",
+        "2026-09-28T14:20:44.526398+00:00",
+        "2026-09-28T14:22:44.526109+00:00",
+        "2026-09-28T14:24:44.526090+00:00",
+        "2026-09-28T14:26:44.526119+00:00"
+      ]
+    },
+    {
+      "run_id": 36433927750,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36433927750",
+      "created_at": "2026-09-28T14:10:05Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T14:10:21.419773+00:00",
+        "2026-09-28T14:12:21.420617+00:00",
+        "2026-09-28T14:14:21.420307+00:00",
+        "2026-09-28T14:16:21.420309+00:00",
+        "2026-09-28T14:18:21.420217+00:00"
+      ]
+    },
+    {
+      "run_id": 36432862281,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36432862281",
+      "created_at": "2026-09-28T14:01:36Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T14:01:58.403830+00:00",
+        "2026-09-28T14:03:58.403655+00:00",
+        "2026-09-28T14:05:58.403277+00:00",
+        "2026-09-28T14:07:58.403393+00:00",
+        "2026-09-28T14:09:58.403402+00:00"
+      ]
+    },
+    {
+      "run_id": 36431824335,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36431824335",
+      "created_at": "2026-09-28T13:53:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T13:53:28.373174+00:00",
+        "2026-09-28T13:55:28.373873+00:00",
+        "2026-09-28T13:57:28.373510+00:00",
+        "2026-09-28T13:59:28.373569+00:00",
+        "2026-09-28T14:01:28.373504+00:00"
+      ]
+    },
+    {
+      "run_id": 36430783964,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36430783964",
+      "created_at": "2026-09-28T13:44:39Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T13:45:02.710895+00:00",
+        "2026-09-28T13:47:02.711726+00:00",
+        "2026-09-28T13:49:02.711284+00:00",
+        "2026-09-28T13:51:02.711412+00:00",
+        "2026-09-28T13:53:02.711203+00:00"
+      ]
+    },
+    {
+      "run_id": 36429771646,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36429771646",
+      "created_at": "2026-09-28T13:36:12Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T13:36:32.720793+00:00",
+        "2026-09-28T13:38:32.721515+00:00",
+        "2026-09-28T13:40:32.721183+00:00",
+        "2026-09-28T13:42:32.721227+00:00",
+        "2026-09-28T13:44:32.721117+00:00"
+      ]
+    },
+    {
+      "run_id": 36428772798,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36428772798",
+      "created_at": "2026-09-28T13:27:41Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T13:28:03.716136+00:00",
+        "2026-09-28T13:30:03.717402+00:00",
+        "2026-09-28T13:32:03.716587+00:00",
+        "2026-09-28T13:34:03.716451+00:00",
+        "2026-09-28T13:36:03.716580+00:00"
+      ]
+    },
+    {
+      "run_id": 36427771886,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36427771886",
+      "created_at": "2026-09-28T13:19:13Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T13:19:33.386010+00:00",
+        "2026-09-28T13:21:33.386680+00:00",
+        "2026-09-28T13:23:33.386539+00:00",
+        "2026-09-28T13:25:33.386374+00:00",
+        "2026-09-28T13:27:33.386359+00:00"
+      ]
+    },
+    {
+      "run_id": 36426755351,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36426755351",
+      "created_at": "2026-09-28T13:10:43Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T13:11:05.172644+00:00",
+        "2026-09-28T13:13:05.173313+00:00",
+        "2026-09-28T13:15:05.172960+00:00",
+        "2026-09-28T13:17:05.173366+00:00",
+        "2026-09-28T13:19:05.173050+00:00"
+      ]
+    },
+    {
+      "run_id": 36425778484,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36425778484",
+      "created_at": "2026-09-28T13:02:23Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T13:02:37.042020+00:00",
+        "2026-09-28T13:04:37.042648+00:00",
+        "2026-09-28T13:06:37.042446+00:00",
+        "2026-09-28T13:08:37.042291+00:00",
+        "2026-09-28T13:10:37.042323+00:00"
+      ]
+    },
+    {
+      "run_id": 36424819591,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36424819591",
+      "created_at": "2026-09-28T12:53:59Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T12:54:16.734092+00:00",
+        "2026-09-28T12:56:16.734244+00:00",
+        "2026-09-28T12:58:16.733906+00:00",
+        "2026-09-28T13:00:16.733787+00:00",
+        "2026-09-28T13:02:16.734128+00:00"
+      ]
+    },
+    {
+      "run_id": 36423900264,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36423900264",
+      "created_at": "2026-09-28T12:45:36Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T12:45:53.270508+00:00",
+        "2026-09-28T12:47:53.271391+00:00",
+        "2026-09-28T12:49:53.270915+00:00",
+        "2026-09-28T12:51:53.271085+00:00",
+        "2026-09-28T12:53:53.270926+00:00"
+      ]
+    },
+    {
+      "run_id": 36422994567,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36422994567",
+      "created_at": "2026-09-28T12:37:12Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T12:37:29.234595+00:00",
+        "2026-09-28T12:39:29.235251+00:00",
+        "2026-09-28T12:41:29.234931+00:00",
+        "2026-09-28T12:43:29.235073+00:00",
+        "2026-09-28T12:45:29.235026+00:00"
+      ]
+    },
+    {
+      "run_id": 36422083557,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36422083557",
+      "created_at": "2026-09-28T12:28:45Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T12:29:05.157175+00:00",
+        "2026-09-28T12:31:05.157685+00:00",
+        "2026-09-28T12:33:05.157456+00:00",
+        "2026-09-28T12:35:05.157529+00:00",
+        "2026-09-28T12:37:05.157704+00:00"
+      ]
+    },
+    {
+      "run_id": 36421187853,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36421187853",
+      "created_at": "2026-09-28T12:20:19Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T12:20:38.924173+00:00",
+        "2026-09-28T12:22:38.924987+00:00",
+        "2026-09-28T12:24:38.924723+00:00",
+        "2026-09-28T12:26:38.924619+00:00",
+        "2026-09-28T12:28:38.924694+00:00"
+      ]
+    },
+    {
+      "run_id": 36420289951,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36420289951",
+      "created_at": "2026-09-28T12:11:57Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T12:12:14.136639+00:00",
+        "2026-09-28T12:14:14.137422+00:00",
+        "2026-09-28T12:16:14.137141+00:00",
+        "2026-09-28T12:18:14.137123+00:00",
+        "2026-09-28T12:20:14.137212+00:00"
+      ]
+    },
+    {
+      "run_id": 36418635316,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36418635316",
+      "created_at": "2026-09-28T11:56:02Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T12:03:50.104536+00:00",
+        "2026-09-28T12:05:50.105203+00:00",
+        "2026-09-28T12:07:50.104888+00:00",
+        "2026-09-28T12:09:50.104831+00:00",
+        "2026-09-28T12:11:50.104825+00:00"
+      ]
+    },
+    {
+      "run_id": 36418532972,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36418532972",
+      "created_at": "2026-09-28T11:55:03Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T11:55:25.724575+00:00",
+        "2026-09-28T11:57:25.725125+00:00",
+        "2026-09-28T11:59:25.724972+00:00",
+        "2026-09-28T12:01:25.725030+00:00",
+        "2026-09-28T12:03:25.724974+00:00"
+      ]
+    },
+    {
+      "run_id": 36417677316,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36417677316",
+      "created_at": "2026-09-28T11:46:36Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T11:46:55.621230+00:00",
+        "2026-09-28T11:48:55.621321+00:00",
+        "2026-09-28T11:50:55.621554+00:00",
+        "2026-09-28T11:52:55.621341+00:00",
+        "2026-09-28T11:54:55.621098+00:00"
+      ]
+    },
+    {
+      "run_id": 36416828713,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36416828713",
+      "created_at": "2026-09-28T11:38:11Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T11:38:30.381352+00:00",
+        "2026-09-28T11:40:30.382065+00:00",
+        "2026-09-28T11:42:30.381812+00:00",
+        "2026-09-28T11:44:30.381539+00:00",
+        "2026-09-28T11:46:30.381992+00:00"
+      ]
+    },
+    {
+      "run_id": 36415989553,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36415989553",
+      "created_at": "2026-09-28T11:29:50Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T11:30:05.822806+00:00",
+        "2026-09-28T11:32:05.823531+00:00",
+        "2026-09-28T11:34:05.823143+00:00",
+        "2026-09-28T11:36:05.823211+00:00",
+        "2026-09-28T11:38:05.823128+00:00"
+      ]
+    },
+    {
+      "run_id": 36415167108,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36415167108",
+      "created_at": "2026-09-28T11:21:29Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T11:21:43.844466+00:00",
+        "2026-09-28T11:23:43.845149+00:00",
+        "2026-09-28T11:25:43.844909+00:00",
+        "2026-09-28T11:27:43.844816+00:00",
+        "2026-09-28T11:29:43.844769+00:00"
+      ]
+    },
+    {
+      "run_id": 36414322911,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36414322911",
+      "created_at": "2026-09-28T11:13:04Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T11:13:22.516164+00:00",
+        "2026-09-28T11:15:22.516776+00:00",
+        "2026-09-28T11:17:22.516655+00:00",
+        "2026-09-28T11:19:22.516589+00:00",
+        "2026-09-28T11:21:22.516539+00:00"
+      ]
+    },
+    {
+      "run_id": 36413465394,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36413465394",
+      "created_at": "2026-09-28T11:04:38Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T11:04:57.961363+00:00",
+        "2026-09-28T11:06:57.962032+00:00",
+        "2026-09-28T11:08:57.961733+00:00",
+        "2026-09-28T11:10:57.961729+00:00",
+        "2026-09-28T11:12:57.961793+00:00"
+      ]
+    },
+    {
+      "run_id": 36412639720,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36412639720",
+      "created_at": "2026-09-28T10:56:14Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T10:56:31.976940+00:00",
+        "2026-09-28T10:58:31.977546+00:00",
+        "2026-09-28T11:00:31.977291+00:00",
+        "2026-09-28T11:02:31.977383+00:00",
+        "2026-09-28T11:04:31.977300+00:00"
+      ]
+    },
+    {
+      "run_id": 36411824721,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36411824721",
+      "created_at": "2026-09-28T10:47:55Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T10:48:08.231058+00:00",
+        "2026-09-28T10:50:08.231766+00:00",
+        "2026-09-28T10:52:08.231433+00:00",
+        "2026-09-28T10:54:08.232405+00:00",
+        "2026-09-28T10:56:08.231446+00:00"
+      ]
+    },
+    {
+      "run_id": 36411007458,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36411007458",
+      "created_at": "2026-09-28T10:39:32Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T10:39:49.567031+00:00",
+        "2026-09-28T10:41:49.567802+00:00",
+        "2026-09-28T10:43:49.567391+00:00",
+        "2026-09-28T10:45:49.567419+00:00",
+        "2026-09-28T10:47:49.567454+00:00"
+      ]
+    },
+    {
+      "run_id": 36410186527,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36410186527",
+      "created_at": "2026-09-28T10:31:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T10:31:26.155679+00:00",
+        "2026-09-28T10:33:26.156497+00:00",
+        "2026-09-28T10:35:26.156156+00:00",
+        "2026-09-28T10:37:26.156197+00:00",
+        "2026-09-28T10:39:26.156206+00:00"
+      ]
+    },
+    {
+      "run_id": 36409349286,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36409349286",
+      "created_at": "2026-09-28T10:22:46Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T10:23:03.345491+00:00",
+        "2026-09-28T10:25:03.346154+00:00",
+        "2026-09-28T10:27:03.345855+00:00",
+        "2026-09-28T10:29:03.345831+00:00",
+        "2026-09-28T10:31:03.345888+00:00"
+      ]
+    },
+    {
+      "run_id": 36408509519,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36408509519",
+      "created_at": "2026-09-28T10:14:25Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T10:14:40.814533+00:00",
+        "2026-09-28T10:16:40.815130+00:00",
+        "2026-09-28T10:18:40.814867+00:00",
+        "2026-09-28T10:20:40.814849+00:00",
+        "2026-09-28T10:22:40.814832+00:00"
+      ]
+    },
+    {
+      "run_id": 36407603507,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36407603507",
+      "created_at": "2026-09-28T10:05:45Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T10:06:19.150852+00:00",
+        "2026-09-28T10:08:19.151606+00:00",
+        "2026-09-28T10:10:19.151264+00:00",
+        "2026-09-28T10:12:19.151160+00:00",
+        "2026-09-28T10:14:19.151269+00:00"
+      ]
+    },
+    {
+      "run_id": 36406735446,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36406735446",
+      "created_at": "2026-09-28T09:57:23Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T09:57:39.708639+00:00",
+        "2026-09-28T09:59:39.709555+00:00",
+        "2026-09-28T10:01:39.709090+00:00",
+        "2026-09-28T10:03:39.709003+00:00",
+        "2026-09-28T10:05:39.709192+00:00"
+      ]
+    },
+    {
+      "run_id": 36405879259,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36405879259",
+      "created_at": "2026-09-28T09:48:59Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T09:49:16.708766+00:00",
+        "2026-09-28T09:51:16.709445+00:00",
+        "2026-09-28T09:53:16.709366+00:00",
+        "2026-09-28T09:55:16.709253+00:00",
+        "2026-09-28T09:57:16.709242+00:00"
+      ]
+    },
+    {
+      "run_id": 36405007049,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36405007049",
+      "created_at": "2026-09-28T09:40:35Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T09:40:51.049312+00:00",
+        "2026-09-28T09:42:51.049949+00:00",
+        "2026-09-28T09:44:51.049616+00:00",
+        "2026-09-28T09:46:51.049625+00:00",
+        "2026-09-28T09:48:51.049659+00:00"
+      ]
+    },
+    {
+      "run_id": 36404123924,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36404123924",
+      "created_at": "2026-09-28T09:32:10Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T09:32:29.668682+00:00",
+        "2026-09-28T09:34:29.669421+00:00",
+        "2026-09-28T09:36:29.669120+00:00",
+        "2026-09-28T09:38:29.668981+00:00",
+        "2026-09-28T09:40:29.668904+00:00"
+      ]
+    },
+    {
+      "run_id": 36403215139,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36403215139",
+      "created_at": "2026-09-28T09:23:45Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T09:24:02.291671+00:00",
+        "2026-09-28T09:26:02.292429+00:00",
+        "2026-09-28T09:28:02.292112+00:00",
+        "2026-09-28T09:30:02.292133+00:00",
+        "2026-09-28T09:32:02.292191+00:00"
+      ]
+    },
+    {
+      "run_id": 36402318775,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36402318775",
+      "created_at": "2026-09-28T09:15:21Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T09:15:39.366357+00:00",
+        "2026-09-28T09:17:39.366971+00:00",
+        "2026-09-28T09:19:39.366754+00:00",
+        "2026-09-28T09:21:39.366812+00:00",
+        "2026-09-28T09:23:39.366709+00:00"
+      ]
+    },
+    {
+      "run_id": 36401444402,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36401444402",
+      "created_at": "2026-09-28T09:06:58Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T09:07:15.907200+00:00",
+        "2026-09-28T09:09:15.907750+00:00",
+        "2026-09-28T09:11:15.907364+00:00",
+        "2026-09-28T09:13:15.907548+00:00",
+        "2026-09-28T09:15:15.907512+00:00"
+      ]
+    },
+    {
+      "run_id": 36400593129,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36400593129",
+      "created_at": "2026-09-28T08:58:35Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T08:58:51.628572+00:00",
+        "2026-09-28T09:00:51.629355+00:00",
+        "2026-09-28T09:02:51.628969+00:00",
+        "2026-09-28T09:04:51.628945+00:00",
+        "2026-09-28T09:06:51.628973+00:00"
+      ]
+    },
+    {
+      "run_id": 36399747559,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36399747559",
+      "created_at": "2026-09-28T08:50:14Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T08:50:29.793940+00:00",
+        "2026-09-28T08:52:29.794802+00:00",
+        "2026-09-28T08:54:29.794402+00:00",
+        "2026-09-28T08:56:29.794355+00:00",
+        "2026-09-28T08:58:29.794338+00:00"
+      ]
+    },
+    {
+      "run_id": 36398901528,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36398901528",
+      "created_at": "2026-09-28T08:41:50Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T08:42:08.076681+00:00",
+        "2026-09-28T08:44:08.077351+00:00",
+        "2026-09-28T08:46:08.077026+00:00",
+        "2026-09-28T08:48:08.077182+00:00",
+        "2026-09-28T08:50:08.076964+00:00"
+      ]
+    },
+    {
+      "run_id": 36398059408,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36398059408",
+      "created_at": "2026-09-28T08:33:26Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T08:33:43.375499+00:00",
+        "2026-09-28T08:35:43.375423+00:00",
+        "2026-09-28T08:37:43.375178+00:00",
+        "2026-09-28T08:39:43.375117+00:00",
+        "2026-09-28T08:41:43.375162+00:00"
+      ]
+    },
+    {
+      "run_id": 36397231985,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36397231985",
+      "created_at": "2026-09-28T08:25:03Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T08:25:19.358935+00:00",
+        "2026-09-28T08:27:19.359590+00:00",
+        "2026-09-28T08:29:19.359316+00:00",
+        "2026-09-28T08:31:19.359411+00:00",
+        "2026-09-28T08:33:19.359368+00:00"
+      ]
+    },
+    {
+      "run_id": 36396404750,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36396404750",
+      "created_at": "2026-09-28T08:16:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T08:16:57.987254+00:00",
+        "2026-09-28T08:18:57.987996+00:00",
+        "2026-09-28T08:20:57.987609+00:00",
+        "2026-09-28T08:22:57.987604+00:00",
+        "2026-09-28T08:24:57.987602+00:00"
+      ]
+    },
+    {
+      "run_id": 36395556184,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36395556184",
+      "created_at": "2026-09-28T08:08:11Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T08:08:31.076644+00:00",
+        "2026-09-28T08:10:31.077313+00:00",
+        "2026-09-28T08:12:31.076959+00:00",
+        "2026-09-28T08:14:31.077284+00:00",
+        "2026-09-28T08:16:31.077061+00:00"
+      ]
+    },
+    {
+      "run_id": 36394726066,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36394726066",
+      "created_at": "2026-09-28T07:59:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T08:00:04.246193+00:00",
+        "2026-09-28T08:02:04.246721+00:00",
+        "2026-09-28T08:04:04.246573+00:00",
+        "2026-09-28T08:06:04.246683+00:00",
+        "2026-09-28T08:08:04.247045+00:00"
+      ]
+    },
+    {
+      "run_id": 36393928611,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36393928611",
+      "created_at": "2026-09-28T07:51:15Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T07:51:34.461145+00:00",
+        "2026-09-28T07:53:34.461792+00:00",
+        "2026-09-28T07:55:34.461522+00:00",
+        "2026-09-28T07:57:34.461764+00:00",
+        "2026-09-28T07:59:34.461716+00:00"
+      ]
+    },
+    {
+      "run_id": 36393148814,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36393148814",
+      "created_at": "2026-09-28T07:42:49Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T07:43:08.705989+00:00",
+        "2026-09-28T07:45:08.706765+00:00",
+        "2026-09-28T07:47:08.706369+00:00",
+        "2026-09-28T07:49:08.706709+00:00",
+        "2026-09-28T07:51:08.706636+00:00"
+      ]
+    },
+    {
+      "run_id": 36392376942,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36392376942",
+      "created_at": "2026-09-28T07:34:25Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T07:34:42.789109+00:00",
+        "2026-09-28T07:36:42.789796+00:00",
+        "2026-09-28T07:38:42.789453+00:00",
+        "2026-09-28T07:40:42.789454+00:00",
+        "2026-09-28T07:42:42.789470+00:00"
+      ]
+    },
+    {
+      "run_id": 36391621712,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36391621712",
+      "created_at": "2026-09-28T07:26:02Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T07:26:20.408638+00:00",
+        "2026-09-28T07:28:20.409558+00:00",
+        "2026-09-28T07:30:20.409334+00:00",
+        "2026-09-28T07:32:20.409204+00:00",
+        "2026-09-28T07:34:20.409358+00:00"
+      ]
+    },
+    {
+      "run_id": 36390874399,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36390874399",
+      "created_at": "2026-09-28T07:17:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T07:17:56.473600+00:00",
+        "2026-09-28T07:19:56.474332+00:00",
+        "2026-09-28T07:21:56.473976+00:00",
+        "2026-09-28T07:23:56.473940+00:00",
+        "2026-09-28T07:25:56.474126+00:00"
+      ]
+    },
+    {
+      "run_id": 36390088333,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36390088333",
+      "created_at": "2026-09-28T07:09:11Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 425,
+        "classified": 425,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T07:09:27.656113+00:00",
+        "2026-09-28T07:11:27.656847+00:00",
+        "2026-09-28T07:13:27.656362+00:00",
+        "2026-09-28T07:15:27.656483+00:00",
+        "2026-09-28T07:17:27.656501+00:00"
+      ]
+    },
+    {
+      "run_id": 36389354744,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36389354744",
+      "created_at": "2026-09-28T07:00:49Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 422,
+        "classified": 422,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T07:01:04.749346+00:00",
+        "2026-09-28T07:03:04.749922+00:00",
+        "2026-09-28T07:05:04.749644+00:00",
+        "2026-09-28T07:07:04.749687+00:00",
+        "2026-09-28T07:09:04.749730+00:00"
+      ]
+    },
+    {
+      "run_id": 36388625611,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36388625611",
+      "created_at": "2026-09-28T06:52:23Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T06:52:42.027699+00:00",
+        "2026-09-28T06:54:42.028360+00:00",
+        "2026-09-28T06:56:42.028101+00:00",
+        "2026-09-28T06:58:42.028388+00:00",
+        "2026-09-28T07:00:42.028175+00:00"
+      ]
+    },
+    {
+      "run_id": 36387918941,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36387918941",
+      "created_at": "2026-09-28T06:43:58Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T06:44:16.780477+00:00",
+        "2026-09-28T06:46:16.781468+00:00",
+        "2026-09-28T06:48:16.780764+00:00",
+        "2026-09-28T06:50:16.781133+00:00",
+        "2026-09-28T06:52:16.781154+00:00"
+      ]
+    },
+    {
+      "run_id": 36387239906,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36387239906",
+      "created_at": "2026-09-28T06:35:32Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T06:35:52.895316+00:00",
+        "2026-09-28T06:37:52.895955+00:00",
+        "2026-09-28T06:39:52.895592+00:00",
+        "2026-09-28T06:41:52.895733+00:00",
+        "2026-09-28T06:43:52.895745+00:00"
+      ]
+    },
+    {
+      "run_id": 36386533575,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36386533575",
+      "created_at": "2026-09-28T06:27:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T06:27:26.660889+00:00",
+        "2026-09-28T06:29:26.661672+00:00",
+        "2026-09-28T06:31:26.661329+00:00",
+        "2026-09-28T06:33:26.661268+00:00",
+        "2026-09-28T06:35:26.661325+00:00"
+      ]
+    },
+    {
+      "run_id": 36385824673,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36385824673",
+      "created_at": "2026-09-28T06:18:43Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T06:19:02.760625+00:00",
+        "2026-09-28T06:21:02.761388+00:00",
+        "2026-09-28T06:23:02.761008+00:00",
+        "2026-09-28T06:25:02.760978+00:00",
+        "2026-09-28T06:27:02.761092+00:00"
+      ]
+    },
+    {
+      "run_id": 36385136873,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36385136873",
+      "created_at": "2026-09-28T06:10:21Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T06:10:36.773927+00:00",
+        "2026-09-28T06:12:36.774488+00:00",
+        "2026-09-28T06:14:36.774226+00:00",
+        "2026-09-28T06:16:36.774135+00:00",
+        "2026-09-28T06:18:36.774230+00:00"
+      ]
+    },
+    {
+      "run_id": 36384481051,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36384481051",
+      "created_at": "2026-09-28T06:01:53Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T06:02:15.739174+00:00",
+        "2026-09-28T06:04:15.739873+00:00",
+        "2026-09-28T06:06:15.739780+00:00",
+        "2026-09-28T06:08:15.739588+00:00",
+        "2026-09-28T06:10:15.739637+00:00"
+      ]
+    },
+    {
+      "run_id": 36383864603,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36383864603",
+      "created_at": "2026-09-28T05:53:29Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T05:53:47.867587+00:00",
+        "2026-09-28T05:55:47.867945+00:00",
+        "2026-09-28T05:57:47.867514+00:00",
+        "2026-09-28T05:59:47.867562+00:00",
+        "2026-09-28T06:01:47.867721+00:00"
+      ]
+    },
+    {
+      "run_id": 36383261519,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36383261519",
+      "created_at": "2026-09-28T05:45:05Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T05:45:23.188483+00:00",
+        "2026-09-28T05:47:23.189080+00:00",
+        "2026-09-28T05:49:23.188714+00:00",
+        "2026-09-28T05:51:23.188744+00:00",
+        "2026-09-28T05:53:23.188731+00:00"
+      ]
+    },
+    {
+      "run_id": 36382668843,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36382668843",
+      "created_at": "2026-09-28T05:36:45Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T05:37:00.291728+00:00",
+        "2026-09-28T05:39:00.292432+00:00",
+        "2026-09-28T05:41:00.292176+00:00",
+        "2026-09-28T05:43:00.292227+00:00",
+        "2026-09-28T05:45:00.292214+00:00"
+      ]
+    },
+    {
+      "run_id": 36382050116,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36382050116",
+      "created_at": "2026-09-28T05:28:18Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T05:28:39.348003+00:00",
+        "2026-09-28T05:30:39.348706+00:00",
+        "2026-09-28T05:32:39.348393+00:00",
+        "2026-09-28T05:34:39.348382+00:00",
+        "2026-09-28T05:36:39.348482+00:00"
+      ]
+    },
+    {
+      "run_id": 36381433660,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36381433660",
+      "created_at": "2026-09-28T05:19:48Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T05:20:11.034356+00:00",
+        "2026-09-28T05:22:11.035133+00:00",
+        "2026-09-28T05:24:11.034874+00:00",
+        "2026-09-28T05:26:11.034808+00:00",
+        "2026-09-28T05:28:11.034769+00:00"
+      ]
+    },
+    {
+      "run_id": 36380744149,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36380744149",
+      "created_at": "2026-09-28T05:10:24Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T05:11:42.638594+00:00",
+        "2026-09-28T05:13:42.639462+00:00",
+        "2026-09-28T05:15:42.639107+00:00",
+        "2026-09-28T05:17:42.638960+00:00",
+        "2026-09-28T05:19:42.639050+00:00"
+      ]
+    },
+    {
+      "run_id": 36380227441,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36380227441",
+      "created_at": "2026-09-28T05:03:06Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T05:03:23.120180+00:00",
+        "2026-09-28T05:05:23.121006+00:00",
+        "2026-09-28T05:07:23.120618+00:00",
+        "2026-09-28T05:09:23.120625+00:00",
+        "2026-09-28T05:11:23.120624+00:00"
+      ]
+    },
+    {
+      "run_id": 36379659315,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36379659315",
+      "created_at": "2026-09-28T04:54:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T04:54:59.474152+00:00",
+        "2026-09-28T04:56:59.474825+00:00",
+        "2026-09-28T04:58:59.474602+00:00",
+        "2026-09-28T05:00:59.474476+00:00",
+        "2026-09-28T05:02:59.474632+00:00"
+      ]
+    },
+    {
+      "run_id": 36379109227,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36379109227",
+      "created_at": "2026-09-28T04:46:19Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T04:46:33.805939+00:00",
+        "2026-09-28T04:48:33.806681+00:00",
+        "2026-09-28T04:50:33.806324+00:00",
+        "2026-09-28T04:52:33.806415+00:00",
+        "2026-09-28T04:54:33.806211+00:00"
+      ]
+    },
+    {
+      "run_id": 36378547614,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36378547614",
+      "created_at": "2026-09-28T04:38:01Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T04:38:14.941375+00:00",
+        "2026-09-28T04:40:14.942266+00:00",
+        "2026-09-28T04:42:14.941736+00:00",
+        "2026-09-28T04:44:14.942138+00:00",
+        "2026-09-28T04:46:14.941895+00:00"
+      ]
+    },
+    {
+      "run_id": 36377941668,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36377941668",
+      "created_at": "2026-09-28T04:29:39Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T04:29:54.637098+00:00",
+        "2026-09-28T04:31:54.637852+00:00",
+        "2026-09-28T04:33:54.637523+00:00",
+        "2026-09-28T04:35:54.637506+00:00",
+        "2026-09-28T04:37:54.637653+00:00"
+      ]
+    },
+    {
+      "run_id": 36377343406,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36377343406",
+      "created_at": "2026-09-28T04:21:16Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T04:21:33.554386+00:00",
+        "2026-09-28T04:23:33.555048+00:00",
+        "2026-09-28T04:25:33.554825+00:00",
+        "2026-09-28T04:27:33.554711+00:00",
+        "2026-09-28T04:29:33.554754+00:00"
+      ]
+    },
+    {
+      "run_id": 36376748381,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36376748381",
+      "created_at": "2026-09-28T04:12:53Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T04:13:09.057711+00:00",
+        "2026-09-28T04:15:09.058403+00:00",
+        "2026-09-28T04:17:09.058087+00:00",
+        "2026-09-28T04:19:09.058050+00:00",
+        "2026-09-28T04:21:09.058049+00:00"
+      ]
+    },
+    {
+      "run_id": 36376176339,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36376176339",
+      "created_at": "2026-09-28T04:04:29Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T04:04:48.270824+00:00",
+        "2026-09-28T04:06:48.271515+00:00",
+        "2026-09-28T04:08:48.271017+00:00",
+        "2026-09-28T04:10:48.271172+00:00",
+        "2026-09-28T04:12:48.271051+00:00"
+      ]
+    },
+    {
+      "run_id": 36375646057,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36375646057",
+      "created_at": "2026-09-28T03:56:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T03:56:24.494443+00:00",
+        "2026-09-28T03:58:24.494832+00:00",
+        "2026-09-28T04:00:24.494614+00:00",
+        "2026-09-28T04:02:24.494728+00:00",
+        "2026-09-28T04:04:24.494685+00:00"
+      ]
+    },
+    {
+      "run_id": 36375109801,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36375109801",
+      "created_at": "2026-09-28T03:47:46Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T03:48:02.054408+00:00",
+        "2026-09-28T03:50:02.055401+00:00",
+        "2026-09-28T03:52:02.055125+00:00",
+        "2026-09-28T03:54:02.054936+00:00",
+        "2026-09-28T03:56:02.055048+00:00"
+      ]
+    },
+    {
+      "run_id": 36374564675,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36374564675",
+      "created_at": "2026-09-28T03:39:22Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T03:39:41.354870+00:00",
+        "2026-09-28T03:41:41.355678+00:00",
+        "2026-09-28T03:43:41.355331+00:00",
+        "2026-09-28T03:45:41.355332+00:00",
+        "2026-09-28T03:47:41.355213+00:00"
+      ]
+    },
+    {
+      "run_id": 36374020116,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36374020116",
+      "created_at": "2026-09-28T03:30:57Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T03:31:15.738112+00:00",
+        "2026-09-28T03:33:15.738752+00:00",
+        "2026-09-28T03:35:15.738459+00:00",
+        "2026-09-28T03:37:15.738456+00:00",
+        "2026-09-28T03:39:15.738465+00:00"
+      ]
+    },
+    {
+      "run_id": 36373473885,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36373473885",
+      "created_at": "2026-09-28T03:22:34Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T03:22:49.527889+00:00",
+        "2026-09-28T03:24:49.528602+00:00",
+        "2026-09-28T03:26:49.528498+00:00",
+        "2026-09-28T03:28:49.528307+00:00",
+        "2026-09-28T03:30:49.528398+00:00"
+      ]
+    },
+    {
+      "run_id": 36372921897,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36372921897",
+      "created_at": "2026-09-28T03:14:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T03:14:28.157101+00:00",
+        "2026-09-28T03:16:28.157893+00:00",
+        "2026-09-28T03:18:28.157587+00:00",
+        "2026-09-28T03:20:28.157614+00:00",
+        "2026-09-28T03:22:28.157701+00:00"
+      ]
+    },
+    {
+      "run_id": 36372342972,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36372342972",
+      "created_at": "2026-09-28T03:05:48Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T03:06:03.537027+00:00",
+        "2026-09-28T03:08:03.537639+00:00",
+        "2026-09-28T03:10:03.537267+00:00",
+        "2026-09-28T03:12:03.537221+00:00",
+        "2026-09-28T03:14:03.537292+00:00"
+      ]
+    },
+    {
+      "run_id": 36371792785,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36371792785",
+      "created_at": "2026-09-28T02:57:23Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T02:57:42.035152+00:00",
+        "2026-09-28T02:59:42.035666+00:00",
+        "2026-09-28T03:01:42.035461+00:00",
+        "2026-09-28T03:03:42.035484+00:00",
+        "2026-09-28T03:05:42.035489+00:00"
+      ]
+    },
+    {
+      "run_id": 36371263346,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36371263346",
+      "created_at": "2026-09-28T02:49:00Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T02:49:17.562516+00:00",
+        "2026-09-28T02:51:17.563521+00:00",
+        "2026-09-28T02:53:17.562864+00:00",
+        "2026-09-28T02:55:17.563019+00:00",
+        "2026-09-28T02:57:17.562836+00:00"
+      ]
+    },
+    {
+      "run_id": 36370730853,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36370730853",
+      "created_at": "2026-09-28T02:40:35Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T02:40:51.848466+00:00",
+        "2026-09-28T02:42:51.848934+00:00",
+        "2026-09-28T02:44:51.849015+00:00",
+        "2026-09-28T02:46:51.848945+00:00",
+        "2026-09-28T02:48:51.848915+00:00"
+      ]
+    },
+    {
+      "run_id": 36370190921,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36370190921",
+      "created_at": "2026-09-28T02:32:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T02:32:28.970568+00:00",
+        "2026-09-28T02:34:28.971499+00:00",
+        "2026-09-28T02:36:28.970893+00:00",
+        "2026-09-28T02:38:28.971132+00:00",
+        "2026-09-28T02:40:28.971249+00:00"
+      ]
+    },
+    {
+      "run_id": 36369654844,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36369654844",
+      "created_at": "2026-09-28T02:23:49Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T02:24:04.297157+00:00",
+        "2026-09-28T02:26:04.298067+00:00",
+        "2026-09-28T02:28:04.297708+00:00",
+        "2026-09-28T02:30:04.297670+00:00",
+        "2026-09-28T02:32:04.297797+00:00"
+      ]
+    },
+    {
+      "run_id": 36369127384,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36369127384",
+      "created_at": "2026-09-28T02:15:27Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T02:15:43.607741+00:00",
+        "2026-09-28T02:17:43.608637+00:00",
+        "2026-09-28T02:19:43.608303+00:00",
+        "2026-09-28T02:21:43.608352+00:00",
+        "2026-09-28T02:23:43.608354+00:00"
+      ]
+    },
+    {
+      "run_id": 36368559883,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36368559883",
+      "created_at": "2026-09-28T02:07:05Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T02:07:20.815527+00:00",
+        "2026-09-28T02:09:20.816315+00:00",
+        "2026-09-28T02:11:20.816252+00:00",
+        "2026-09-28T02:13:20.816021+00:00",
+        "2026-09-28T02:15:20.815948+00:00"
+      ]
+    },
+    {
+      "run_id": 36368007460,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36368007460",
+      "created_at": "2026-09-28T01:58:26Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T01:58:59.747806+00:00",
+        "2026-09-28T02:00:59.748455+00:00",
+        "2026-09-28T02:02:59.748030+00:00",
+        "2026-09-28T02:04:59.748205+00:00",
+        "2026-09-28T02:06:59.748110+00:00"
+      ]
+    },
+    {
+      "run_id": 36367488673,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36367488673",
+      "created_at": "2026-09-28T01:50:05Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T01:50:20.988292+00:00",
+        "2026-09-28T01:52:20.988832+00:00",
+        "2026-09-28T01:54:20.988585+00:00",
+        "2026-09-28T01:56:20.988655+00:00",
+        "2026-09-28T01:58:20.988702+00:00"
+      ]
+    },
+    {
+      "run_id": 36366955195,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36366955195",
+      "created_at": "2026-09-28T01:41:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T01:41:59.600271+00:00",
+        "2026-09-28T01:43:59.600844+00:00",
+        "2026-09-28T01:45:59.600678+00:00",
+        "2026-09-28T01:47:59.600642+00:00",
+        "2026-09-28T01:49:59.600669+00:00"
+      ]
+    },
+    {
+      "run_id": 36366414464,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36366414464",
+      "created_at": "2026-09-28T01:33:20Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T01:33:34.580254+00:00",
+        "2026-09-28T01:35:34.580939+00:00",
+        "2026-09-28T01:37:34.580615+00:00",
+        "2026-09-28T01:39:34.580738+00:00",
+        "2026-09-28T01:41:34.580618+00:00"
+      ]
+    },
+    {
+      "run_id": 36365884012,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36365884012",
+      "created_at": "2026-09-28T01:25:01Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T01:25:15.261186+00:00",
+        "2026-09-28T01:27:15.261850+00:00",
+        "2026-09-28T01:29:15.261740+00:00",
+        "2026-09-28T01:31:15.261918+00:00",
+        "2026-09-28T01:33:15.261772+00:00"
+      ]
+    },
+    {
+      "run_id": 36365367240,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36365367240",
+      "created_at": "2026-09-28T01:16:37Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T01:16:55.058947+00:00",
+        "2026-09-28T01:18:55.059699+00:00",
+        "2026-09-28T01:20:55.059306+00:00",
+        "2026-09-28T01:22:55.059665+00:00",
+        "2026-09-28T01:24:55.059328+00:00"
+      ]
+    },
+    {
+      "run_id": 36364814253,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36364814253",
+      "created_at": "2026-09-28T01:08:16Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T01:08:32.577381+00:00",
+        "2026-09-28T01:10:32.578142+00:00",
+        "2026-09-28T01:12:32.577774+00:00",
+        "2026-09-28T01:14:32.577994+00:00",
+        "2026-09-28T01:16:32.578117+00:00"
+      ]
+    },
+    {
+      "run_id": 36364257469,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36364257469",
+      "created_at": "2026-09-28T00:59:50Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T01:00:10.364593+00:00",
+        "2026-09-28T01:02:10.365354+00:00",
+        "2026-09-28T01:04:10.365017+00:00",
+        "2026-09-28T01:06:10.365136+00:00",
+        "2026-09-28T01:08:10.364904+00:00"
+      ]
+    },
+    {
+      "run_id": 36363743841,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36363743841",
+      "created_at": "2026-09-28T00:51:23Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T00:51:44.025561+00:00",
+        "2026-09-28T00:53:44.026395+00:00",
+        "2026-09-28T00:55:44.026056+00:00",
+        "2026-09-28T00:57:44.026211+00:00",
+        "2026-09-28T00:59:44.026362+00:00"
+      ]
+    },
+    {
+      "run_id": 36363221650,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36363221650",
+      "created_at": "2026-09-28T00:42:56Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T00:43:17.200319+00:00",
+        "2026-09-28T00:45:17.200864+00:00",
+        "2026-09-28T00:47:17.200719+00:00",
+        "2026-09-28T00:49:17.200866+00:00",
+        "2026-09-28T00:51:17.201593+00:00"
+      ]
+    },
+    {
+      "run_id": 36362705207,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36362705207",
+      "created_at": "2026-09-28T00:34:29Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T00:34:50.743023+00:00",
+        "2026-09-28T00:36:50.743866+00:00",
+        "2026-09-28T00:38:50.743458+00:00",
+        "2026-09-28T00:40:50.743823+00:00",
+        "2026-09-28T00:42:50.743783+00:00"
+      ]
+    },
+    {
+      "run_id": 36362201973,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36362201973",
+      "created_at": "2026-09-28T00:25:59Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T00:26:23.820277+00:00",
+        "2026-09-28T00:28:23.821136+00:00",
+        "2026-09-28T00:30:23.820584+00:00",
+        "2026-09-28T00:32:23.821083+00:00",
+        "2026-09-28T00:34:23.821160+00:00"
+      ]
+    },
+    {
+      "run_id": 36361681725,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36361681725",
+      "created_at": "2026-09-28T00:17:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T00:17:54.480392+00:00",
+        "2026-09-28T00:19:54.480874+00:00",
+        "2026-09-28T00:21:54.480678+00:00",
+        "2026-09-28T00:23:54.481065+00:00",
+        "2026-09-28T00:25:54.480643+00:00"
+      ]
+    },
+    {
+      "run_id": 36361070485,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36361070485",
+      "created_at": "2026-09-28T00:08:30Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T00:09:27.618913+00:00",
+        "2026-09-28T00:11:27.619790+00:00",
+        "2026-09-28T00:13:27.619352+00:00",
+        "2026-09-28T00:15:27.619742+00:00",
+        "2026-09-28T00:17:27.619604+00:00"
+      ]
+    },
+    {
+      "run_id": 36360233762,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36360233762",
+      "created_at": "2026-09-27T23:54:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-28T00:00:24.502264+00:00",
+        "2026-09-28T00:02:24.502858+00:00",
+        "2026-09-28T00:04:24.502567+00:00",
+        "2026-09-28T00:06:24.502858+00:00",
+        "2026-09-28T00:08:24.502677+00:00"
+      ]
+    },
+    {
+      "run_id": 36360103654,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36360103654",
+      "created_at": "2026-09-27T23:51:45Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T23:52:04.134505+00:00",
+        "2026-09-27T23:54:04.135216+00:00",
+        "2026-09-27T23:56:04.135020+00:00",
+        "2026-09-27T23:58:04.135201+00:00",
+        "2026-09-28T00:00:04.135257+00:00"
+      ]
+    },
+    {
+      "run_id": 36359646959,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36359646959",
+      "created_at": "2026-09-27T23:43:25Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T23:43:40.136707+00:00",
+        "2026-09-27T23:45:40.137146+00:00",
+        "2026-09-27T23:47:40.136934+00:00",
+        "2026-09-27T23:49:40.137141+00:00",
+        "2026-09-27T23:51:40.137352+00:00"
+      ]
+    },
+    {
+      "run_id": 36359184344,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36359184344",
+      "created_at": "2026-09-27T23:35:04Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T23:35:20.643909+00:00",
+        "2026-09-27T23:37:20.644544+00:00",
+        "2026-09-27T23:39:20.644325+00:00",
+        "2026-09-27T23:41:20.644502+00:00",
+        "2026-09-27T23:43:20.644170+00:00"
+      ]
+    },
+    {
+      "run_id": 36358705392,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36358705392",
+      "created_at": "2026-09-27T23:26:38Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T23:26:58.113978+00:00",
+        "2026-09-27T23:28:58.114813+00:00",
+        "2026-09-27T23:30:58.114291+00:00",
+        "2026-09-27T23:32:58.114681+00:00",
+        "2026-09-27T23:34:58.114687+00:00"
+      ]
+    },
+    {
+      "run_id": 36358238861,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36358238861",
+      "created_at": "2026-09-27T23:18:16Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T23:18:32.844949+00:00",
+        "2026-09-27T23:20:32.845641+00:00",
+        "2026-09-27T23:22:32.845333+00:00",
+        "2026-09-27T23:24:32.845564+00:00",
+        "2026-09-27T23:26:32.845653+00:00"
+      ]
+    },
+    {
+      "run_id": 36357759771,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36357759771",
+      "created_at": "2026-09-27T23:09:56Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T23:10:10.940353+00:00",
+        "2026-09-27T23:12:10.940982+00:00",
+        "2026-09-27T23:14:10.940854+00:00",
+        "2026-09-27T23:16:10.940952+00:00",
+        "2026-09-27T23:18:10.940912+00:00"
+      ]
+    },
+    {
+      "run_id": 36357274356,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36357274356",
+      "created_at": "2026-09-27T23:01:31Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T23:01:48.661880+00:00",
+        "2026-09-27T23:03:48.662530+00:00",
+        "2026-09-27T23:05:48.662284+00:00",
+        "2026-09-27T23:07:48.662572+00:00",
+        "2026-09-27T23:09:48.662664+00:00"
+      ]
+    },
+    {
+      "run_id": 36356813059,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36356813059",
+      "created_at": "2026-09-27T22:53:10Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T22:53:25.110926+00:00",
+        "2026-09-27T22:55:25.111800+00:00",
+        "2026-09-27T22:57:25.111485+00:00",
+        "2026-09-27T22:59:25.111730+00:00",
+        "2026-09-27T23:01:25.111527+00:00"
+      ]
+    },
+    {
+      "run_id": 36356347450,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36356347450",
+      "created_at": "2026-09-27T22:44:51Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T22:45:05.398939+00:00",
+        "2026-09-27T22:47:05.399513+00:00",
+        "2026-09-27T22:49:05.399315+00:00",
+        "2026-09-27T22:51:05.399582+00:00",
+        "2026-09-27T22:53:05.399252+00:00"
+      ]
+    },
+    {
+      "run_id": 36355878886,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36355878886",
+      "created_at": "2026-09-27T22:36:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T22:36:46.859024+00:00",
+        "2026-09-27T22:38:46.859596+00:00",
+        "2026-09-27T22:40:46.859450+00:00",
+        "2026-09-27T22:42:46.859728+00:00",
+        "2026-09-27T22:44:46.859784+00:00"
+      ]
+    },
+    {
+      "run_id": 36355393006,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36355393006",
+      "created_at": "2026-09-27T22:28:12Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T22:28:28.522030+00:00",
+        "2026-09-27T22:30:28.522702+00:00",
+        "2026-09-27T22:32:28.522498+00:00",
+        "2026-09-27T22:34:28.522683+00:00",
+        "2026-09-27T22:36:28.522746+00:00"
+      ]
+    },
+    {
+      "run_id": 36354874845,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36354874845",
+      "created_at": "2026-09-27T22:19:13Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T22:20:06.611431+00:00",
+        "2026-09-27T22:22:06.612026+00:00",
+        "2026-09-27T22:24:06.611659+00:00",
+        "2026-09-27T22:26:06.612166+00:00",
+        "2026-09-27T22:28:06.612059+00:00"
+      ]
+    },
+    {
+      "run_id": 36354379973,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36354379973",
+      "created_at": "2026-09-27T22:10:53Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T22:11:08.294473+00:00",
+        "2026-09-27T22:13:08.294838+00:00",
+        "2026-09-27T22:15:08.294658+00:00",
+        "2026-09-27T22:17:08.294986+00:00",
+        "2026-09-27T22:19:08.294845+00:00"
+      ]
+    },
+    {
+      "run_id": 36353875931,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36353875931",
+      "created_at": "2026-09-27T22:02:31Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T22:02:48.712933+00:00",
+        "2026-09-27T22:04:48.713618+00:00",
+        "2026-09-27T22:06:48.713400+00:00",
+        "2026-09-27T22:08:48.713323+00:00",
+        "2026-09-27T22:10:48.713405+00:00"
+      ]
+    },
+    {
+      "run_id": 36353388696,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36353388696",
+      "created_at": "2026-09-27T21:54:07Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T21:54:25.498767+00:00",
+        "2026-09-27T21:56:25.499397+00:00",
+        "2026-09-27T21:58:25.499107+00:00",
+        "2026-09-27T22:00:25.499128+00:00",
+        "2026-09-27T22:02:25.499151+00:00"
+      ]
+    },
+    {
+      "run_id": 36352896764,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36352896764",
+      "created_at": "2026-09-27T21:45:41Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T21:46:01.395429+00:00",
+        "2026-09-27T21:48:01.396209+00:00",
+        "2026-09-27T21:50:01.395851+00:00",
+        "2026-09-27T21:52:01.395789+00:00",
+        "2026-09-27T21:54:01.395907+00:00"
+      ]
+    },
+    {
+      "run_id": 36352091692,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36352091692",
+      "created_at": "2026-09-27T21:32:15Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T21:37:34.896303+00:00",
+        "2026-09-27T21:39:34.896922+00:00",
+        "2026-09-27T21:41:34.896760+00:00",
+        "2026-09-27T21:43:34.896707+00:00",
+        "2026-09-27T21:45:34.896679+00:00"
+      ]
+    },
+    {
+      "run_id": 36351886214,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36351886214",
+      "created_at": "2026-09-27T21:29:01Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T21:29:16.260608+00:00",
+        "2026-09-27T21:31:16.261300+00:00",
+        "2026-09-27T21:33:16.261073+00:00",
+        "2026-09-27T21:35:16.261018+00:00",
+        "2026-09-27T21:37:16.261186+00:00"
+      ]
+    },
+    {
+      "run_id": 36351376434,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36351376434",
+      "created_at": "2026-09-27T21:20:39Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T21:20:55.801121+00:00",
+        "2026-09-27T21:22:55.801773+00:00",
+        "2026-09-27T21:24:55.801557+00:00",
+        "2026-09-27T21:26:55.801530+00:00",
+        "2026-09-27T21:28:55.801507+00:00"
+      ]
+    },
+    {
+      "run_id": 36350841376,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36350841376",
+      "created_at": "2026-09-27T21:12:18Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T21:12:33.136467+00:00",
+        "2026-09-27T21:14:33.137395+00:00",
+        "2026-09-27T21:16:33.137106+00:00",
+        "2026-09-27T21:18:33.137119+00:00",
+        "2026-09-27T21:20:33.137179+00:00"
+      ]
+    },
+    {
+      "run_id": 36350314112,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36350314112",
+      "created_at": "2026-09-27T21:03:56Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T21:04:13.317251+00:00",
+        "2026-09-27T21:06:13.317924+00:00",
+        "2026-09-27T21:08:13.317837+00:00",
+        "2026-09-27T21:10:13.317709+00:00",
+        "2026-09-27T21:12:13.317515+00:00"
+      ]
+    },
+    {
+      "run_id": 36349811023,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36349811023",
+      "created_at": "2026-09-27T20:55:32Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T20:55:50.863375+00:00",
+        "2026-09-27T20:57:50.864075+00:00",
+        "2026-09-27T20:59:50.863776+00:00",
+        "2026-09-27T21:01:50.863676+00:00",
+        "2026-09-27T21:03:50.863794+00:00"
+      ]
+    },
+    {
+      "run_id": 36349312540,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36349312540",
+      "created_at": "2026-09-27T20:47:11Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T20:47:27.205773+00:00",
+        "2026-09-27T20:49:27.206365+00:00",
+        "2026-09-27T20:51:27.206209+00:00",
+        "2026-09-27T20:53:27.206030+00:00",
+        "2026-09-27T20:55:27.206064+00:00"
+      ]
+    },
+    {
+      "run_id": 36348798635,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36348798635",
+      "created_at": "2026-09-27T20:38:47Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T20:39:05.582587+00:00",
+        "2026-09-27T20:41:05.583135+00:00",
+        "2026-09-27T20:43:05.582944+00:00",
+        "2026-09-27T20:45:05.583039+00:00",
+        "2026-09-27T20:47:05.582960+00:00"
+      ]
+    },
+    {
+      "run_id": 36348280194,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36348280194",
+      "created_at": "2026-09-27T20:30:24Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T20:30:42.095173+00:00",
+        "2026-09-27T20:32:42.095878+00:00",
+        "2026-09-27T20:34:42.095462+00:00",
+        "2026-09-27T20:36:42.095469+00:00",
+        "2026-09-27T20:38:42.095514+00:00"
+      ]
+    },
+    {
+      "run_id": 36347759785,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36347759785",
+      "created_at": "2026-09-27T20:22:00Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T20:22:17.644824+00:00",
+        "2026-09-27T20:24:17.645290+00:00",
+        "2026-09-27T20:26:17.645050+00:00",
+        "2026-09-27T20:28:17.644925+00:00",
+        "2026-09-27T20:30:17.645202+00:00"
+      ]
+    },
+    {
+      "run_id": 36347242222,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36347242222",
+      "created_at": "2026-09-27T20:13:41Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T20:13:55.543511+00:00",
+        "2026-09-27T20:15:55.544139+00:00",
+        "2026-09-27T20:17:55.543843+00:00",
+        "2026-09-27T20:19:55.544129+00:00",
+        "2026-09-27T20:21:55.543977+00:00"
+      ]
+    },
+    {
+      "run_id": 36346729090,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36346729090",
+      "created_at": "2026-09-27T20:05:21Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T20:05:35.232139+00:00",
+        "2026-09-27T20:07:35.232783+00:00",
+        "2026-09-27T20:09:35.232555+00:00",
+        "2026-09-27T20:11:35.232586+00:00",
+        "2026-09-27T20:13:35.232558+00:00"
+      ]
+    },
+    {
+      "run_id": 36346199155,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36346199155",
+      "created_at": "2026-09-27T19:56:57Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T19:57:13.732276+00:00",
+        "2026-09-27T19:59:13.732946+00:00",
+        "2026-09-27T20:01:13.732688+00:00",
+        "2026-09-27T20:03:13.732598+00:00",
+        "2026-09-27T20:05:13.732627+00:00"
+      ]
+    },
+    {
+      "run_id": 36345706762,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36345706762",
+      "created_at": "2026-09-27T19:48:31Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T19:48:50.549523+00:00",
+        "2026-09-27T19:50:50.550298+00:00",
+        "2026-09-27T19:52:50.549991+00:00",
+        "2026-09-27T19:54:50.549849+00:00",
+        "2026-09-27T19:56:50.550009+00:00"
+      ]
+    },
+    {
+      "run_id": 36345194272,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36345194272",
+      "created_at": "2026-09-27T19:40:06Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T19:40:24.366947+00:00",
+        "2026-09-27T19:42:24.367676+00:00",
+        "2026-09-27T19:44:24.367321+00:00",
+        "2026-09-27T19:46:24.367328+00:00",
+        "2026-09-27T19:48:24.367326+00:00"
+      ]
+    },
+    {
+      "run_id": 36344675130,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36344675130",
+      "created_at": "2026-09-27T19:31:41Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T19:32:00.884622+00:00",
+        "2026-09-27T19:34:00.885405+00:00",
+        "2026-09-27T19:36:00.884951+00:00",
+        "2026-09-27T19:38:00.884970+00:00",
+        "2026-09-27T19:40:00.884965+00:00"
+      ]
+    },
+    {
+      "run_id": 36344160455,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36344160455",
+      "created_at": "2026-09-27T19:23:17Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T19:23:34.848961+00:00",
+        "2026-09-27T19:25:34.849712+00:00",
+        "2026-09-27T19:27:34.849443+00:00",
+        "2026-09-27T19:29:34.849510+00:00",
+        "2026-09-27T19:31:34.849467+00:00"
+      ]
+    },
+    {
+      "run_id": 36343650688,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36343650688",
+      "created_at": "2026-09-27T19:14:56Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T19:15:11.442279+00:00",
+        "2026-09-27T19:17:11.442908+00:00",
+        "2026-09-27T19:19:11.442608+00:00",
+        "2026-09-27T19:21:11.442643+00:00",
+        "2026-09-27T19:23:11.442683+00:00"
+      ]
+    },
+    {
+      "run_id": 36343135617,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36343135617",
+      "created_at": "2026-09-27T19:06:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T19:06:49.400379+00:00",
+        "2026-09-27T19:08:49.400943+00:00",
+        "2026-09-27T19:10:49.400713+00:00",
+        "2026-09-27T19:12:49.401021+00:00",
+        "2026-09-27T19:14:49.400741+00:00"
+      ]
+    },
+    {
+      "run_id": 36342605234,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36342605234",
+      "created_at": "2026-09-27T18:58:14Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T18:58:28.339914+00:00",
+        "2026-09-27T19:00:28.340690+00:00",
+        "2026-09-27T19:02:28.340314+00:00",
+        "2026-09-27T19:04:28.340490+00:00",
+        "2026-09-27T19:06:28.340423+00:00"
+      ]
+    },
+    {
+      "run_id": 36342097949,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36342097949",
+      "created_at": "2026-09-27T18:49:56Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T18:50:09.431041+00:00",
+        "2026-09-27T18:52:09.431604+00:00",
+        "2026-09-27T18:54:09.431516+00:00",
+        "2026-09-27T18:56:09.431351+00:00",
+        "2026-09-27T18:58:09.431382+00:00"
+      ]
+    },
+    {
+      "run_id": 36341583053,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36341583053",
+      "created_at": "2026-09-27T18:41:35Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T18:41:50.523589+00:00",
+        "2026-09-27T18:43:50.524030+00:00",
+        "2026-09-27T18:45:50.523750+00:00",
+        "2026-09-27T18:47:50.523734+00:00",
+        "2026-09-27T18:49:50.523935+00:00"
+      ]
+    },
+    {
+      "run_id": 36341066865,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36341066865",
+      "created_at": "2026-09-27T18:33:05Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T18:33:29.387444+00:00",
+        "2026-09-27T18:35:29.388154+00:00",
+        "2026-09-27T18:37:29.387756+00:00",
+        "2026-09-27T18:39:29.387853+00:00",
+        "2026-09-27T18:41:29.387937+00:00"
+      ]
+    },
+    {
+      "run_id": 36340541741,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36340541741",
+      "created_at": "2026-09-27T18:24:43Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T18:24:59.402192+00:00",
+        "2026-09-27T18:26:59.402882+00:00",
+        "2026-09-27T18:28:59.402572+00:00",
+        "2026-09-27T18:30:59.402570+00:00",
+        "2026-09-27T18:32:59.402636+00:00"
+      ]
+    },
+    {
+      "run_id": 36339962280,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36339962280",
+      "created_at": "2026-09-27T18:15:20Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T18:16:37.376423+00:00",
+        "2026-09-27T18:18:37.377152+00:00",
+        "2026-09-27T18:20:37.376799+00:00",
+        "2026-09-27T18:22:37.376855+00:00",
+        "2026-09-27T18:24:37.376813+00:00"
+      ]
+    },
+    {
+      "run_id": 36339496781,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36339496781",
+      "created_at": "2026-09-27T18:07:51Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T18:08:09.037080+00:00",
+        "2026-09-27T18:10:09.037694+00:00",
+        "2026-09-27T18:12:09.037441+00:00",
+        "2026-09-27T18:14:09.037377+00:00",
+        "2026-09-27T18:16:09.037437+00:00"
+      ]
+    },
+    {
+      "run_id": 36338962910,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36338962910",
+      "created_at": "2026-09-27T17:59:29Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T17:59:45.161527+00:00",
+        "2026-09-27T18:01:45.162336+00:00",
+        "2026-09-27T18:03:45.161865+00:00",
+        "2026-09-27T18:05:45.161991+00:00",
+        "2026-09-27T18:07:45.161909+00:00"
+      ]
+    },
+    {
+      "run_id": 36338470868,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36338470868",
+      "created_at": "2026-09-27T17:51:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T17:51:23.504970+00:00",
+        "2026-09-27T17:53:23.505641+00:00",
+        "2026-09-27T17:55:23.505403+00:00",
+        "2026-09-27T17:57:23.505345+00:00",
+        "2026-09-27T17:59:23.505493+00:00"
+      ]
+    },
+    {
+      "run_id": 36337956014,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36337956014",
+      "created_at": "2026-09-27T17:42:45Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T17:43:03.288653+00:00",
+        "2026-09-27T17:45:03.289393+00:00",
+        "2026-09-27T17:47:03.288920+00:00",
+        "2026-09-27T17:49:03.288937+00:00",
+        "2026-09-27T17:51:03.289032+00:00"
+      ]
+    },
+    {
+      "run_id": 36337443879,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36337443879",
+      "created_at": "2026-09-27T17:34:26Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T17:34:40.448220+00:00",
+        "2026-09-27T17:36:40.448841+00:00",
+        "2026-09-27T17:38:40.448536+00:00",
+        "2026-09-27T17:40:40.448543+00:00",
+        "2026-09-27T17:42:40.448572+00:00"
+      ]
+    },
+    {
+      "run_id": 36336920796,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36336920796",
+      "created_at": "2026-09-27T17:26:07Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T17:26:21.697707+00:00",
+        "2026-09-27T17:28:21.698420+00:00",
+        "2026-09-27T17:30:21.698090+00:00",
+        "2026-09-27T17:32:21.698052+00:00",
+        "2026-09-27T17:34:21.698041+00:00"
+      ]
+    },
+    {
+      "run_id": 36336402504,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36336402504",
+      "created_at": "2026-09-27T17:17:47Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T17:18:02.018760+00:00",
+        "2026-09-27T17:20:02.019424+00:00",
+        "2026-09-27T17:22:02.019160+00:00",
+        "2026-09-27T17:24:02.019125+00:00",
+        "2026-09-27T17:26:02.019086+00:00"
+      ]
+    },
+    {
+      "run_id": 36335867008,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36335867008",
+      "created_at": "2026-09-27T17:09:15Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T17:09:41.291365+00:00",
+        "2026-09-27T17:11:41.292148+00:00",
+        "2026-09-27T17:13:41.291946+00:00",
+        "2026-09-27T17:15:41.291879+00:00",
+        "2026-09-27T17:17:41.291870+00:00"
+      ]
+    },
+    {
+      "run_id": 36335337800,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36335337800",
+      "created_at": "2026-09-27T17:00:51Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T17:01:09.034300+00:00",
+        "2026-09-27T17:03:09.035063+00:00",
+        "2026-09-27T17:05:09.034554+00:00",
+        "2026-09-27T17:07:09.034713+00:00",
+        "2026-09-27T17:09:09.034674+00:00"
+      ]
+    },
+    {
+      "run_id": 36334835710,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36334835710",
+      "created_at": "2026-09-27T16:52:27Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T16:52:46.580361+00:00",
+        "2026-09-27T16:54:46.581079+00:00",
+        "2026-09-27T16:56:46.580744+00:00",
+        "2026-09-27T16:58:46.580557+00:00",
+        "2026-09-27T17:00:46.580616+00:00"
+      ]
+    },
+    {
+      "run_id": 36334326088,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36334326088",
+      "created_at": "2026-09-27T16:44:05Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T16:44:22.122829+00:00",
+        "2026-09-27T16:46:22.123597+00:00",
+        "2026-09-27T16:48:22.123202+00:00",
+        "2026-09-27T16:50:22.123316+00:00",
+        "2026-09-27T16:52:22.123302+00:00"
+      ]
+    },
+    {
+      "run_id": 36333781350,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36333781350",
+      "created_at": "2026-09-27T16:35:07Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T16:35:59.436562+00:00",
+        "2026-09-27T16:37:59.437078+00:00",
+        "2026-09-27T16:39:59.436884+00:00",
+        "2026-09-27T16:41:59.436709+00:00",
+        "2026-09-27T16:43:59.436955+00:00"
+      ]
+    },
+    {
+      "run_id": 36333263559,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36333263559",
+      "created_at": "2026-09-27T16:26:42Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T16:27:00.794039+00:00",
+        "2026-09-27T16:29:00.794674+00:00",
+        "2026-09-27T16:31:00.794349+00:00",
+        "2026-09-27T16:33:00.794367+00:00",
+        "2026-09-27T16:35:00.794393+00:00"
+      ]
+    },
+    {
+      "run_id": 36332739542,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36332739542",
+      "created_at": "2026-09-27T16:18:17Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T16:18:36.103894+00:00",
+        "2026-09-27T16:20:36.104422+00:00",
+        "2026-09-27T16:22:36.104097+00:00",
+        "2026-09-27T16:24:36.104168+00:00",
+        "2026-09-27T16:26:36.104192+00:00"
+      ]
+    },
+    {
+      "run_id": 36332210711,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36332210711",
+      "created_at": "2026-09-27T16:09:55Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T16:10:11.985628+00:00",
+        "2026-09-27T16:12:11.986305+00:00",
+        "2026-09-27T16:14:11.986106+00:00",
+        "2026-09-27T16:16:11.986075+00:00",
+        "2026-09-27T16:18:11.985981+00:00"
+      ]
+    },
+    {
+      "run_id": 36331686285,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36331686285",
+      "created_at": "2026-09-27T16:01:32Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T16:01:48.983430+00:00",
+        "2026-09-27T16:03:48.984043+00:00",
+        "2026-09-27T16:05:48.983668+00:00",
+        "2026-09-27T16:07:48.983673+00:00",
+        "2026-09-27T16:09:48.983706+00:00"
+      ]
+    },
+    {
+      "run_id": 36331184295,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36331184295",
+      "created_at": "2026-09-27T15:53:07Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T15:53:25.751261+00:00",
+        "2026-09-27T15:55:25.751937+00:00",
+        "2026-09-27T15:57:25.751744+00:00",
+        "2026-09-27T15:59:25.751674+00:00",
+        "2026-09-27T16:01:25.751704+00:00"
+      ]
+    },
+    {
+      "run_id": 36330679886,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36330679886",
+      "created_at": "2026-09-27T15:44:44Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T15:45:00.991413+00:00",
+        "2026-09-27T15:47:00.992145+00:00",
+        "2026-09-27T15:49:00.991763+00:00",
+        "2026-09-27T15:51:00.991757+00:00",
+        "2026-09-27T15:53:00.991858+00:00"
+      ]
+    },
+    {
+      "run_id": 36330173271,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36330173271",
+      "created_at": "2026-09-27T15:36:21Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T15:36:38.563783+00:00",
+        "2026-09-27T15:38:38.564383+00:00",
+        "2026-09-27T15:40:38.564071+00:00",
+        "2026-09-27T15:42:38.564164+00:00",
+        "2026-09-27T15:44:38.564039+00:00"
+      ]
+    },
+    {
+      "run_id": 36329648814,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36329648814",
+      "created_at": "2026-09-27T15:28:00Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T15:28:15.412321+00:00",
+        "2026-09-27T15:30:15.413010+00:00",
+        "2026-09-27T15:32:15.412680+00:00",
+        "2026-09-27T15:34:15.412658+00:00",
+        "2026-09-27T15:36:15.412756+00:00"
+      ]
+    },
+    {
+      "run_id": 36329137860,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36329137860",
+      "created_at": "2026-09-27T15:19:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T15:19:55.055576+00:00",
+        "2026-09-27T15:21:55.056185+00:00",
+        "2026-09-27T15:23:55.055842+00:00",
+        "2026-09-27T15:25:55.055951+00:00",
+        "2026-09-27T15:27:55.056015+00:00"
+      ]
+    },
+    {
+      "run_id": 36328629555,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36328629555",
+      "created_at": "2026-09-27T15:11:20Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T15:11:34.910908+00:00",
+        "2026-09-27T15:13:34.911319+00:00",
+        "2026-09-27T15:15:34.911138+00:00",
+        "2026-09-27T15:17:34.910916+00:00",
+        "2026-09-27T15:19:34.911101+00:00"
+      ]
+    },
+    {
+      "run_id": 36328119065,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36328119065",
+      "created_at": "2026-09-27T15:03:00Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T15:03:15.521976+00:00",
+        "2026-09-27T15:05:15.522749+00:00",
+        "2026-09-27T15:07:15.522293+00:00",
+        "2026-09-27T15:09:15.522343+00:00",
+        "2026-09-27T15:11:15.522258+00:00"
+      ]
+    },
+    {
+      "run_id": 36327612358,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36327612358",
+      "created_at": "2026-09-27T14:54:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T14:54:54.546082+00:00",
+        "2026-09-27T14:56:54.546797+00:00",
+        "2026-09-27T14:58:54.546459+00:00",
+        "2026-09-27T15:00:54.546545+00:00",
+        "2026-09-27T15:02:54.546632+00:00"
+      ]
+    },
+    {
+      "run_id": 36327076295,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36327076295",
+      "created_at": "2026-09-27T14:45:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 390,
+        "classified": 390,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T14:46:27.068951+00:00",
+        "2026-09-27T14:48:27.069649+00:00",
+        "2026-09-27T14:50:27.069210+00:00",
+        "2026-09-27T14:52:27.069391+00:00",
+        "2026-09-27T14:54:27.069362+00:00"
+      ]
+    },
+    {
+      "run_id": 36326560910,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36326560910",
+      "created_at": "2026-09-27T14:37:08Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 380,
+        "classified": 380,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T14:37:25.898095+00:00",
+        "2026-09-27T14:39:25.898666+00:00",
+        "2026-09-27T14:41:25.898426+00:00",
+        "2026-09-27T14:43:25.898357+00:00",
+        "2026-09-27T14:45:25.898606+00:00"
+      ]
+    },
+    {
+      "run_id": 36326058983,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36326058983",
+      "created_at": "2026-09-27T14:28:48Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T14:29:02.378926+00:00",
+        "2026-09-27T14:31:02.379487+00:00",
+        "2026-09-27T14:33:02.379268+00:00",
+        "2026-09-27T14:35:02.379320+00:00",
+        "2026-09-27T14:37:02.379346+00:00"
+      ]
+    },
+    {
+      "run_id": 36325558489,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36325558489",
+      "created_at": "2026-09-27T14:20:30Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T14:20:43.920103+00:00",
+        "2026-09-27T14:22:43.920810+00:00",
+        "2026-09-27T14:24:43.920423+00:00",
+        "2026-09-27T14:26:43.920538+00:00",
+        "2026-09-27T14:28:43.920608+00:00"
+      ]
+    },
+    {
+      "run_id": 36325056033,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36325056033",
+      "created_at": "2026-09-27T14:12:10Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T14:12:25.762795+00:00",
+        "2026-09-27T14:14:25.763431+00:00",
+        "2026-09-27T14:16:25.763147+00:00",
+        "2026-09-27T14:18:25.763159+00:00",
+        "2026-09-27T14:20:25.763309+00:00"
+      ]
+    },
+    {
+      "run_id": 36324569203,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36324569203",
+      "created_at": "2026-09-27T14:03:51Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T14:04:05.099092+00:00",
+        "2026-09-27T14:06:05.099733+00:00",
+        "2026-09-27T14:08:05.099384+00:00",
+        "2026-09-27T14:10:05.099389+00:00",
+        "2026-09-27T14:12:05.099444+00:00"
+      ]
+    },
+    {
+      "run_id": 36323707459,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36323707459",
+      "created_at": "2026-09-27T13:49:05Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T13:55:45.998376+00:00",
+        "2026-09-27T13:57:45.999047+00:00",
+        "2026-09-27T13:59:45.998766+00:00",
+        "2026-09-27T14:01:45.998684+00:00",
+        "2026-09-27T14:03:45.998738+00:00"
+      ]
+    },
+    {
+      "run_id": 36323587276,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36323587276",
+      "created_at": "2026-09-27T13:46:58Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T13:47:15.198198+00:00",
+        "2026-09-27T13:49:15.198902+00:00",
+        "2026-09-27T13:51:15.198794+00:00",
+        "2026-09-27T13:53:15.198548+00:00",
+        "2026-09-27T13:55:15.198678+00:00"
+      ]
+    },
+    {
+      "run_id": 36323105171,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36323105171",
+      "created_at": "2026-09-27T13:38:39Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T13:38:53.503018+00:00",
+        "2026-09-27T13:40:53.503608+00:00",
+        "2026-09-27T13:42:53.503422+00:00",
+        "2026-09-27T13:44:53.503358+00:00",
+        "2026-09-27T13:46:53.503411+00:00"
+      ]
+    },
+    {
+      "run_id": 36322618550,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36322618550",
+      "created_at": "2026-09-27T13:30:16Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T13:30:34.045182+00:00",
+        "2026-09-27T13:32:34.045837+00:00",
+        "2026-09-27T13:34:34.045441+00:00",
+        "2026-09-27T13:36:34.045436+00:00",
+        "2026-09-27T13:38:34.045550+00:00"
+      ]
+    },
+    {
+      "run_id": 36322132874,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36322132874",
+      "created_at": "2026-09-27T13:21:52Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T13:22:07.938298+00:00",
+        "2026-09-27T13:24:07.938898+00:00",
+        "2026-09-27T13:26:07.938550+00:00",
+        "2026-09-27T13:28:07.938640+00:00",
+        "2026-09-27T13:30:07.938838+00:00"
+      ]
+    },
+    {
+      "run_id": 36321652701,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36321652701",
+      "created_at": "2026-09-27T13:13:31Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T13:13:47.145915+00:00",
+        "2026-09-27T13:15:47.146557+00:00",
+        "2026-09-27T13:17:47.146230+00:00",
+        "2026-09-27T13:19:47.146256+00:00",
+        "2026-09-27T13:21:47.146275+00:00"
+      ]
+    },
+    {
+      "run_id": 36321169093,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36321169093",
+      "created_at": "2026-09-27T13:05:07Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T13:05:26.161259+00:00",
+        "2026-09-27T13:07:26.162047+00:00",
+        "2026-09-27T13:09:26.161586+00:00",
+        "2026-09-27T13:11:26.161671+00:00",
+        "2026-09-27T13:13:26.161663+00:00"
+      ]
+    },
+    {
+      "run_id": 36320683829,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36320683829",
+      "created_at": "2026-09-27T12:56:42Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T12:57:01.440473+00:00",
+        "2026-09-27T12:59:01.441238+00:00",
+        "2026-09-27T13:01:01.440961+00:00",
+        "2026-09-27T13:03:01.441064+00:00",
+        "2026-09-27T13:05:01.440788+00:00"
+      ]
+    },
+    {
+      "run_id": 36320209723,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36320209723",
+      "created_at": "2026-09-27T12:48:18Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T12:48:35.129794+00:00",
+        "2026-09-27T12:50:35.130458+00:00",
+        "2026-09-27T12:52:35.130174+00:00",
+        "2026-09-27T12:54:35.130256+00:00",
+        "2026-09-27T12:56:35.130269+00:00"
+      ]
+    },
+    {
+      "run_id": 36319742215,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36319742215",
+      "created_at": "2026-09-27T12:39:58Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T12:40:12.808301+00:00",
+        "2026-09-27T12:42:12.809017+00:00",
+        "2026-09-27T12:44:12.808733+00:00",
+        "2026-09-27T12:46:12.808787+00:00",
+        "2026-09-27T12:48:12.808727+00:00"
+      ]
+    },
+    {
+      "run_id": 36319277625,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36319277625",
+      "created_at": "2026-09-27T12:31:35Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T12:31:53.272223+00:00",
+        "2026-09-27T12:33:53.272750+00:00",
+        "2026-09-27T12:35:53.272444+00:00",
+        "2026-09-27T12:37:53.272519+00:00",
+        "2026-09-27T12:39:53.272496+00:00"
+      ]
+    },
+    {
+      "run_id": 36318809266,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36318809266",
+      "created_at": "2026-09-27T12:23:14Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T12:23:30.428814+00:00",
+        "2026-09-27T12:25:30.429457+00:00",
+        "2026-09-27T12:27:30.429114+00:00",
+        "2026-09-27T12:29:30.428999+00:00",
+        "2026-09-27T12:31:30.429197+00:00"
+      ]
+    },
+    {
+      "run_id": 36318346054,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36318346054",
+      "created_at": "2026-09-27T12:14:51Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T12:15:08.937818+00:00",
+        "2026-09-27T12:17:08.938413+00:00",
+        "2026-09-27T12:19:08.938096+00:00",
+        "2026-09-27T12:21:08.938234+00:00",
+        "2026-09-27T12:23:08.938246+00:00"
+      ]
+    },
+    {
+      "run_id": 36317885978,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36317885978",
+      "created_at": "2026-09-27T12:06:24Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T12:06:45.852104+00:00",
+        "2026-09-27T12:08:45.852986+00:00",
+        "2026-09-27T12:10:45.852433+00:00",
+        "2026-09-27T12:12:45.852426+00:00",
+        "2026-09-27T12:14:45.852514+00:00"
+      ]
+    },
+    {
+      "run_id": 36317418823,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36317418823",
+      "created_at": "2026-09-27T11:57:58Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T11:58:19.102139+00:00",
+        "2026-09-27T12:00:19.102955+00:00",
+        "2026-09-27T12:02:19.102674+00:00",
+        "2026-09-27T12:04:19.102772+00:00",
+        "2026-09-27T12:06:19.102851+00:00"
+      ]
+    },
+    {
+      "run_id": 36316982970,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36316982970",
+      "created_at": "2026-09-27T11:49:38Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T11:49:53.049982+00:00",
+        "2026-09-27T11:51:53.050698+00:00",
+        "2026-09-27T11:53:53.050423+00:00",
+        "2026-09-27T11:55:53.050379+00:00",
+        "2026-09-27T11:57:53.050469+00:00"
+      ]
+    },
+    {
+      "run_id": 36316535803,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36316535803",
+      "created_at": "2026-09-27T11:41:13Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T11:41:32.655228+00:00",
+        "2026-09-27T11:43:32.655870+00:00",
+        "2026-09-27T11:45:32.655609+00:00",
+        "2026-09-27T11:47:32.655509+00:00",
+        "2026-09-27T11:49:32.655574+00:00"
+      ]
+    },
+    {
+      "run_id": 36316080994,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36316080994",
+      "created_at": "2026-09-27T11:32:50Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T11:33:06.814096+00:00",
+        "2026-09-27T11:35:06.814921+00:00",
+        "2026-09-27T11:37:06.814919+00:00",
+        "2026-09-27T11:39:06.814908+00:00",
+        "2026-09-27T11:41:06.814585+00:00"
+      ]
+    },
+    {
+      "run_id": 36315631146,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36315631146",
+      "created_at": "2026-09-27T11:24:30Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T11:24:45.072878+00:00",
+        "2026-09-27T11:26:45.073582+00:00",
+        "2026-09-27T11:28:45.073324+00:00",
+        "2026-09-27T11:30:45.073347+00:00",
+        "2026-09-27T11:32:45.073291+00:00"
+      ]
+    },
+    {
+      "run_id": 36315181392,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36315181392",
+      "created_at": "2026-09-27T11:16:06Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T11:16:24.072404+00:00",
+        "2026-09-27T11:18:24.073173+00:00",
+        "2026-09-27T11:20:24.072765+00:00",
+        "2026-09-27T11:22:24.072795+00:00",
+        "2026-09-27T11:24:24.072857+00:00"
+      ]
+    },
+    {
+      "run_id": 36314731774,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36314731774",
+      "created_at": "2026-09-27T11:07:44Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T11:08:00.832119+00:00",
+        "2026-09-27T11:10:00.832662+00:00",
+        "2026-09-27T11:12:00.832419+00:00",
+        "2026-09-27T11:14:00.832712+00:00",
+        "2026-09-27T11:16:00.832718+00:00"
+      ]
+    },
+    {
+      "run_id": 36314265471,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36314265471",
+      "created_at": "2026-09-27T10:59:11Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T10:59:38.637369+00:00",
+        "2026-09-27T11:01:38.638247+00:00",
+        "2026-09-27T11:03:38.637623+00:00",
+        "2026-09-27T11:05:38.637700+00:00",
+        "2026-09-27T11:07:38.637788+00:00"
+      ]
+    },
+    {
+      "run_id": 36313841355,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36313841355",
+      "created_at": "2026-09-27T10:50:50Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T10:51:06.841951+00:00",
+        "2026-09-27T10:53:06.842657+00:00",
+        "2026-09-27T10:55:06.842248+00:00",
+        "2026-09-27T10:57:06.842319+00:00",
+        "2026-09-27T10:59:06.842241+00:00"
+      ]
+    },
+    {
+      "run_id": 36313395928,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36313395928",
+      "created_at": "2026-09-27T10:42:27Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T10:42:45.242307+00:00",
+        "2026-09-27T10:44:45.243017+00:00",
+        "2026-09-27T10:46:45.242606+00:00",
+        "2026-09-27T10:48:45.243032+00:00",
+        "2026-09-27T10:50:45.243015+00:00"
+      ]
+    },
+    {
+      "run_id": 36312943405,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36312943405",
+      "created_at": "2026-09-27T10:34:01Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T10:34:21.264247+00:00",
+        "2026-09-27T10:36:21.265021+00:00",
+        "2026-09-27T10:38:21.264998+00:00",
+        "2026-09-27T10:40:21.264889+00:00",
+        "2026-09-27T10:42:21.264909+00:00"
+      ]
+    },
+    {
+      "run_id": 36312494074,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36312494074",
+      "created_at": "2026-09-27T10:25:35Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T10:25:56.142891+00:00",
+        "2026-09-27T10:27:56.143434+00:00",
+        "2026-09-27T10:29:56.143142+00:00",
+        "2026-09-27T10:31:56.143395+00:00",
+        "2026-09-27T10:33:56.143465+00:00"
+      ]
+    },
+    {
+      "run_id": 36312015372,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36312015372",
+      "created_at": "2026-09-27T10:16:40Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T10:17:30.565032+00:00",
+        "2026-09-27T10:19:30.565835+00:00",
+        "2026-09-27T10:21:30.565592+00:00",
+        "2026-09-27T10:23:30.565687+00:00",
+        "2026-09-27T10:25:30.565694+00:00"
+      ]
+    },
+    {
+      "run_id": 36311569924,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36311569924",
+      "created_at": "2026-09-27T10:08:18Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T10:08:34.485989+00:00",
+        "2026-09-27T10:10:34.486725+00:00",
+        "2026-09-27T10:12:34.486485+00:00",
+        "2026-09-27T10:14:34.486661+00:00",
+        "2026-09-27T10:16:34.486310+00:00"
+      ]
+    },
+    {
+      "run_id": 36311111154,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36311111154",
+      "created_at": "2026-09-27T09:59:54Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T10:00:12.725085+00:00",
+        "2026-09-27T10:02:12.725536+00:00",
+        "2026-09-27T10:04:12.725178+00:00",
+        "2026-09-27T10:06:12.725603+00:00",
+        "2026-09-27T10:08:12.725623+00:00"
+      ]
+    },
+    {
+      "run_id": 36310700437,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36310700437",
+      "created_at": "2026-09-27T09:51:34Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T09:51:50.445502+00:00",
+        "2026-09-27T09:53:50.446284+00:00",
+        "2026-09-27T09:55:50.445952+00:00",
+        "2026-09-27T09:57:50.446155+00:00",
+        "2026-09-27T09:59:50.446387+00:00"
+      ]
+    },
+    {
+      "run_id": 36310262399,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36310262399",
+      "created_at": "2026-09-27T09:43:12Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T09:43:28.682751+00:00",
+        "2026-09-27T09:45:28.683444+00:00",
+        "2026-09-27T09:47:28.683127+00:00",
+        "2026-09-27T09:49:28.683451+00:00",
+        "2026-09-27T09:51:28.683203+00:00"
+      ]
+    },
+    {
+      "run_id": 36309825197,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36309825197",
+      "created_at": "2026-09-27T09:34:52Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T09:35:06.971486+00:00",
+        "2026-09-27T09:37:06.972291+00:00",
+        "2026-09-27T09:39:06.971914+00:00",
+        "2026-09-27T09:41:06.972210+00:00",
+        "2026-09-27T09:43:06.971925+00:00"
+      ]
+    },
+    {
+      "run_id": 36309379023,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36309379023",
+      "created_at": "2026-09-27T09:26:33Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T09:26:48.088952+00:00",
+        "2026-09-27T09:28:48.089568+00:00",
+        "2026-09-27T09:30:48.089237+00:00",
+        "2026-09-27T09:32:48.089593+00:00",
+        "2026-09-27T09:34:48.089403+00:00"
+      ]
+    },
+    {
+      "run_id": 36308929670,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36308929670",
+      "created_at": "2026-09-27T09:18:09Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T09:18:26.910131+00:00",
+        "2026-09-27T09:20:26.910715+00:00",
+        "2026-09-27T09:22:26.910385+00:00",
+        "2026-09-27T09:24:26.910731+00:00",
+        "2026-09-27T09:26:26.910725+00:00"
+      ]
+    },
+    {
+      "run_id": 36308486575,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36308486575",
+      "created_at": "2026-09-27T09:09:46Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T09:10:03.456881+00:00",
+        "2026-09-27T09:12:03.457711+00:00",
+        "2026-09-27T09:14:03.457143+00:00",
+        "2026-09-27T09:16:03.457324+00:00",
+        "2026-09-27T09:18:03.457524+00:00"
+      ]
+    },
+    {
+      "run_id": 36308041670,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36308041670",
+      "created_at": "2026-09-27T09:01:27Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T09:01:42.182555+00:00",
+        "2026-09-27T09:03:42.183248+00:00",
+        "2026-09-27T09:05:42.183024+00:00",
+        "2026-09-27T09:07:42.183254+00:00",
+        "2026-09-27T09:09:42.183241+00:00"
+      ]
+    },
+    {
+      "run_id": 36307599711,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36307599711",
+      "created_at": "2026-09-27T08:53:01Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T08:53:21.436120+00:00",
+        "2026-09-27T08:55:21.436701+00:00",
+        "2026-09-27T08:57:21.436527+00:00",
+        "2026-09-27T08:59:21.436440+00:00",
+        "2026-09-27T09:01:21.436599+00:00"
+      ]
+    },
+    {
+      "run_id": 36307148110,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36307148110",
+      "created_at": "2026-09-27T08:44:28Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T08:44:55.167403+00:00",
+        "2026-09-27T08:46:55.168141+00:00",
+        "2026-09-27T08:48:55.168043+00:00",
+        "2026-09-27T08:50:55.167998+00:00",
+        "2026-09-27T08:52:55.167745+00:00"
+      ]
+    },
+    {
+      "run_id": 36306699813,
+      "url": "https://github.com/chjh6107/help-me-tibooo/actions/runs/36306699813",
+      "created_at": "2026-09-27T08:35:57Z",
+      "counts": {
+        "run_started": 5,
+        "source_fetched": 20,
+        "post_observed": 420,
+        "classified": 420,
+        "run_finished": 5
+      },
+      "tick_started_at": [
+        "2026-09-27T08:36:23.473598+00:00",
+        "2026-09-27T08:38:23.474242+00:00",
+        "2026-09-27T08:40:23.473910+00:00",
+        "2026-09-27T08:42:23.474294+00:00",
+        "2026-09-27T08:44:23.474250+00:00"
+      ]
+    }
+  ]
+}

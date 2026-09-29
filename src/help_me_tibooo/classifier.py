@@ -32,7 +32,7 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
         return (AlertCategory.RESET,)
 
     text = post.text.lower()
-    has_product_context = _contains_any_term(text, ("openai", "codex", "chatgpt", "astra")) or bool(
+    has_product_context = _contains_any_term(text, ("openai", "codex", "chatgpt", "astra", "devday")) or bool(
         re.search(r"(?<![a-z0-9])gpt(?:-[a-z0-9]+)?(?![a-z0-9])", text)
     )
     has_reset_context = _contains_any(text, RESET_TERMS)
@@ -44,7 +44,7 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
         ResetSourceKind.SIGNAL,
         ResetSourceKind.ANNOUNCEMENT,
     } and (
-        has_reset_context or _contains_any_term(text, ("reset",))
+        has_reset_context or _contains_any_term(text, ("reset", "resets"))
     ):
         categories.add(AlertCategory.RESET)
     elif has_product_context and has_reset_context:
