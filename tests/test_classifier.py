@@ -50,6 +50,34 @@ def test_special_reset_source_requires_reset_context(make_post) -> None:
     assert classify(make_post(text="Codex availability is improving.", source_kind="signal")) == (AlertCategory.NEWS,)
 
 
+@pytest.mark.parametrize(
+    ("text", "source_kind"),
+    [
+        ("Sorry Gia. More resets coming next week", "signal"),
+        ("Resets all propagated. That will be all. Have a fantastic weekend.", "candidate"),
+    ],
+)
+def test_structured_reset_signal_accepts_plural_resets(make_post, text, source_kind) -> None:
+    assert classify(make_post(text=text, source_kind=source_kind)) == (AlertCategory.RESET,)
+
+
+@pytest.mark.parametrize("text", ("@mark_k DevDay", "See you at DEVDAY."))
+def test_devday_is_openai_news_without_a_product_name(make_post, text) -> None:
+    assert classify(make_post(text=text)) == (AlertCategory.NEWS,)
+
+
+@pytest.mark.parametrize(
+    ("text", "source_kind"),
+    [
+        ("The game resets every week.", None),
+        ("Presets are coming next week.", "signal"),
+        ("My devdaydream was fun.", None),
+    ],
+)
+def test_reset_and_devday_boundaries_ignore_unrelated_text(make_post, text, source_kind) -> None:
+    assert classify(make_post(text=text, source_kind=source_kind)) == ()
+
+
 def test_limits_source_kind_is_classified_without_limit_wording(make_post) -> None:
     assert classify(make_post(text="New capacity details.", source_kind="limits")) == (AlertCategory.LIMITS,)
 
