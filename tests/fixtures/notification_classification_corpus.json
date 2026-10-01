@@ -1,0 +1,589 @@
+{
+  "description": "Public source observations captured 2026-10-01 plus preserved research excerpts. Hand-reviewed category expectations; development regression set, not independent precision/recall evaluation. Source text may be incomplete: 2104823812042940713 is truncated at 1200 characters. Same IDs at different sources are not independent samples.",
+  "cases": [
+    {
+      "id": "2105464274747527543",
+      "text": "GPT-6.1 Sol is our most demanded model pretty much ever both across both the API and subscriptions. \n\nWithin ChatGPT & Codex, we were under heavy load, but have brough more capacity online and the speed should get much better in the coming hours, reaching almost twice the speed compared to what we served yesterday.",
+      "url": "https://x.com/thsottiaux/status/2105464274747527543",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "limits",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "한도"
+      ]
+    },
+    {
+      "id": "2105120499177230798",
+      "text": "👋",
+      "url": "https://x.com/thsottiaux/status/2105120499177230798",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105120226027450685",
+      "text": "Shhhhhh",
+      "url": "https://x.com/thsottiaux/status/2105120226027450685",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105006253986738615",
+      "text": "You can now use your ChatGPT subscription directly in over 16 partners products. No little rules, you can just use all your included usage right there. This includes things such as Devin, OpenCode, Notion, and many more.\n\nSign in with ChatGPT and go.",
+      "url": "https://x.com/thsottiaux/status/2105006253986738615",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "limits",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "한도"
+      ]
+    },
+    {
+      "id": "2104991765904375896",
+      "text": "We are opening up our platform and you can now build full native apps with plugin extensions, and ship them right in ChatGPT. We have over 1.2B weekly users and will surface relevant plugins right in the conversations.",
+      "url": "https://x.com/thsottiaux/status/2104991765904375896",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "limits",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "출시"
+      ]
+    },
+    {
+      "id": "2104991529416999243",
+      "text": "You can now use your ChatGPT subscription directly in over 60 partners products. No little rules, you can just use all your included usage right there. This includes things such as Devin, OpenCode, Lovable, and many more.\n\nSign in with ChatGPT and go.",
+      "url": "https://x.com/thsottiaux/status/2104991529416999243",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "limits",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "한도"
+      ]
+    },
+    {
+      "id": "2104981170685616361",
+      "text": "Announcing dots. Dots work 24/7 for you, learn from your feedback, have their own computer, browser and can be connected to over 4k apps in our ecosystem.\n\nThey’re powered by Astra our best model yet. Included in your Pro plan, without drawing down on any of your usage. You can even call a dot while it’s working.\n\nWe’re getting you started with your primary dot today and soon you’ll be able to create entire teams of them.",
+      "url": "https://x.com/thsottiaux/status/2104981170685616361",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "limits",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "한도"
+      ]
+    },
+    {
+      "id": "2104951965184925941",
+      "text": "I’ll explain the new Pro 200 plan differently, before I start live tweeting from DevDay on things that are going out!\n\nToday we are going to ship a number of things that increase what you can do across the Plus and Pro plans. A lot of compute is online for this increase. As we increase the floor, we are changing the relative difference between plans to be\n\nPlus = 1X\nPro 100 = 5X\nPro 200 = 10X\n\nand we are reopening subscriptions for Pro 200 (we had paused it). If you have an existing plan you will keep the 20X multiplier for a bit and also receive a lot of additional credits because we know changes are hard even if it means that everyone will get more in the end.",
+      "url": "https://x.com/thsottiaux/status/2104951965184925941",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "limits",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "한도",
+        "출시"
+      ]
+    },
+    {
+      "id": "2104838506363408740",
+      "text": "That was yesterday, today is DevDay. And it's all good news. I'm surprised we've kept it all under wraps. https://t.co/oR1Prs6pkT",
+      "url": "https://x.com/thsottiaux/status/2104838506363408740",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "OpenAI 소식"
+      ]
+    },
+    {
+      "id": "2104823812042940713",
+      "text": "Hi,\n\nTomorrow we are re-opening the Pro $200 subscriptions to new subscribers, but together with it we are also changing how we calculate the usage for it. In effect, if you do the math, it will net out at half the dollar in API spend compared to the old Pro $200 plan. \n\nNow that it's said, let me explain why this is happening and why you will still get more work done than if you were on the Pro $200 subscription one month ago.\n\n(a) We didn't want to compromise in other ways and are committing to not reintroducing the 5h limit, so that you can fully use the weekly usage when you want.\n(b) On the subscription, we guarantee that over time you always get more work done and with an increasing level of quality. This means that you will continue to get more value per dollar spent as a result of models getting more efficient and us passing down the improvements in the form of API price reductions.\n(c) We don't want to put an incentive on ourselves to artificially inflate the API list prices to make it look like you are getting a lot (and workaround it through discounts, etc). Instead we want to continue to both rapidly reduce prices and increase capabilities of models on the API. This wee",
+      "url": "https://x.com/thsottiaux/status/2104823812042940713",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "요금제"
+      ]
+    },
+    {
+      "id": "2104467346945675347",
+      "text": "Taken by none other than the incredible @ah20im",
+      "url": "https://x.com/thsottiaux/status/2104467346945675347",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": []
+    },
+    {
+      "id": "2103963215885701493",
+      "text": "Sorry Gia. More resets coming next week",
+      "url": "https://x.com/thsottiaux/status/2103963215885701493",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": "signal",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "리셋"
+      ]
+    },
+    {
+      "id": "2103911959544610829",
+      "text": "Resets all propagated. That will be all. Have a fantastic weekend.",
+      "url": "https://x.com/thsottiaux/status/2103911959544610829",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "candidate",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "리셋"
+      ]
+    },
+    {
+      "id": "2103637477760311522",
+      "text": "o yes… we’re back in action and we’ll reset usage limits for all paid users across codex and ChatGPT work\n\nsorry about the brief disruption!\n\n(and yes we have a special spare codex when things are down to help us out) https://t.co/Qy0da4L1jq",
+      "url": "https://x.com/thsottiaux/status/2103637477760311522",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "candidate",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "리셋",
+        "한도"
+      ]
+    },
+    {
+      "id": "2103622639386574979",
+      "text": "o no :(",
+      "url": "https://x.com/thsottiaux/status/2103622639386574979",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": []
+    },
+    {
+      "id": "2102466463156285686",
+      "text": "pizza plutot",
+      "url": "https://x.com/thsottiaux/status/2102466463156285686",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": []
+    },
+    {
+      "id": "2102463847714247142",
+      "text": "GPT-6 Sol and Luna are out. Not only are they a very significant improvement across the board, but also in writing and general \"you know when you try it\" quality. \n\nWe are also permanently reducing the API price by 50% making both of them viable for a ton of new usecases and making your usage go further too, even on the subscriptions.\n\nAnd one more thing. We are loading a banked reset into all accounts of our Plus, Pro and Business users. Let's go!\n\nhttps://t.co/00DRh1sRrO",
+      "url": "https://x.com/thsottiaux/status/2102463847714247142",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "banked",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "리셋"
+      ]
+    },
+    {
+      "id": "2102254445082116335",
+      "text": "Ladies and gentlemen... start... your... ENGINES. We are almost Tuesday and I promised a reset for Tuesday. Among some other things. See you soon.",
+      "url": "https://x.com/thsottiaux/status/2102254445082116335",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "signal",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": [
+        "리셋"
+      ]
+    },
+    {
+      "id": "2101352781219258527",
+      "text": "OK fine. But it’s also still coming in Tuesday",
+      "url": "https://x.com/thsottiaux/status/2101352781219258527",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": []
+    },
+    {
+      "id": "2101158161994699036",
+      "text": "@stemonteduro You main Sol? And out of curiosity, you never buy credits?",
+      "url": "https://x.com/thsottiaux/status/2101158161994699036",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": "limits",
+      "endpoint": "https://codex-reset.com/api/feed",
+      "observed_at": "2026-10-01T06:18:45.874459+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105522533139452359",
+      "text": "@jxnlco I was going to say, last year. But no… it was this year.",
+      "url": "https://x.com/thsottiaux/status/2105522533139452359",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105519686280790252",
+      "text": "@imjustnewatai For the Pro 200 shenanigans",
+      "url": "https://x.com/thsottiaux/status/2105519686280790252",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105519215092584786",
+      "text": "One more thing, you can now build and deploy MCP servers right through ChatGPT. And restrict its access to anyone you want or share it with the world.\nt.co/KZwGmxL9ew",
+      "url": "https://x.com/thsottiaux/status/2105519215092584786",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": [
+        "OpenAI 소식"
+      ]
+    },
+    {
+      "id": "2105489877727064272",
+      "text": "@_bgian @OpenAI Thanks for playing",
+      "url": "https://x.com/thsottiaux/status/2105489877727064272",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105464274747527543",
+      "text": "GPT-6.1 Sol is our most demanded model pretty much ever both across both the API and subscriptions. \n\nWithin ChatGPT & Codex, we were under heavy load, but have brough more capacity online and the speed should get much better in the coming hours, reaching almost twice the speed compared to what we served yesterday.",
+      "url": "https://x.com/thsottiaux/status/2105464274747527543",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": "limits",
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": [
+        "한도"
+      ]
+    },
+    {
+      "id": "2105456105954648292",
+      "text": "@OdraivK Hi, what can I do for you today",
+      "url": "https://x.com/thsottiaux/status/2105456105954648292",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105395200248156556",
+      "text": "Asked my dot to paint me. After sending me something cartoonish, I asked it to try a bit harder and to find a recent picture of me on the internet. It did better.\n\nBelow video is me clicking through my dot's computer.\nt.co/AutVg2erlh",
+      "url": "https://x.com/thsottiaux/status/2105395200248156556",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105394405238886517",
+      "text": "@AbdoKerdawy @OpenAI @OpenAIDevs Agree, except with the cursing, be nice to your dot!",
+      "url": "https://x.com/thsottiaux/status/2105394405238886517",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105348026416140781",
+      "text": "Hi! What would you like to see us ship for dots and space in the next two weeks? Or how can we improve things in other parts of the product.",
+      "url": "https://x.com/thsottiaux/status/2105348026416140781",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105344482149613853",
+      "text": "You can enroll here:\nt.co/kjNgDoLCWz",
+      "url": "https://x.com/thsottiaux/status/2105344482149613853",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://codex-reset.com/tibo",
+      "observed_at": "2026-10-01T06:18:46.601552+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105428405571428785",
+      "text": "Announcing one more launch: ChatGPT Sites can now host MCP servers, including plugin extensions! 🤯\n\n> @⁠sites create a todo list that I can use in ChatGPT\n\nThis will:\n\n· Create an MCP server with extensions\n· Deploy that MCP server to Sites\n· Turn the MCP server into a plugin\n· Install the plugin for you across web, mobile, and desktop\n\nChatGPT is slowly becoming malleable software that anybody can customize to their needs. Very excited to see what you all build with this!",
+      "url": "https://x.com/thsottiaux/status/2105428405571428785",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": true,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105464274747527543",
+      "text": "GPT-6.1 Sol is our most demanded model pretty much ever both across both the API and subscriptions. \n\nWithin ChatGPT & Codex, we were under heavy load, but have brough more capacity online and the speed should get much better in the coming hours, reaching almost twice the speed compared to what we served yesterday.",
+      "url": "https://x.com/thsottiaux/status/2105464274747527543",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": [
+        "OpenAI 소식"
+      ]
+    },
+    {
+      "id": "2105395200248156556",
+      "text": "Asked my dot to paint me. After sending me something cartoonish, I asked it to try a bit harder and to find a recent picture of me on the internet. It did better.\n\nBelow video is me clicking through my dot's computer.",
+      "url": "https://x.com/thsottiaux/status/2105395200248156556",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105105086506840421",
+      "text": "We will have a few million dots online within days, working on all sorts of things across such a diverse and large community. \n\nExcited to learn from all of you on what you love and what doesn’t yet feel magical. Personally I felt a jump after 2-3 days of use after teaching it more about my preferences and things on my mind. It learns very quickly to be most useful and it can take on surprisingly ambitious tasks on its own.\n\nWe’re learning from how you all use your primary dot before releasing the ability to create an entire team of them.",
+      "url": "https://x.com/thsottiaux/status/2105105086506840421",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105102312167575701",
+      "text": "I got community noted, but the note is wrong 😅\n\nYour primary dot is included in your plan and will be available 24/7. If you ask it to create a codex task for you, that one will be drawing usage as usual. But when your dot does work directly, that uses nothing and is all on top of your plans usage. In the future you will be able to increase the speed and allow your dot to have more bandwidth, this will be a paid feature, but the baseline functionality will always just be included in your plan.",
+      "url": "https://x.com/thsottiaux/status/2105102312167575701",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": [
+        "OpenAI 소식"
+      ]
+    },
+    {
+      "id": "2104981170685616361",
+      "text": "Announcing dots. Dots work 24/7 for you, learn from your feedback, have their own computer, browser and can be connected to over 4k apps in our ecosystem.\n\nThey’re powered by Astra our best model yet. Included in your Pro plan, without drawing down on any of your usage. You can even call a dot while it’s working.\n\nWe’re getting you started with your primary dot today and soon you’ll be able to create entire teams of them.",
+      "url": "https://x.com/thsottiaux/status/2104981170685616361",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": true,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": []
+    },
+    {
+      "id": "2105006253986738615",
+      "text": "You can now use your ChatGPT subscription directly in over 16 partners products. No little rules, you can just use all your included usage right there. This includes things such as Devin, OpenCode, Notion, and many more.\n\nSign in with ChatGPT and go.",
+      "url": "https://x.com/thsottiaux/status/2105006253986738615",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": [
+        "요금제"
+      ]
+    },
+    {
+      "id": "2104994835212226681",
+      "text": "Live demos suffered from rolling out all the updates at the same time, but were committed to keep doing these live in the future. \n\nAlmost all the things we announced will be available today. Can’t see what you will do with it.",
+      "url": "https://x.com/thsottiaux/status/2104994835212226681",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": []
+    },
+    {
+      "id": "2104991765904375896",
+      "text": "We are opening up our platform and you can now build full native apps with plugin extensions, and ship them right in ChatGPT. We have over 1.2B weekly users and will surface relevant plugins right in the conversations.",
+      "url": "https://x.com/thsottiaux/status/2104991765904375896",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": [
+        "출시"
+      ]
+    },
+    {
+      "id": "2104991529416999243",
+      "text": "You can now use your ChatGPT subscription directly in over 60 partners products. No little rules, you can just use all your included usage right there. This includes things such as Devin, OpenCode, Lovable, and many more.\n\nSign in with ChatGPT and go.",
+      "url": "https://x.com/thsottiaux/status/2104991529416999243",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": [
+        "요금제"
+      ]
+    },
+    {
+      "id": "2104987594719461796",
+      "text": "Launching a new Codex Cloud, much improved from last year. With configurable cloud environments, it’s impossible to go back to building on your laptop once you’ve taken the time to configure it.\n\nAgents API, the same tech powering all our cloud agents, including dots, is also now in preview and supports computer use. It allows you to build the same incredible products we are making available today.",
+      "url": "https://x.com/thsottiaux/status/2104987594719461796",
+      "source": "twiscan",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "endpoint": "https://twiscan.com/en/x/thsottiaux",
+      "observed_at": "2026-10-01T06:18:47.493725+00:00",
+      "expected": [
+        "출시"
+      ]
+    },
+    {
+      "id": "2101921202436702657",
+      "text": "@melvindvivas 👁️codex👁️",
+      "url": "https://x.com/thsottiaux/status/2101921202436702657",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "evidence": "docs/research/2026-09-22-watcher-investigation.md",
+      "expected": []
+    },
+    {
+      "id": "2104462713296683467",
+      "text": "@mark_k DevDay",
+      "url": "https://x.com/thsottiaux/status/2104462713296683467",
+      "source": "reset",
+      "is_reply": true,
+      "is_repost": false,
+      "source_kind": null,
+      "evidence": "docs/research/2026-09-29-no-notifications.md",
+      "expected": [
+        "OpenAI 소식"
+      ]
+    },
+    {
+      "id": "2101157729037586694",
+      "text": "We'll have some things next week already, with the keynote in two weeks",
+      "url": "https://x.com/thsottiaux/status/2101157729037586694",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "evidence": "docs/research/2026-09-22-watcher-investigation.md",
+      "expected": []
+    },
+    {
+      "id": "2100297380968997327",
+      "text": "Astra ✅ Fast ✅ Frontier ✅ Efficient ✅ For everyone",
+      "url": "https://x.com/thsottiaux/status/2100297380968997327",
+      "source": "reset",
+      "is_reply": false,
+      "is_repost": false,
+      "source_kind": null,
+      "evidence": "tests/test_latest_posts.py:latest_html",
+      "expected": [
+        "OpenAI 소식"
+      ]
+    }
+  ]
+}
