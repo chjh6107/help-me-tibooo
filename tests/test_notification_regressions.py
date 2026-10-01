@@ -50,6 +50,8 @@ def test_conversational_posts_are_handled_without_delivery(make_post, provider) 
     originals = (
         ("2105489877727064272", "@_bgian @OpenAI Thanks for playing"),
         ("2105519215092584786", "ChatGPT can now build and deploy MCP servers, and restrict their access."),
+        ("2105519500000000000", "I use ChatGPT. You can now access the gym."),
+        ("2105519600000000000", "ChatGPT is fun. Tickets are available for all users."),
         ("2105519686280790252", "@imjustnewatai For the Pro 200 shenanigans"),
     )
     if provider == "feed":
@@ -76,3 +78,24 @@ def test_conversational_posts_are_handled_without_delivery(make_post, provider) 
     assert set(post_id for post_id, _ in originals) <= set(state.seen_ids)
     checkpoint = next(item for item in state.source_checkpoints if item.source == source)
     assert checkpoint.position.id == originals[-1][0]
+
+
+def test_limits_tagged_enrollment_notice_reaches_delivery_once(make_post) -> None:
+    alerts = []
+    send = lambda post, categories: alerts.append((post.id, categories))
+    state = run_watcher(
+        (SourceBatch(SourceName.RESET, (make_post(id="100"),)),), None, send, lambda _: None,
+    )
+    posts = parse_reset_feed({"tweets": [{
+        "id": "101",
+        "text": "We are re-opening Pro $200 subscriptions tomorrow.",
+        "at": "2026-10-01T00:00:00Z",
+        "url": "https://x.com/thsottiaux/status/101",
+        "kind": "limits",
+    }]})
+    batches = (SourceBatch(SourceName.RESET, posts),)
+
+    state = run_watcher(batches, state, send, lambda _: None)
+    run_watcher(batches, state, send, lambda _: None)
+
+    assert alerts == [("101", (AlertCategory.PLANS,))]

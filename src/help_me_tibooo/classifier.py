@@ -42,12 +42,12 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
         " ",
         post.text.lower(),
     )
-    text = " ".join(re.sub(r"(?<!\w)@[a-z0-9_]+", " ", context_text).split())
-    has_product_context = _contains_any_term(text, ("openai", "codex", "chatgpt", "astra", "devday")) or bool(
-        re.search(r"(?<![a-z0-9])gpt(?:-[a-z0-9]+)?(?![a-z0-9])", text)
-    ) or bool(
-        re.search(r"(?<![a-z0-9_])@(?:openai|codex|chatgpt)(?![a-z0-9_])", context_text)
+    text = _classification_text(context_text)
+    sentences = tuple(
+        (sentence, _classification_text(sentence))
+        for sentence in re.split(r"(?<!\d)\.|\.(?!\d)|[!?;]", context_text)
     )
+    has_product_context = _has_product_context(context_text, text)
     has_reset_context = _contains_any(text, RESET_TERMS)
     categories: set[AlertCategory] = set()
 
@@ -78,12 +78,20 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
     if has_product_context and (has_launch_context or has_ambiguous_news_context):
         categories.add(AlertCategory.LAUNCH)
 
-    has_named_plan_context = _contains_any_term(text, NAMED_PLAN_TERMS)
     if (
-        post.source_kind is None
-        and _contains_any_term(text, PLAN_TERMS)
-        and (has_product_context or has_named_plan_context)
-        and _has_plan_information(text)
+        (
+            post.source_kind is None
+            or (post.source_kind == ResetSourceKind.LIMITS and AlertCategory.LIMITS not in categories)
+        )
+        and any(
+            _contains_any_term(sentence_text, PLAN_TERMS)
+            and (
+                _has_product_context(sentence_context, sentence_text)
+                or _contains_any_term(sentence_text, NAMED_PLAN_TERMS)
+            )
+            and _has_plan_information(sentence_text)
+            for sentence_context, sentence_text in sentences
+        )
     ):
         categories.add(AlertCategory.PLANS)
 
@@ -93,11 +101,27 @@ def classify(post: Post) -> tuple[AlertCategory, ...]:
         categories.add(AlertCategory.INCIDENT)
 
     if has_product_context and not categories and (
-        _contains_any_term(text, ("devday",)) or _has_news_information(text)
+        any(
+            _has_product_context(sentence_context, sentence_text)
+            and (_contains_any_term(sentence_text, ("devday",)) or _has_news_information(sentence_text))
+            for sentence_context, sentence_text in sentences
+        )
     ):
         categories.add(AlertCategory.NEWS)
 
     return tuple(category for category in AlertCategory if category in categories)
+
+
+def _classification_text(context_text: str) -> str:
+    return " ".join(re.sub(r"(?<!\w)@[a-z0-9_]+", " ", context_text).split())
+
+
+def _has_product_context(context_text: str, text: str) -> bool:
+    return _contains_any_term(text, ("openai", "codex", "chatgpt", "astra", "devday")) or bool(
+        re.search(r"(?<![a-z0-9])gpt(?:-[a-z0-9]+)?(?![a-z0-9])", text)
+    ) or bool(
+        re.search(r"(?<![a-z0-9_])@(?:openai|codex|chatgpt)(?![a-z0-9_])", context_text)
+    )
 
 
 def _contains_any(text: str, terms: tuple[str, ...]) -> bool:
@@ -115,8 +139,8 @@ def _has_plan_information(text: str) -> bool:
         r"\b(?:costs?|priced at|price is|pricing is)\s+(?:now\s+)?[$€£]\s*\d",
         r"\b(?:subscriptions?|plans?)\s+(?:are|is)\s+(?:now\s+)?open(?:\s+again)?\b",
         rf"\b(?:rolling out|releasing|launching|shipping)\b{SENTENCE_CHARACTER_PATTERN}{{0,60}}\b(?:plus|pro|business|enterprise)\b",
-        rf"\b(?:paus(?:e|es|ed|ing)|re[- ]?open(?:s|ed|ing)?|chang(?:e|es|ed|ing)|increas(?:e|es|ed|ing)|reduc(?:e|es|ed|ing))\b{SENTENCE_CHARACTER_PATTERN}{{0,80}}\b(?:plans?|subscriptions?|pricing|prices?|cost|access|usage|limits?|credits?|benefits?)\b",
-        rf"\b(?:plans?|subscriptions?|pricing|prices?|cost|access|usage|limits?|credits?|benefits?)\b{SENTENCE_CHARACTER_PATTERN}{{0,60}}\b(?:paused|re[- ]?open(?:ed|ing)?|chang(?:e|es|ed|ing)|increas(?:e|es|ed|ing)|reduc(?:e|es|ed|ing))\b",
+        rf"\b(?:paus(?:e|es|ed|ing)|re[- ]?open(?:s|ed|ing)?|chang(?:e|es|ed|ing)|increas(?:e|es|ed|ing)|reduc(?:e|es|ed|ing)|expand(?:s|ed|ing)?)\b{SENTENCE_CHARACTER_PATTERN}{{0,80}}\b(?:plans?|subscriptions?|pricing|prices?|cost|access|usage|limits?|credits?|benefits?)\b",
+        rf"\b(?:plans?|subscriptions?|pricing|prices?|cost|access|usage|limits?|credits?|benefits?)\b{SENTENCE_CHARACTER_PATTERN}{{0,60}}\b(?:paused|re[- ]?open(?:ed|ing)?|chang(?:e|es|ed|ing)|increas(?:e|es|ed|ing)|reduc(?:e|es|ed|ing)|expand(?:s|ed|ing)?)\b",
     ))
 
 
@@ -128,6 +152,7 @@ def _has_news_information(text: str) -> bool:
         rf"\b(?:reliability|availability|capacity|speed|performance|access|usage|limits?|quota)\b{SENTENCE_CHARACTER_PATTERN}{{0,60}}\b(?:improv(?:e|es|ed|ing)|increas(?:e|es|ed|ing)|reduc(?:e|es|ed|ing)|better|faster)\b",
         r"\b(?:better|faster)\s+(?:performance|speed|reliability|availability)\b",
         r"\b(?:more|extra|additional)\s+(?:capacity|compute)\s+(?:is\s+|are\s+)?online\b",
+        r"\b(?:draw(?:s|ing)?|uses?|consum(?:e|es|ing))\s+(?:(?:your|included)\s+)?(?:usage|credits?|quota)\b",
     ))
 
 

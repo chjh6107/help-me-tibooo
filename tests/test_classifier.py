@@ -194,6 +194,13 @@ def test_named_openai_plan_is_strong_product_context(make_post, plan_name) -> No
         "What is ChatGPT",
         "Pro users have been great. I need access to the gym.",
         "@OpenAI Thanks for improving my mood. Access to the gym is great.",
+        "I use ChatGPT. You can now access the gym.",
+        "ChatGPT is fun. Tickets are available for all users.",
+        "I use ChatGPT; You can now access the gym.",
+        "I use GPT-6.1. You can now access the gym.",
+        "I use @OpenAI. You can now access the gym.",
+        "I use Pro. Tickets cost $200.",
+        "Pro is fun. Gym access has expanded.",
     ),
 )
 def test_product_names_without_information_do_not_trigger_alerts(make_post, text, is_reply) -> None:
@@ -213,6 +220,32 @@ def test_limits_tag_requires_operational_information(make_post, text) -> None:
 
 
 @pytest.mark.parametrize(
+    "text",
+    (
+        "We are re-opening Pro $200 subscriptions tomorrow.",
+        "Pro now costs $200/month.",
+        "Pro subscriptions are paused.",
+    ),
+)
+def test_limits_tag_without_limit_evidence_preserves_plan_updates(make_post, text) -> None:
+    assert classify(make_post(text=text, source_kind="limits")) == (AlertCategory.PLANS,)
+
+
+@pytest.mark.parametrize("source_kind", (None, "limits"))
+@pytest.mark.parametrize(
+    "text",
+    (
+        "We are expanding access for Pro users.",
+        "Pro access has expanded.",
+        "We expanded benefits for Plus users.",
+        "Pro access expands tomorrow.",
+    ),
+)
+def test_expanded_plan_entitlements_are_classified(make_post, text, source_kind) -> None:
+    assert classify(make_post(text=text, source_kind=source_kind)) == (AlertCategory.PLANS,)
+
+
+@pytest.mark.parametrize(
     ("text", "expected"),
     (
         ("@OpenAI is rolling out a new model.", (AlertCategory.LAUNCH,)),
@@ -229,6 +262,10 @@ def test_limits_tag_requires_operational_information(make_post, text) -> None:
         ("Codex available now.", (AlertCategory.NEWS,)),
         ("Codex now has faster performance.", (AlertCategory.NEWS,)),
         ("Plus users now get GPT-6.1 access.", (AlertCategory.PLANS,)),
+        ("@OpenAI You can now build MCP servers.", (AlertCategory.NEWS,)),
+        ("GPT-6.1 is included in your plan.", (AlertCategory.NEWS,)),
+        ("I use ChatGPT. Codex has more capacity online.", (AlertCategory.NEWS,)),
+        ("A Codex task will be drawing usage as usual.", (AlertCategory.NEWS,)),
     ),
 )
 def test_substantive_short_announcements_keep_their_category(make_post, text, expected) -> None:
