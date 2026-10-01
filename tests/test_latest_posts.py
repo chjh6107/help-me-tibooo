@@ -56,7 +56,7 @@ def test_json_timeline_survives_latest_html_failure():
     assert [post.id for post in reset.posts] == ["2100363668051603608"]
 
 
-@pytest.mark.parametrize("text", ["Astra ✅ Fast ✅ Frontier ✅ Efficient ✅ For everyone", "What is ChatGPT", "OpenAI is improving reliability.", "Codex availability is improving."])
+@pytest.mark.parametrize("text", ["Astra ✅ Fast ✅ Frontier ✅ Efficient ✅ For everyone", "OpenAI is improving reliability.", "Codex availability is improving."])
 def test_related_posts_do_not_need_release_keywords(make_post, text):
     assert classify(make_post(text=text)) == (AlertCategory.NEWS,)
 

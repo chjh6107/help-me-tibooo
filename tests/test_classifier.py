@@ -1,7 +1,7 @@
 import pytest
 
 from help_me_tibooo.classifier import classify
-from help_me_tibooo.models import AlertCategory
+from help_me_tibooo.models import AlertCategory, Post
 from help_me_tibooo.sources import parse_reset_feed
 
 
@@ -78,7 +78,7 @@ def test_reset_and_devday_boundaries_ignore_unrelated_text(make_post, text, sour
     assert classify(make_post(text=text, source_kind=source_kind)) == ()
 
 
-def test_limits_source_kind_is_classified_without_limit_wording(make_post) -> None:
+def test_limits_source_tag_accepts_capacity_information(make_post) -> None:
     assert classify(make_post(text="New capacity details.", source_kind="limits")) == (AlertCategory.LIMITS,)
 
 
@@ -170,3 +170,119 @@ def test_named_openai_plan_is_strong_product_context(make_post, plan_name) -> No
     assert classify(make_post(text=f"{plan_name} users now get more access.")) == (
         AlertCategory.PLANS,
     )
+
+
+@pytest.mark.parametrize("is_reply", (False, True))
+@pytest.mark.parametrize(
+    "text",
+    (
+        "@imjustnewatai For the Pro 200 shenanigans",
+        "@_bgian @OpenAI Thanks for playing",
+        "@AbdoKerdawy @OpenAI @OpenAIDevs Agree, except with the cursing, be nice to your dot!",
+        "@melvindvivas 👁️codex👁️",
+        "New Pro plan!",
+        "For the Pro $200 shenanigans",
+        "@OpenAI Thanks for playing https://example.com/releases/plus",
+        "@pro @capacity Thanks for playing",
+        "OpenAI leadership is great.",
+        "Thanks for playing www.openai.com/releases",
+        "Thanks for playing openai.com/launch",
+        "Pro 200 launch shenanigans",
+        "Pro users, what should we ship next?",
+        "@OpenAI I am available for a chat.",
+        "Pro is available for a chat.",
+        "What is ChatGPT",
+        "Pro users have been great. I need access to the gym.",
+        "@OpenAI Thanks for improving my mood. Access to the gym is great.",
+        "I use ChatGPT. You can now access the gym.",
+        "ChatGPT is fun. Tickets are available for all users.",
+        "I use ChatGPT; You can now access the gym.",
+        "I use GPT-6.1. You can now access the gym.",
+        "I use @OpenAI. You can now access the gym.",
+        "I use Pro. Tickets cost $200.",
+        "Pro is fun. Gym access has expanded.",
+    ),
+)
+def test_product_names_without_information_do_not_trigger_alerts(make_post, text, is_reply) -> None:
+    assert classify(make_post(text=text, is_reply=is_reply)) == ()
+
+
+@pytest.mark.parametrize(
+    "text",
+    (
+        "@stemonteduro You main Sol? And out of curiosity, you never buy credits?",
+        "@capacity Thanks for playing",
+        "https://example.com/usage/ Thanks for playing",
+    ),
+)
+def test_limits_tag_requires_operational_information(make_post, text) -> None:
+    assert classify(make_post(text=text, source_kind="limits")) == ()
+
+
+@pytest.mark.parametrize(
+    "text",
+    (
+        "We are re-opening Pro $200 subscriptions tomorrow.",
+        "Pro now costs $200/month.",
+        "Pro subscriptions are paused.",
+    ),
+)
+def test_limits_tag_without_limit_evidence_preserves_plan_updates(make_post, text) -> None:
+    assert classify(make_post(text=text, source_kind="limits")) == (AlertCategory.PLANS,)
+
+
+@pytest.mark.parametrize("source_kind", (None, "limits"))
+@pytest.mark.parametrize(
+    "text",
+    (
+        "We are expanding access for Pro users.",
+        "Pro access has expanded.",
+        "We expanded benefits for Plus users.",
+        "Pro access expands tomorrow.",
+    ),
+)
+def test_expanded_plan_entitlements_are_classified(make_post, text, source_kind) -> None:
+    assert classify(make_post(text=text, source_kind=source_kind)) == (AlertCategory.PLANS,)
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    (
+        ("@OpenAI is rolling out a new model.", (AlertCategory.LAUNCH,)),
+        ("ChatGPT can now build and deploy MCP servers, and restrict their access.", (AlertCategory.NEWS,)),
+        ("We are re-opening Pro $200 subscriptions tomorrow.", (AlertCategory.PLANS,)),
+        ("You can now use your ChatGPT subscription in partner products.", (AlertCategory.PLANS,)),
+        ("Pro subscriptions are paused.", (AlertCategory.PLANS,)),
+        ("ChatGPT now supports MCP servers.", (AlertCategory.NEWS,)),
+        ("Codex has more capacity online.", (AlertCategory.NEWS,)),
+        ("Codex speed should get much better in the coming hours.", (AlertCategory.NEWS,)),
+        ("Pro now costs $200/month.", (AlertCategory.PLANS,)),
+        ("Pro price is now $200.", (AlertCategory.PLANS,)),
+        ("Codex Plus subscriptions are open again.", (AlertCategory.PLANS,)),
+        ("Codex available now.", (AlertCategory.NEWS,)),
+        ("Codex now has faster performance.", (AlertCategory.NEWS,)),
+        ("Plus users now get GPT-6.1 access.", (AlertCategory.PLANS,)),
+        ("@OpenAI You can now build MCP servers.", (AlertCategory.NEWS,)),
+        ("GPT-6.1 is included in your plan.", (AlertCategory.NEWS,)),
+        ("I use ChatGPT. Codex has more capacity online.", (AlertCategory.NEWS,)),
+        ("A Codex task will be drawing usage as usual.", (AlertCategory.NEWS,)),
+    ),
+)
+def test_substantive_short_announcements_keep_their_category(make_post, text, expected) -> None:
+    assert classify(make_post(text=text, is_reply=True)) == expected
+
+
+def test_live_classification_corpus(load_json_fixture) -> None:
+    corpus = load_json_fixture("notification_classification_corpus.json")
+    for case in corpus["cases"]:
+        post = Post(
+            id=case["id"],
+            text=case["text"],
+            created_at=None,
+            url=case["url"],
+            source=case["source"],
+            is_reply=case["is_reply"],
+            is_repost=case["is_repost"],
+            source_kind=case["source_kind"],
+        )
+        assert classify(post) == tuple(AlertCategory(value) for value in case["expected"]), case
